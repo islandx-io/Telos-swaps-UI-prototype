@@ -229,7 +229,7 @@ export class UsdBancorModule
           console.warn("Failed to find name", token.symbol);
           name = token.symbol;
           logo =
-            "https://storage.googleapis.com/bancor-prod-file-store/images/communities/f39c32b0-cfae-11e9-9f7d-af4705d95e66.jpeg";
+            "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/placeholder.jpg";
         }
 
         const baseToken: BaseToken = {

@@ -3,7 +3,7 @@
     class="bg-image"
     :style="
       'background-image: url(' +
-        require('@/assets/media/photos/bg01.jpg') +
+        require('@/assets/media/photos/bg03.svg') +
         ');'
     "
   >

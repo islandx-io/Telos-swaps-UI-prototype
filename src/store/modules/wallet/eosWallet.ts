@@ -37,11 +37,11 @@ export class EosTransitModule extends VuexModule.With({
   accessContext = initAccessContext({
     appName,
     network: {
-      host: "nodes.get-scatter.com",
+      host: "telos.caleos.io",
       port: 443,
       protocol: "https",
       chainId:
-        "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
+        "4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11"
     },
     walletProviders: [
       scatter(),

@@ -139,8 +139,8 @@ const addDefaultQueryParams = (to: Route): any => {
   switch (to.params.service) {
     case "eos":
       return appendBaseQuoteQuery(
-        buildTokenId({ contract: "bntbntbntbnt", symbol: "BNT" }),
-        buildTokenId({ contract: "eosio.token", symbol: "EOS" }),
+        buildTokenId({ contract: "stablecoin.z", symbol: "EZAR" }),
+        buildTokenId({ contract: "eosio.token", symbol: "TLOS" }),
         to
       );
     case "eth":

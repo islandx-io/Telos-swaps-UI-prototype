@@ -298,8 +298,9 @@ const isValidBalance = (data: any): boolean =>
 export const getTokenBalances = async (
   accountName: string
 ): Promise<TokenBalances> => {
+  console.log("getTokenBalances(", accountName, ")");
   const res = await axios.get<TokenBalances>(
-    `https://eos.eosn.io/v2/state/get_tokens?account=${accountName}`
+    `https://telos.caleos.io/v2/state/get_tokens?account=${accountName}`
   );
   return {
     ...res.data,
@@ -531,16 +532,16 @@ export const fetchMultiRelay = async (
 };
 
 const tokenMetaDataEndpoint =
-  "https://raw.githubusercontent.com/eoscafe/eos-airdrops/master/tokens.json";
+  "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/tokens.json";
 
 const hardCoded: () => TokenMeta[] = () =>
   [
     {
-      name: "Telos",
+      name: "TLOS",
       logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOS.png",
       logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOS.png",
       symbol: "TLOS",
       account: "eosio.token",
       chain: "eos"
@@ -548,9 +549,9 @@ const hardCoded: () => TokenMeta[] = () =>
     {
       name: "TLOSD",
       logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
       logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
       symbol: "TLOSD",
       account: "tokens.swaps",
       chain: "eos"
@@ -558,9 +559,9 @@ const hardCoded: () => TokenMeta[] = () =>
     {
       name: "TLOSM",
       logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSM.png",
       logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSM.png",
       symbol: "TLOSM",
       account: "tokens.swaps",
       chain: "eos"
@@ -568,9 +569,9 @@ const hardCoded: () => TokenMeta[] = () =>
     {
       name: "USDT",
       logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/USDT.png",
       logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/USDT.png",
       symbol: "USDT",
       account: "tokens.swaps",
       chain: "eos"
@@ -578,71 +579,11 @@ const hardCoded: () => TokenMeta[] = () =>
     {
       name: "EOSDT",
       logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOSDT.png",
       logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOSDT.png",
       symbol: "EOSDT",
       account: "tokens.swaps",
-      chain: "eos"
-    },
-    {
-      name: "EOS",
-      logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
-      logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/359b8290-0767-11e8-8744-97748b632eaf.png",
-      symbol: "EOS",
-      account: "eosio.token",
-      chain: "eos"
-    },
-    {
-      name: "Prochain",
-      logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/EPRA.png",
-      logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/EPRA.png",
-      symbol: "EPRA",
-      account: "epraofficial",
-      chain: "eos"
-    },
-    {
-      name: "Gold Tael",
-      logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/f146c8c0-1e6c-11e9-96e6-590b33725e90.jpeg",
-      logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/f146c8c0-1e6c-11e9-96e6-590b33725e90.jpeg",
-      symbol: "TAEL",
-      account: "realgoldtael",
-      chain: "eos"
-    },
-    {
-      name: "ZOS",
-      logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/636a3e10-328f-11e9-99c6-21750f32c67e.jpeg",
-      logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/636a3e10-328f-11e9-99c6-21750f32c67e.jpeg",
-      symbol: "ZOS",
-      account: "zosdiscounts",
-      chain: "eos"
-    },
-    {
-      name: "EQUA",
-      logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/d03d3120-cd5b-11e9-923a-f50a5610b222.jpeg",
-      logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/d03d3120-cd5b-11e9-923a-f50a5610b222.jpeg",
-      symbol: "EQUA",
-      account: "equacasheos1",
-      chain: "eos"
-    },
-    {
-      name: "FINX",
-      logo:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/77c385a0-6675-11e9-9f0e-7591708e99af.jpeg",
-      logo_lg:
-        "https://storage.googleapis.com/bancor-prod-file-store/images/communities/77c385a0-6675-11e9-9f0e-7591708e99af.jpeg",
-      symbol: "FINX",
-      account: "finxtokenvci",
       chain: "eos"
     }
   ].map(token => ({
