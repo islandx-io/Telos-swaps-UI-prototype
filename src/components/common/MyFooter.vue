@@ -39,13 +39,11 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
-
 @Component({})
 export default class MyFooter extends Vue {
   get website() {
     return "https://wallet.coolx.io";
   }
-
   get appVersion() {
     return JSON.parse(
       unescape(escape(JSON.stringify(require("../../../package.json"))))
@@ -60,24 +58,19 @@ export default class MyFooter extends Vue {
   padding: 15px 15px;
   justify-content: space-between;
 }
-
 .list-inline {
   margin: 0;
 }
-
 .list-inline-item {
   border-right: 1px solid white;
   padding-right: 6px;
 }
-
 .list-inline-item:last-child {
   border-right: none;
 }
-
 .text {
   color: white;
 }
-
 .orange {
   color: #d18235;
 }
