@@ -37,3 +37,97 @@
 .bn-onboard-custom.bn-onboard-modal {
   z-index: 99;
 }
+
+
+
+//New style changes - Neil
+.bg-dark {
+  background-color: #02003b !important;
+}
+
+.navBar {
+  -webkit-box-shadow: 0 2px 8px 0 rgba(0,0,0,.35);
+  -moz-box-shadow: 0 2px 8px 0 rgba(0,0,0,.35);
+  -box-shadow: 0 2px 8px 0 rgba(0,0,0,.35);
+}
+
+.footer {
+  background-color: #02003b;
+}
+
+.bg-primary {
+  background-color: #02003b !important;
+}
+
+.bg-primary-dark-op {
+  background-color: rgba(2, 0, 56, 0.85) !important;
+}
+
+.btn-dual {
+  color: white;
+  background-color: #571aff;
+  border-color: #571aff;
+}
+
+.btn-dual:hover {
+  color: white;
+  background-color: #4405f2;
+  border-color: #4405f2;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle {
+  color: #231f20;
+  background-color: #dfdfed;
+  border-color: #dfdfed;
+}
+
+.btn-success.disabled {
+  color: #fff;
+  background-color: #55c3b3;
+  border-color: #55c3b3;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #55c3b3;
+  border-color: #55c3b3;
+}
+
+.btn-success:hover {
+  color: #fff;
+  background-color: #309a8b;
+  border-color: #309a8b;
+}
+
+label.active {
+  color: #231f20;
+  background-color: #ffd75e !important;
+}
+
+label.active:hover {
+  color: #231f20;
+  background-color: #eac24a !important;
+}
+
+.img-avatar-thumb {
+  -webkit-box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 1);
+  width: 84px;
+  height: 84px;
+}
+
+.block {
+  border-radius: 10px;
+  margin-top: 20px;
+  -webkit-box-shadow: 0 2px 8px 0 rgba(0,0,0,.35);
+  -moz-box-shadow: 0 2px 8px 0 rgba(0,0,0,.35);
+  -box-shadow: 0 2px 8px 0 rgba(0,0,0,.35);
+}
+
+.modal-dialog-centered.modal-dialog-scrollable .modal-content {
+  border-radius: 10px;
+}
+
+a:hover {
+  color: #ff422a;
+}

@@ -2,7 +2,7 @@
   <b-navbar class="navBar" toggleable="md" type="dark" variant="dark">
     <b-navbar-brand>
       <router-link :to="{ name: 'Tokens' }">
-        <img src="@/assets/media/logos/eosn.png" height="30px" class="mr-4" />
+        <img src="@/assets/media/logos/telos.png" height="30px" class="mr-4" />
       </router-link>
     </b-navbar-brand>
 
@@ -72,7 +72,6 @@ import { store } from "../../store";
 import { ModuleParam } from "../../types/bancor";
 import { ethReserveAddress } from "../../api/ethConfig";
 import { Route } from "vue-router";
-
 const defaultPaths = [
   {
     moduleId: "eos",
@@ -90,20 +89,17 @@ const defaultPaths = [
     quote: buildTokenId({ contract: "tokens.swaps", symbol: "USDT" })
   }
 ];
-
 const appendBaseQuoteQuery = (base: string, quote: string, route: Route) => ({
   name: route.name,
   params: route.params,
   query: { base, quote }
 });
-
 const extendRouter = (moduleId: string) => {
   const path = findOrThrow(
     defaultPaths,
     path => compareString(moduleId, path.moduleId),
     `failed to find default path for unknown service`
   );
-
   return {
     query: {
       base: path.base,
@@ -114,24 +110,20 @@ const extendRouter = (moduleId: string) => {
     }
   };
 };
-
 const addDefaultQueryParams = (to: Route): any => {
   const path = findOrThrow(
     defaultPaths,
     path => compareString(to.params.service, path.moduleId),
     `failed to find default path for unknown service`
   );
-
   return appendBaseQuoteQuery(path.base, path.quote, to);
 };
-
 const defaultModuleParams = (moduleId: string): ModuleParam => {
   const path = findOrThrow(
     defaultPaths,
     path => compareString(moduleId, path.moduleId),
     `failed to find default path for unknown service`
   );
-
   return {
     tradeQuery: {
       base: path.base,
@@ -139,26 +131,21 @@ const defaultModuleParams = (moduleId: string): ModuleParam => {
     }
   };
 };
-
 const createDirectRoute = (name: string, params?: any) => ({
   name,
   ...(params && { params })
 });
-
 @Component
 export default class Navigation extends Vue {
   get selectedNetwork() {
     return vxm.bancor.currentNetwork;
   }
-
   get selectedWallet() {
     return vxm.wallet.currentWallet;
   }
-
   get selected() {
     return this.selectedNetwork;
   }
-
   get navItems() {
     return [
       {
@@ -211,17 +198,14 @@ export default class Navigation extends Vue {
       // @ts-ignore
     ].filter(route => route.render);
   }
-
   set selected(newSelection: string) {
     this.loadNewModule(newSelection);
   }
-
   async loadNewModule(moduleId: string) {
     const module = findOrThrow(vxm.bancor.modules, module =>
       compareString(module.id, moduleId)
     );
     const moduleAlreadyLoaded = module.loaded;
-
     await vxm.bancor.initialiseModule({
       moduleId,
       resolveWhenFinished: !moduleAlreadyLoaded,
@@ -229,7 +213,6 @@ export default class Navigation extends Vue {
     });
     this.$router.push({ name: "Tokens", ...extendRouter(moduleId) });
   }
-
   get options() {
     return vxm.bancor.modules.map(module => ({
       text: module.label,
@@ -237,15 +220,12 @@ export default class Navigation extends Vue {
       disabled: module.loading
     }));
   }
-
   get selectedService() {
     return services.find(service => service.namespace == this.selectedNetwork);
   }
-
   created() {
     vxm.ethWallet.checkAlreadySignedIn();
   }
-
   @Watch("isAuthenticated")
   onAuthentication(account: string) {
     if (account) {
@@ -256,25 +236,20 @@ export default class Navigation extends Vue {
       this.$analytics.logEvent("login", { account });
     }
   }
-
   get language() {
     return vxm.general.language;
   }
-
   get loginTooltip() {
     return this.selected == "eth" && vxm.ethWallet.isAuthenticated
       ? "Logout via wallet"
       : "";
   }
-
   set language(lang: string) {
     vxm.general.setLanguage(lang);
   }
-
   get loginStatus() {
     return vxm.eosWallet.loginStatus;
   }
-
   get shortenedEthAddress() {
     const isAuthenticated = vxm.ethWallet.isAuthenticated;
     return isAuthenticated.length > 13
@@ -286,7 +261,6 @@ export default class Navigation extends Vue {
           )
       : isAuthenticated;
   }
-
   get loginButtonLabel() {
     if (this.selectedWallet == "eos") {
       return this.loginStatus[0];
@@ -297,7 +271,6 @@ export default class Navigation extends Vue {
       } else return "Login";
     }
   }
-
   get icon() {
     if (this.selectedWallet == "eos") {
       return this.loginStatus[1];
@@ -305,21 +278,17 @@ export default class Navigation extends Vue {
       return vxm.ethWallet.isAuthenticated ? "power-off" : "arrow-circle-right";
     }
   }
-
   get spin() {
     return this.loginStatus[2];
   }
-
   get isAuthenticated() {
     return vxm.wallet.isAuthenticated;
   }
-
   createRelay() {
     this.$router.push({
       name: "Create"
     });
   }
-
   async loginActionEos() {
     const status = this.loginButtonLabel;
     if (status === "Login") {
@@ -332,7 +301,6 @@ export default class Navigation extends Vue {
       vxm.eosWallet.logout();
     }
   }
-
   async loginActionEth() {
     if (vxm.ethWallet.isAuthenticated) {
       // Cannot logout of MetaMask
@@ -340,7 +308,6 @@ export default class Navigation extends Vue {
       await vxm.ethWallet.connect();
     }
   }
-
   async loginAction() {
     const wallet = this.selectedWallet;
     if (wallet == "eos") this.loginActionEos();
@@ -353,61 +320,50 @@ export default class Navigation extends Vue {
 .navItem {
   margin: 2px 2px;
 }
-
 #form-group {
   margin-bottom: unset;
 }
-
 .btn-branded {
   color: grey !important;
   background-color: #1b262e !important;
 }
-
 .btn-branded:hover {
   color: black !important;
   background-color: #fa932b !important;
 }
-
 .login {
   min-width: 130px;
 }
-
 @media (max-width: 768px) {
   .networks {
     margin-top: 15px;
     margin-bottom: 15px;
   }
-
   .login {
     margin-top: 15px;
   }
 }
-
 .features {
   flex-grow: 2;
   flex-basis: auto;
   display: flex;
   justify-content: center;
 }
-
 .spacer {
   display: hidden;
   flex-grow: 1;
 }
-
 .networks {
   flex-grow: 1;
   flex-basis: auto;
   display: flex;
   justify-content: center;
 }
-
 .big {
   width: 100%;
   display: flex;
   justify-content: center;
 }
-
 label.active {
   color: black !important;
   background-color: #d18235 !important;
