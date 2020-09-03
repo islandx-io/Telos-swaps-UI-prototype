@@ -46,6 +46,63 @@ import {
 import _ from "lodash";
 import wait from "waait";
 
+const getUSDS = (code: string): any => {
+  switch (code) {
+    case "TLOSD":
+      return {
+        name: "TLOSD",
+        id: "tokens.swaps-TLOSD",
+        logo: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
+        logo_lg: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
+        symbol: "TLOSD",
+        account: "tokens.swaps",
+        chain: "eos"
+      };
+    case "TLOSM":
+      return {
+        name: "TLOSM",
+        id: "tokens.swaps-TLOSM",
+        logo: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSM.png",
+        logo_lg: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSM.png",
+        symbol: "TLOSM",
+        account: "tokens.swaps",
+        chain: "eos"
+      };
+    case "EOSDT":
+      return {
+        name: "EOSDT",
+        id: "tokens.swaps-EOSDT",
+        logo: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOSDT.png",
+        logo_lg: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOSDT.png",
+        symbol: "EOSDT",
+        account: "tokens.swaps",
+        chain: "eos"
+      };
+    case "USDT":
+      return {
+        name: "USDT",
+        id: "tokens.swaps-USDT",
+        logo: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/USDT.png",
+        logo_lg: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/USDT.png",
+        symbol: "USDT",
+        account: "tokens.swaps",
+        chain: "eos"
+      };
+    case "VIGOR":
+      return {
+        name: "VIGOR",
+        id: "tokens.swaps-VIGOR",
+        logo: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/VIGOR.png",
+        logo_lg: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/VIGOR.png",
+        symbol: "VIGOR",
+        account: "tokens.swaps",
+        chain: "eos"
+      };
+    default:
+      throw new Error("Unrecognised token");
+  }
+};
+
 interface RateDetail {
   rate: Asset;
   slippage: number;
@@ -64,6 +121,7 @@ const getRate = (
 
   return { rate, slippage, fee };
 };
+
 const getInverseRate = (
   asset: Asset,
   sym: Sym,
@@ -223,21 +281,13 @@ export class UsdBancorModule
 //        console.log("vxm.eosBancor.tokenMeta : ", vxm.eosBancor.tokenMeta);
 
         try {
+/*
           const eosModuleBorrowed = vxm.eosBancor.tokenMeta.find(
             tokenMeta => tokenMeta.symbol == token.symbol
           )!;
-/*
-          const eosModuleBorrowed = {
-            name: "TLOSD",
-            id: "tokens.swaps-TLOSD",
-            logo: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
-            logo_lg: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
-            symbol: "TLOSD",
-            account: "tokens.swaps",
-            chain: "eos"
-          };
 */
-          console.log("eosModuleBorrowed : ", eosModuleBorrowed);
+          // Hack until vxm.eosBancor.tokenMeta.find fixed
+          const eosModuleBorrowed = getUSDS(token.symbol);
 
           if (!eosModuleBorrowed) throw new Error("Failed to find token");
           name = eosModuleBorrowed.name;

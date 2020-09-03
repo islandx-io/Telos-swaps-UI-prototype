@@ -160,7 +160,7 @@ export default class HeroTransfer extends Vue {
   }
 
   get defaultId() {
-    return vxm.bancor.tokens.find((token: any) => token.symbol !== "BNT")!.id;
+    return vxm.bancor.tokens.find((token: any) => token.symbol !== "TLOS")!.id;
   }
 
   navConvert() {

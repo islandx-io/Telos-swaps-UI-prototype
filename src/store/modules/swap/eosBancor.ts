@@ -616,25 +616,25 @@ export class EosBancorModule
   }
 
   get newNetworkTokenChoices(): NetworkChoice[] {
-    const bnt: BaseToken = {
-      symbol: "BNT",
-      contract: "bntbntbntbnt"
+    const tlos: BaseToken = {
+      symbol: "TLOS",
+      contract: "eosio.token"
     };
 
-    const usdb: BaseToken = {
-      symbol: "USDB",
-      contract: "usdbusdbusdb"
+    const tlosd: BaseToken = {
+      symbol: "TLOSD",
+      contract: "tokens.swaps"
     };
 
     return [
       {
-        ...bnt,
-        id: buildTokenId(bnt),
+        ...tlos,
+        id: buildTokenId(tlos),
         usdValue: this.usdPriceOfBnt
       },
       {
-        ...usdb,
-        id: buildTokenId(usdb),
+        ...tlosd,
+        id: buildTokenId(tlosd),
         usdValue: 1
       }
     ].map(choice => ({
@@ -733,7 +733,7 @@ export class EosBancorModule
     );
 
     const networkSymbol = networkAsset.symbol.code().to_string();
-    const initialLiquidity = compareString(networkSymbol, "USDB")
+    const initialLiquidity = compareString(networkSymbol, "TLOSD")
       ? 0.5
       : 1 * asset_to_number(networkAsset);
 
@@ -860,6 +860,7 @@ export class EosBancorModule
   }
 
   get token(): (arg0: string) => ViewToken {
+//    console.log(this.tokens);
     return (id: string) => {
       const tradableToken = this.tokens.find(token =>
         compareString(token.id, id)
@@ -1224,8 +1225,8 @@ export class EosBancorModule
   @action async buildPossibleRelayFeedsFromHydrated(relays: EosMultiRelay[]) {
     const feeds = relays.flatMap(relay =>
       buildTwoFeedsFromRelay(relay, [
-        { symbol: "USDB", unitPrice: 1 },
-        { symbol: "BNT", unitPrice: this.usdPriceOfBnt }
+        { symbol: "TLOSD", unitPrice: 1 },
+        { symbol: "TLOS", unitPrice: this.usdPriceOfBnt }
       ])
     );
     this.updateRelayFeed(feeds);

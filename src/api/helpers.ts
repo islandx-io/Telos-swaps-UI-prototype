@@ -380,7 +380,6 @@ export interface Service {
 }
 
 export const services: Service[] = [
-  /*
   {
     namespace: "eos",
     features: [
@@ -390,6 +389,7 @@ export const services: Service[] = [
       Feature.CreatePool
     ]
   },
+  /*
   {
     namespace: "eth",
     features: [
@@ -525,7 +525,7 @@ export const fetchMultiRelay = async (
   return {
     ...relay,
     reserves: sortByNetworkTokens(relay.reserves, reserve => reserve.symbol, [
-      "BNT"
+      "TLOS"
     ])
   };
 };

@@ -417,8 +417,8 @@ export class EthBancorModule
   }
 
   get newNetworkTokenChoices(): ModalChoice[] {
-    const bntTokenMeta = this.tokenMeta.find(token => token.symbol == "BNT")!;
-    const usdBTokenMeta = this.tokenMeta.find(token => token.symbol == "USDB")!;
+    const bntTokenMeta = this.tokenMeta.find(token => token.symbol == "TLOS")!;
+    const usdBTokenMeta = this.tokenMeta.find(token => token.symbol == "TLOSD")!;
 
     const bntBalance = this.tokenBalance(bntTokenMeta.contract);
     const usdBalance = this.tokenBalance(usdBTokenMeta.contract);
@@ -1619,7 +1619,7 @@ export class EthBancorModule
 
   @action async fetchBancorUsdPriceOfBnt() {
     const tokens = await ethBancorApi.getTokens();
-    const usdPriceOfBnt = findOrThrow(tokens, token => token.code == "BNT")
+    const usdPriceOfBnt = findOrThrow(tokens, token => token.code == "TLOS")
       .price;
     return usdPriceOfBnt;
   }
@@ -1655,7 +1655,7 @@ export class EthBancorModule
       balance[0].symbol.toUpperCase()
     );
 
-    const networkReserveIsUsd = networkReserve.symbol == "USDB";
+    const networkReserveIsUsd = networkReserve.symbol == "TLOSD";
     const dec = networkReserveAmount / tokenAmount;
     const reverse = tokenAmount / networkReserveAmount;
     const main = networkReserveIsUsd ? dec : dec * usdPriceOfBnt;

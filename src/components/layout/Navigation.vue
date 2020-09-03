@@ -75,14 +75,16 @@ import { Route } from "vue-router";
 const defaultPaths = [
   {
     moduleId: "eos",
-    base: buildTokenId({ contract: "bntbntbntbnt", symbol: "BNT" }),
-    quote: buildTokenId({ contract: "eosio.token", symbol: "EOS" })
+    base: buildTokenId({ contract: "eosio.token", symbol: "TLOS" }),
+    quote: buildTokenId({ contract: "stablecoin.z", symbol: "EZAR" })
   },
+/*
   {
     moduleId: "eth",
     base: ethReserveAddress,
     quote: "0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c"
   },
+*/
   {
     moduleId: "usds",
     base: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" }),

@@ -219,8 +219,8 @@ export default class HeroConvert extends Vue {
       case "eos":
       case "usds":
         return `https://bloks.io/transaction/${this.success}`;
-      case "eth":
-        return `https://etherscan.io/tx/${this.success}`;
+//      case "eth":
+//        return `https://etherscan.io/tx/${this.success}`;
       default:
         return `https://bloks.io/transaction/${this.success}`;
     }
@@ -231,8 +231,8 @@ export default class HeroConvert extends Vue {
       case "eos":
       case "usds":
         return `Bloks.io`;
-      case "eth":
-        return `Etherscan`;
+//      case "eth":
+//        return `Etherscan`;
       default:
         return `Bloks.io`;
     }
