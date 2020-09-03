@@ -1,346 +1,122 @@
 import { DryRelay } from "@/api/eosBancorCalc";
 import { Sym } from "eos-common";
 
-const bntToken = {
-  contract: "bntbntbntbnt",
-  symbol: "10,BNT"
+const tlosToken = {
+  contract: "eosio.token",
+  symbol: "4,TLOS"
 };
 
 const oldRelays = [
   {
-    contract: "bnt2eoscnvrt",
+    contract: "zar.tbn",
     smartToken: {
-      contract: "bnt2eosrelay",
-      symbol: "10,BNTEOS"
+      contract: "zarrelay.tbn",
+      symbol: "8,TLOSZAR"
     },
     reserves: [
       {
-        contract: "eosio.token",
-        symbol: "4,EOS"
+        contract: "stablecoin.z",
+        symbol: "2,EZAR"
       },
-      bntToken
+      tlosToken
     ]
   },
   {
-    contract: "bancorc11111",
+    contract: "cx.tbn",
     smartToken: {
-      contract: "bancorr11111",
-      symbol: "10,BNTBLK"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "eosblackteam",
-        symbol: "4,BLACK"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11121",
-    smartToken: {
-      contract: "bancorr11121",
-      symbol: "10,BNTHRUS"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "horustokenio",
-        symbol: "4,HORUS"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11122",
-    smartToken: {
-      contract: "bancorr11122",
-      symbol: "10,BNTMEET"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "eosiomeetone",
-        symbol: "4,MEETONE"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11123",
-    smartToken: {
-      contract: "bancorr11123",
-      symbol: "10,BNTIQ"
+      contract: "cxrelay.tbn",
+      symbol: "8,TLOSCX"
     },
     reserves: [
       {
-        contract: "everipediaiq",
-        symbol: "3,IQ"
+        contract: "thecooltoken",
+        symbol: "4,COOL"
       },
-      bntToken
+      tlosToken
     ]
   },
   {
-    contract: "bancorc11124",
+    contract: "dric.tbn",
     smartToken: {
-      contract: "bancorr11124",
-      symbol: "10,BNTEPRA"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "epraofficial",
-        symbol: "4,EPRA"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11125",
-    smartToken: {
-      contract: "bancorr11125",
-      symbol: "10,BNTDICE"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "betdicetoken",
-        symbol: "4,DICE"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11131",
-    smartToken: {
-      contract: "bancorr11131",
-      symbol: "10,BNTHVT"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "hirevibeshvt",
-        symbol: "4,HVT"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11132",
-    smartToken: {
-      contract: "bancorr11132",
-      symbol: "10,BNTOCT"
+      contract: "dricrly.tbn",
+      symbol: "8,TLSDRIC"
     },
     reserves: [
       {
-        contract: "octtothemoon",
-        symbol: "4,OCT"
+        contract: "persiandaric",
+        symbol: "4,DRIC"
       },
-      bntToken
+      tlosToken
     ]
   },
   {
-    contract: "bancorc11134",
+    contract: "gem.tbn",
     smartToken: {
-      contract: "bancorr11134",
-      symbol: "10,BNTMEV"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "eosvegascoin",
-        symbol: "4,MEV"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11145",
-    smartToken: {
-      contract: "bancorr11145",
-      symbol: "10,BNTTAEL"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "realgoldtael",
-        symbol: "6,TAEL"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11151",
-    smartToken: {
-      contract: "bancorr11151",
-      symbol: "10,BNTZOS"
+      contract: "gemrelay.tbn",
+      symbol: "8,TLOSGEM"
     },
     reserves: [
       {
-        contract: "zosdiscounts",
-        symbol: "4,ZOS"
+        contract: "lord",
+        symbol: "4,GEM"
       },
-      bntToken
+      tlosToken
     ]
   },
   {
-    contract: "bancorc11152",
+    contract: "seeds.tbn",
     smartToken: {
-      contract: "bancorr11152",
-      symbol: "10,BNTEQA"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "equacasheos1",
-        symbol: "8,EQUA"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11153",
-    smartToken: {
-      contract: "bancorr11153",
-      symbol: "10,BNTPEOS"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "thepeostoken",
-        symbol: "4,PEOS"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11154",
-    smartToken: {
-      contract: "bancorr11154",
-      symbol: "10,BNTDAPP"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "dappservices",
-        symbol: "4,DAPP"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11155",
-    smartToken: {
-      contract: "bancorr11155",
-      symbol: "10,BNTCHEX"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "chexchexchex",
-        symbol: "8,CHEX"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11211",
-    smartToken: {
-      contract: "bancorr11211",
-      symbol: "10,BNTFINX"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "finxtokenvci",
-        symbol: "8,FINX"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11213",
-    smartToken: {
-      contract: "bancorr11213",
-      symbol: "10,BNTEMT"
+      contract: "seedsrly.tbn",
+      symbol: "8,TLSEEDS"
     },
     reserves: [
       {
-        contract: "emanateoneos",
-        symbol: "4,EMT"
+        contract: "token.seeds",
+        symbol: "4,SEEDS"
       },
-      bntToken
+      tlosToken
     ]
   },
   {
-    contract: "bancorc11214",
+    contract: "ppl.tbn",
     smartToken: {
-      contract: "bancorr11214",
-      symbol: "10,BNTPIXE"
+      contract: "pplrelay.tbn",
+      symbol: "8,TLOSPPL"
     },
     reserves: [
-      bntToken,
       {
-        contract: "pixeos1token",
-        symbol: "4,PIXEOS"
-      }
+        contract: "vapaeetokens",
+        symbol: "4,PEOPLE"
+      },
+      tlosToken
     ]
   },
   {
-    contract: "bancorc11215",
+    contract: "ynt.tbn",
     smartToken: {
-      contract: "bancorr11215",
-      symbol: "10,BNTNUT"
+      contract: "yntrelay.tbn",
+      symbol: "8,TLOSYNT"
     },
     reserves: [
-      bntToken,
       {
-        contract: "eosdtnutoken",
-        symbol: "9,NUT"
-      }
+        contract: "sesacashmain",
+        symbol: "4,YNT"
+      },
+      tlosToken
     ]
   },
   {
-    contract: "bancorc11222",
+    contract: "san.tbn",
     smartToken: {
-      contract: "bancorr11222",
-      symbol: "10,BNTESDT"
+      contract: "sanrelay.tbn",
+      symbol: "8,xxx"
     },
     reserves: [
-      bntToken,
       {
-        contract: "eosdtsttoken",
-        symbol: "9,EOSDT"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11225",
-    smartToken: {
-      contract: "bancorr11225",
-      symbol: "10,BNTLUME"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "lumetokenctr",
-        symbol: "3,LUME"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11231",
-    smartToken: {
-      contract: "bancorr11231",
-      symbol: "10,BNTSENS"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "sensegenesis",
-        symbol: "4,SENSE"
-      }
-    ]
-  },
-  {
-    contract: "bancorc11232",
-    smartToken: {
-      contract: "bancorr11232",
-      symbol: "10,BNTUSDT"
-    },
-    reserves: [
-      bntToken,
-      {
-        contract: "tethertether",
-        symbol: "4,USDT"
-      }
+        contract: "xxx",
+        symbol: "xxx,xxx"
+      },
+      tlosToken
     ]
   }
 ];

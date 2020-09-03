@@ -220,8 +220,7 @@ const noBlackListedReserves = (blackListedTokens: BaseToken[]) => (
   );
 
 const mandatoryNetworkTokens: BaseToken[] = [
-  { contract: "bntbntbntbnt", symbol: "BNT" },
-  { contract: "usdbusdbusdb", symbol: "USDB" }
+  { contract: "eosio.token", symbol: "TLOS" }
 ];
 
 const isBaseToken = (token: BaseToken) => (comparasion: BaseToken): boolean =>
@@ -1146,6 +1145,9 @@ export class EosBancorModule
     console.count("eosInit");
     console.time("eos");
     console.log("eosInit received", param);
+
+    console.log("init : ", param);
+
     if (this.initialised) {
       console.log("eos refreshing instead");
       return this.refresh();
@@ -1159,10 +1161,15 @@ export class EosBancorModule
       this.setTokenMeta(tokenMeta);
       this.setBntPrice(usdPriceOfBnt);
 
+      console.log("tokenMeta : ",tokenMeta);
+      console.log("usdPriceOfBnt : ",usdPriceOfBnt);
+
       const v1Relays = getHardCodedRelays();
+      console.log("v1Relays : ",v1Relays);
       const allDry = [...v1Relays, ...v2Relays.map(multiToDry)].filter(
         noBlackListedReservesDry(blackListedTokens)
       );
+      console.log("allDry : ",allDry);
 
       this.fetchTokenBalancesIfPossible(
         _.uniqWith(
@@ -1179,6 +1186,7 @@ export class EosBancorModule
         param.tradeQuery.base &&
         param.tradeQuery.quote;
 
+      console.log("quickTrade : ",quickTrade);
       if (quickTrade) {
         const { base: fromId, quote: toId } = param!.tradeQuery!;
         await this.bareMinimumForTrade({
@@ -1234,8 +1242,8 @@ export class EosBancorModule
         ethBancorApi.getTokens()
       ]);
 
-      const bntToken = findOrThrow(tokenPrices, token =>
-        compareString(token.code, "BNT")
+      const tlosToken = findOrThrow(tokenPrices, token =>
+        compareString(token.code, "TLOS")
       );
 
       const usdPriceOfEth = findOrThrow(ethTokenPrices, token =>
@@ -1294,9 +1302,9 @@ export class EosBancorModule
             ? {
                 ...secondary,
                 liqDepth,
-                costByNetworkUsd: bntToken.price,
-                change24H: bntToken.change24h,
-                volume24H: bntToken.volume24h.USD
+                costByNetworkUsd: tlosToken.price,
+                change24H: tlosToken.change24h,
+                volume24H: tlosToken.volume24h.USD
               }
             : {
                 ...secondary,
@@ -1848,6 +1856,7 @@ export class EosBancorModule
   }
 
   @action async idToSymbol(id: string): Promise<Sym> {
+    console.log("idToSymbol : ", id);
     const token = await this.tokenById(id);
     return new Sym(token.symbol, token.precision);
   }
@@ -1956,6 +1965,7 @@ export class EosBancorModule
   }
 
   @action async tokenById(id: string) {
+    console.log("tokenById : ", id);
     return findOrThrow(
       this.relaysList.flatMap(relay => relay.reserves),
       token => compareString(token.id, id),
@@ -2184,6 +2194,7 @@ export class EosBancorModule
   }
 
   @mutation setTokenMeta(tokens: TokenMeta[]) {
+    console.log("setTokenMeta : ", tokens);
     this.tokenMeta = tokens.filter(token => compareString(token.chain, "eos"));
   }
 }

@@ -117,7 +117,8 @@ const contractDb: BaseToken[] = [
   { contract: "tokens.swaps", symbol: "TLOSD" },
   { contract: "tokens.swaps", symbol: "TLOSM" },
   { contract: "tokens.swaps", symbol: "USDT" },
-  { contract: "tokens.swaps", symbol: "EOSDT" }
+  { contract: "tokens.swaps", symbol: "EOSDT" },
+  { contract: "tokens.swaps", symbol: "VIGOR" }
 ];
 
 const symbolNameToContract = (symbolName: string) =>
@@ -218,10 +219,26 @@ export class UsdBancorModule
         let name, logo: string;
         const { contract, symbol } = token;
 
+//        console.log("token : ", token);
+//        console.log("vxm.eosBancor.tokenMeta : ", vxm.eosBancor.tokenMeta);
+
         try {
           const eosModuleBorrowed = vxm.eosBancor.tokenMeta.find(
             tokenMeta => tokenMeta.symbol == token.symbol
           )!;
+/*
+          const eosModuleBorrowed = {
+            name: "TLOSD",
+            id: "tokens.swaps-TLOSD",
+            logo: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
+            logo_lg: "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
+            symbol: "TLOSD",
+            account: "tokens.swaps",
+            chain: "eos"
+          };
+*/
+          console.log("eosModuleBorrowed : ", eosModuleBorrowed);
+
           if (!eosModuleBorrowed) throw new Error("Failed to find token");
           name = eosModuleBorrowed.name;
           logo = eosModuleBorrowed.logo;
@@ -289,7 +306,6 @@ export class UsdBancorModule
         });
 
         const data = res.rows[0];
-        console.log(data);
         return {
           contract,
           ...data

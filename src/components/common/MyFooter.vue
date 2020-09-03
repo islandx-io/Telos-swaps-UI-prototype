@@ -42,7 +42,7 @@ import { Prop, Component, Vue } from "vue-property-decorator";
 @Component({})
 export default class MyFooter extends Vue {
   get website() {
-    return "https://wallet.coolx.io";
+    return "https://telosd.com";
   }
   get appVersion() {
     return JSON.parse(

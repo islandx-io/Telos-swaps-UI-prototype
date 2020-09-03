@@ -34,7 +34,7 @@ import {
 import { sortByNetworkTokens } from "./sortByNetworkTokens";
 import { add } from "lodash";
 
-export const networkTokens = ["BNT", "USDB"];
+export const networkTokens = ["TLOS"];
 
 export const isOdd = (num: number) => num % 2 == 1;
 
@@ -218,7 +218,6 @@ export const fetchTokenSymbol = async (
     throw new Error(
       `Unexpected stats table return from tokenContract ${contractName} ${symbolName}`
     );
-  console.log(statRes.rows[0]);
   const maxSupplyAssetString = statRes.rows[0].max_supply;
   const maxSupplyAsset = new Asset(maxSupplyAssetString);
   return maxSupplyAsset.symbol;
@@ -298,9 +297,9 @@ const isValidBalance = (data: any): boolean =>
 export const getTokenBalances = async (
   accountName: string
 ): Promise<TokenBalances> => {
-  console.log("getTokenBalances(", accountName, ")");
   const res = await axios.get<TokenBalances>(
     `https://telos.caleos.io/v2/state/get_tokens?account=${accountName}`
+//    `https://telos.eosphere.io/v2/state/get_tokens?account=${accountName}`
   );
   return {
     ...res.data,
@@ -547,6 +546,26 @@ const hardCoded: () => TokenMeta[] = () =>
       chain: "eos"
     },
     {
+      name: "EOS",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOS.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOS.png",
+      symbol: "EOS",
+      account: "tokens.swaps",
+      chain: "eos"
+    },
+    {
+      name: "BNT",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/BNT.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/BNT.png",
+      symbol: "BNT",
+      account: "tokens.swaps",
+      chain: "eos"
+    },
+    {
       name: "TLOSD",
       logo:
         "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
@@ -585,6 +604,16 @@ const hardCoded: () => TokenMeta[] = () =>
       symbol: "EOSDT",
       account: "tokens.swaps",
       chain: "eos"
+    },
+    {
+      name: "VIGOR",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/VIGOR.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/VIGOR.png",
+      symbol: "VIGOR",
+      account: "tokens.swaps",
+      chain: "eos"
     }
   ].map(token => ({
     ...token,
@@ -595,7 +624,11 @@ export const getTokenMeta = async (): Promise<TokenMeta[]> => {
   const res: AxiosResponse<TokenMeta[]> = await axios.get(
     tokenMetaDataEndpoint
   );
-  return [...res.data, ...hardCoded()]
+
+  console.log([...hardCoded()]);
+
+//  return [...res.data, ...hardCoded()]
+  return [...hardCoded()]
     .filter(token => compareString(token.chain, "eos"))
     .map(token => ({
       ...token,

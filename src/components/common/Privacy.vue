@@ -151,11 +151,11 @@ import { Prop, Component, Vue } from "vue-property-decorator";
 @Component({})
 export default class Privacy extends Vue {
   get website() {
-    return "https://wallet.coolx.io";
+    return "https://telosd.com";
   }
 
   get email() {
-    return "info@coolx.io";
+    return "info@telosd.com";
   }
 }
 </script>

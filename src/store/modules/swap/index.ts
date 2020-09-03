@@ -38,14 +38,14 @@ interface RootParam {
 }
 
 const moduleIds: { label: string; id: string }[] = [
-  //  {
-  //    label: "EOS",
-  //    id: "eos"
-  //  },
-  //  {
-  //    label: "ETH",
-  //    id: "eth"
-  //  },
+//  {
+//    label: "EOS",
+//    id: "eos"
+//  },
+//  {
+//    label: "ETH",
+//    id: "eth"
+//  },
   {
     label: "USDⓈ",
     id: "usds"
