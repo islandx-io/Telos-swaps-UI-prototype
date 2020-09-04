@@ -12,15 +12,6 @@
         <h5 id="select-token">
           Select Token
         </h5>
-        <div class="left">
-          <b-btn
-            size="sm"
-            class="d-none d-md-block"
-            href="https://github.com/eoscafe/eos-airdrops"
-            target="_blank"
-            >Add Token</b-btn
-          >
-        </div>
         <div>
           <b-input-group>
             <b-form-input
