@@ -109,12 +109,12 @@ const oldRelays = [
     contract: "san.tbn",
     smartToken: {
       contract: "sanrelay.tbn",
-      symbol: "8,xxx"
+      symbol: "8,SAND"
     },
     reserves: [
       {
-        contract: "xxx",
-        symbol: "xxx,xxx"
+        contract: "sandiegocoin",
+        symbol: "8,SAND"
       },
       tlosToken
     ]

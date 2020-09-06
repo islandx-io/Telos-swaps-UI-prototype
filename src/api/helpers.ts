@@ -452,6 +452,7 @@ export const buildTokenId = ({ contract, symbol }: BaseToken): string =>
   contract + "-" + symbol;
 
 export const fetchMultiRelays = async (): Promise<EosMultiRelay[]> => {
+/*
   const contractName = process.env.VUE_APP_MULTICONTRACT!;
 
   const rawRelays: {
@@ -511,6 +512,8 @@ export const fetchMultiRelays = async (): Promise<EosMultiRelay[]> => {
   }));
 
   return relays;
+*/
+  return [];
 };
 
 export const fetchMultiRelay = async (
@@ -613,6 +616,86 @@ const hardCoded: () => TokenMeta[] = () =>
         "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/VIGOR.png",
       symbol: "VIGOR",
       account: "tokens.swaps",
+      chain: "eos"
+    },
+    {
+      name: "EZAR",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EZAR.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EZAR.png",
+      symbol: "EZAR",
+      account: "stablecoin.z",
+      chain: "eos"
+    },
+    {
+      name: "COOL",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/COOL.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/COOL.png",
+      symbol: "COOL",
+      account: "thecooltoken",
+      chain: "eos"
+    },
+    {
+      name: "DRIC",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/DRIC.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/DRIC.png",
+      symbol: "DRIC",
+      account: "persiandaric",
+      chain: "eos"
+    },
+    {
+      name: "GEM",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/GEM.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/GEM.png",
+      symbol: "GEM",
+      account: "lord",
+      chain: "eos"
+    },
+    {
+      name: "SEEDS",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SEEDS.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SEEDS.png",
+      symbol: "SEEDS",
+      account: "token.seeds",
+      chain: "eos"
+    },
+    {
+      name: "PEOPLE",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/PEOPLE.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/PEOPLE.png",
+      symbol: "PEOPLE",
+      account: "vapaeetokens",
+      chain: "eos"
+    },
+    {
+      name: "YNT",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/YNT.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/YNT.png",
+      symbol: "YNT",
+      account: "sesacashmain",
+      chain: "eos"
+    },
+    {
+      name: "SAND",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SAND.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SAND.png",
+      symbol: "SAND",
+      account: "sandiegocoin",
       chain: "eos"
     }
   ].map(token => ({
