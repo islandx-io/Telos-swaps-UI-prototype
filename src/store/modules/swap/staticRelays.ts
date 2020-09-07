@@ -109,12 +109,54 @@ const oldRelays = [
     contract: "san.tbn",
     smartToken: {
       contract: "sanrelay.tbn",
-      symbol: "8,SAND"
+      symbol: "8,TLOSSAN"
     },
     reserves: [
       {
         contract: "sandiegocoin",
         symbol: "8,SAND"
+      },
+      tlosToken
+    ]
+  },
+  {
+    contract: "rev.tbn",
+    smartToken: {
+      contract: "revrelay.tbn",
+      symbol: "8,TLOSREV"
+    },
+    reserves: [
+      {
+        contract: "revelation21",
+        symbol: "4,HEART"
+      },
+      tlosToken
+    ]
+  },
+  {
+    contract: "qbe.tbn",
+    smartToken: {
+      contract: "qberelay.tbn",
+      symbol: "8,TLOSQBE"
+    },
+    reserves: [
+      {
+        contract: "qubicletoken",
+        symbol: "4,QBE"
+      },
+      tlosToken
+    ]
+  },
+  {
+    contract: "sql.tbn",
+    smartToken: {
+      contract: "sqlrelay.tbn",
+      symbol: "8,TLOSSQL"
+    },
+    reserves: [
+      {
+        contract: "sqrlwalletio",
+        symbol: "4,SQRL"
       },
       tlosToken
     ]

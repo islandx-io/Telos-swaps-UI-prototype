@@ -634,9 +634,9 @@ const hardCoded: () => TokenMeta[] = () =>
     {
       name: "COOL",
       logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/COOL.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/COOL.jpg",
       logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/COOL.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/COOL.jpg",
       symbol: "COOL",
       account: "thecooltoken",
       chain: "eos"
@@ -664,9 +664,9 @@ const hardCoded: () => TokenMeta[] = () =>
     {
       name: "SEEDS",
       logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SEEDS.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SEEDS.jpeg",
       logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SEEDS.png",
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SEEDS.jpeg",
       symbol: "SEEDS",
       account: "token.seeds",
       chain: "eos"
@@ -699,6 +699,36 @@ const hardCoded: () => TokenMeta[] = () =>
         "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SAND.png",
       symbol: "SAND",
       account: "sandiegocoin",
+      chain: "eos"
+    },
+    {
+      name: "HEART",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/HEART.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/HEART.png",
+      symbol: "HEART",
+      account: "revelation21",
+      chain: "eos"
+    },
+    {
+      name: "QBE",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/QBE.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/QBE.png",
+      symbol: "QBE",
+      account: "qubicletoken",
+      chain: "eos"
+    },
+    {
+      name: "SQRL",
+      logo:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SQRL.png",
+      logo_lg:
+        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SQRL.png",
+      symbol: "SQRL",
+      account: "sqrlwalletio",
       chain: "eos"
     }
   ].map(token => ({
