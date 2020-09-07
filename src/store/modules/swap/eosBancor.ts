@@ -70,7 +70,6 @@ import wait from "waait";
 import { getHardCodedRelays } from "./staticRelays";
 import { sortByNetworkTokens } from "@/api/sortByNetworkTokens";
 import { liquidateAction } from "@/api/singleContractTx";
-import {TokenInfo} from "@/api/TokensDummy";
 
 const compareAgnosticToBalanceParam = (
   agnostic: AgnosticToken,
