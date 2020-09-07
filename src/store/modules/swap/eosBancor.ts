@@ -70,6 +70,7 @@ import wait from "waait";
 import { getHardCodedRelays } from "./staticRelays";
 import { sortByNetworkTokens } from "@/api/sortByNetworkTokens";
 import { liquidateAction } from "@/api/singleContractTx";
+import {TokenInfo} from "@/api/TokensDummy";
 
 const compareAgnosticToBalanceParam = (
   agnostic: AgnosticToken,
@@ -1232,6 +1233,41 @@ export class EosBancorModule
     this.updateRelayFeed(feeds);
   }
 
+/*
+change24h: -2.287651124147028
+code: "BNT"
+id: "594bb7e468a95e00203b048d"
+liquidityDepth: 27934.009807858576
+name: "Bancor"
+price: 1.0736276822045399
+priceHistory: (168) [Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), …]
+primaryCommunityImageName: "https://storage.googleapis.com/bancor-prod-file-store/images/communities/f80f2a40-eaf5-11e7-9b5e-179c6e04aa7c.png"
+volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
+ * /
+
+  const tokenDb_: TokenInfo[] = [
+    {
+      change24h: -2.287651124147028,
+      code: "BNT",
+      id: "594bb7e468a95e00203b048d",
+      liquidityDepth: 27934.009807858576,
+      name: "Bancor",
+      price: 1.0736276822045399,
+      primaryCommunityImageName: "https://storage.googleapis.com/bancor-prod-file-store/images/communities/f80f2a40-eaf5-11e7-9b5e-179c6e04aa7c.png",
+      volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
+    },
+    {
+      change24h: -2.287651124147028,
+      code: "BNT",
+      id: "594bb7e468a95e00203b048d",
+      liquidityDepth: 27934.009807858576,
+      name: "Bancor",
+      price: 1.0736276822045399,
+      primaryCommunityImageName: "https://storage.googleapis.com/bancor-prod-file-store/images/communities/f80f2a40-eaf5-11e7-9b5e-179c6e04aa7c.png",
+      volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
+    }];
+*/
+
   @action async buildPossibleRelayFeedsFromBancorApi({
     relays
   }: {
@@ -1242,6 +1278,8 @@ export class EosBancorModule
         bancorApi.getTokens(),
         ethBancorApi.getTokens()
       ]);
+
+      console.log("tokenPrices : ", tokenPrices);
 
       const tlosToken = findOrThrow(tokenPrices, token =>
         compareString(token.code, "TLOS")
