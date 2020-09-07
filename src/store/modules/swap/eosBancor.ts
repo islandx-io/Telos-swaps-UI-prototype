@@ -1273,6 +1273,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     relays: DryRelay[];
   }) {
     try {
+      // https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
       const [tokenPrices, ethTokenPrices] = await Promise.all([
         bancorApi.getTokens(),
         ethBancorApi.getTokens()
