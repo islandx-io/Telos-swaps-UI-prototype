@@ -111,7 +111,7 @@ export class BancorApi implements BancorWrapper {
     );
     return chunk(res.data, 2);
   }
-
+/*
   public async getTokens(): Promise<TokenPrice[]> {
     const res = await this.request("currencies/tokens", {
       blockchainType: this.blockchain == Blockchain.EOS ? "eos" : "ethereum",
@@ -127,6 +127,27 @@ export class BancorApi implements BancorWrapper {
       primaryCommunityImageName:
         this.photoBaseUrl + token.primaryCommunityImageName
     }));
+  }
+*/
+
+  public async getTokens(): Promise<any> {
+    let params = {
+      limit: 150,
+      skip: 0,
+      fromCurrencyCode: "USD",
+      includeTotal: true,
+      orderBy: "volume24h",
+      sortOrder: "desc",
+      blockchainType: ""
+    };
+    const endpoint = "currencies/tokens";
+    let eos: any;
+    let eth: any;
+    params.blockchainType = "eos";
+    const Api = new TokenApi();
+    const response = await Api.getTradeSummary({});
+    console.log("Google tokens response", response);
+    return response.tokens;
   }
 
   public async getTokenTicker(symbol: string): Promise<BancorAPIResponseToken> {
