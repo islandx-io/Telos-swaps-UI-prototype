@@ -1,28 +1,6 @@
 <template>
   <div>
     <div class="content content-boxed">
-      <b-row class="d-flex justify-content-around">
-        <b-col md="4" lg="3">
-          <div class="block">
-            <div class="block-header">
-              <h3 class="block-title">Token Diversity<small> - EOS</small></h3>
-            </div>
-            <div class="block-content text-center">
-              <h2>{{ tokens.length }}/{{ allTokensLength }}</h2>
-            </div>
-          </div>
-        </b-col>
-        <b-col md="4" lg="3">
-          <div class="block">
-            <div class="block-header">
-              <h3 class="block-title">Total Balance<small> - USD</small></h3>
-            </div>
-            <div class="block-content text-center">
-              <h2>{{ numeral(totalValue).format("$0,0.00") }}</h2>
-            </div>
-          </div>
-        </b-col>
-      </b-row>
       <div class="block">
         <div class="block-header">
           <h3 class="block-title">EOS <small>Token Balances</small></h3>

@@ -396,8 +396,8 @@ export const services: Service[] = [
     features: [
       Feature.Trade,
       Feature.Liquidity,
-      Feature.Wallet,
-      Feature.CreatePool
+      Feature.Wallet
+//      Feature.CreatePool
     ]
   },
   /*
@@ -409,7 +409,11 @@ export const services: Service[] = [
       Feature.CreatePool]
   },
   */
-  { namespace: "usds", features: [Feature.Trade] }
+  { namespace: "usds", features: [
+      Feature.Trade,
+      Feature.Wallet
+    ]
+  }
 ];
 
 export interface ReserveTableRow {
@@ -550,212 +554,15 @@ export const fetchMultiRelay = async (
 const tokenMetaDataEndpoint =
   "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/tokens.json";
 
-const hardCoded: () => TokenMeta[] = () =>
-  [
-    {
-      name: "TLOS",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOS.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOS.png",
-      symbol: "TLOS",
-      account: "eosio.token",
-      chain: "eos"
-    },
-    {
-      name: "EOS",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOS.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOS.png",
-      symbol: "EOS",
-      account: "tokens.swaps",
-      chain: "eos"
-    },
-    {
-      name: "BNT",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/BNT.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/BNT.png",
-      symbol: "BNT",
-      account: "tokens.swaps",
-      chain: "eos"
-    },
-    {
-      name: "TLOSD",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSD.png",
-      symbol: "TLOSD",
-      account: "tokens.swaps",
-      chain: "eos"
-    },
-    {
-      name: "TLOSM",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSM.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/TLOSM.png",
-      symbol: "TLOSM",
-      account: "tokens.swaps",
-      chain: "eos"
-    },
-    {
-      name: "USDT",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/USDT.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/USDT.png",
-      symbol: "USDT",
-      account: "tokens.swaps",
-      chain: "eos"
-    },
-    {
-      name: "EOSDT",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOSDT.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EOSDT.png",
-      symbol: "EOSDT",
-      account: "tokens.swaps",
-      chain: "eos"
-    },
-    {
-      name: "VIGOR",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/VIGOR.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/VIGOR.png",
-      symbol: "VIGOR",
-      account: "tokens.swaps",
-      chain: "eos"
-    },
-    {
-      name: "EZAR",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EZAR.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/EZAR.png",
-      symbol: "EZAR",
-      account: "stablecoin.z",
-      chain: "eos"
-    },
-    {
-      name: "COOL",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/COOL.jpg",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/COOL.jpg",
-      symbol: "COOL",
-      account: "thecooltoken",
-      chain: "eos"
-    },
-    {
-      name: "DRIC",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/DRIC.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/DRIC.png",
-      symbol: "DRIC",
-      account: "persiandaric",
-      chain: "eos"
-    },
-    {
-      name: "GEM",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/GEM.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/GEM.png",
-      symbol: "GEM",
-      account: "lord",
-      chain: "eos"
-    },
-    {
-      name: "SEEDS",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SEEDS.jpeg",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SEEDS.jpeg",
-      symbol: "SEEDS",
-      account: "token.seeds",
-      chain: "eos"
-    },
-    {
-      name: "PEOPLE",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/PEOPLE.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/PEOPLE.png",
-      symbol: "PEOPLE",
-      account: "vapaeetokens",
-      chain: "eos"
-    },
-    {
-      name: "YNT",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/YNT.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/YNT.png",
-      symbol: "YNT",
-      account: "sesacashmain",
-      chain: "eos"
-    },
-    {
-      name: "SAND",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SAND.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SAND.png",
-      symbol: "SAND",
-      account: "sandiegocoin",
-      chain: "eos"
-    },
-    {
-      name: "HEART",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/HEART.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/HEART.png",
-      symbol: "HEART",
-      account: "revelation21",
-      chain: "eos"
-    },
-    {
-      name: "QBE",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/QBE.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/QBE.png",
-      symbol: "QBE",
-      account: "qubicletoken",
-      chain: "eos"
-    },
-    {
-      name: "SQRL",
-      logo:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SQRL.png",
-      logo_lg:
-        "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/icons/SQRL.png",
-      symbol: "SQRL",
-      account: "sqrlwalletio",
-      chain: "eos"
-    }
-  ].map(token => ({
-    ...token,
-    id: buildTokenId({ contract: token.account, symbol: token.symbol })
-  }));
-
 export const getTokenMeta = async (): Promise<TokenMeta[]> => {
   const res: AxiosResponse<TokenMeta[]> = await axios.get(
     tokenMetaDataEndpoint
   );
 
-  console.log([...hardCoded()]);
+  console.log([...res.data]);
 
 //  return [...res.data, ...hardCoded()]
-  return [...hardCoded()]
+  return [...res.data]
     .filter(token => compareString(token.chain, "eos"))
     .map(token => ({
       ...token,
