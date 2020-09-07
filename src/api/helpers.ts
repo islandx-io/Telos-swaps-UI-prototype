@@ -125,11 +125,22 @@ export const compareString = (stringOne: string, stringTwo: string) => {
   return stringOne.toLowerCase() == stringTwo.toLowerCase();
 };
 
+// https://api.coingecko.com/api/v3/simple/price
+// {"mins":5,"price":"1.03251579"}
 export const fetchBinanceUsdPriceOfBnt = async (): Promise<number> => {
   const res = await axios.get<{ mins: number; price: string }>(
     "https://api.binance.com/api/v3/avgPrice?symbol=BNTUSDT"
   );
   return Number(res.data.price);
+};
+
+// https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd
+// {"telos":{"usd":0.02797187}}
+export const fetchCoinGechoUsdPriceOfTlos = async (): Promise<number> => {
+  const res = await axios.get<{ telos: { usd: string } }>(
+      "https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd"
+  );
+  return Number(res.data.telos.usd);
 };
 
 export const fetchUsdPriceOfBntViaRelay = async (

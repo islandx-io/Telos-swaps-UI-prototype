@@ -19,7 +19,10 @@ import {
   fetchUsdPriceOfBntViaRelay,
   updateArray
 } from "@/api/helpers";
-import { fetchBinanceUsdPriceOfBnt } from "@/api/helpers";
+import {
+  fetchBinanceUsdPriceOfBnt,
+  fetchCoinGechoUsdPriceOfTlos
+} from "@/api/helpers";
 import wait from "waait";
 import { defaultModule } from "@/router";
 
@@ -261,7 +264,8 @@ export class BancorModule extends VuexModule.With({
         );
       const any = (arr: any[]) => reverse(Promise.all(arr.map(reverse)));
       const res = await any([
-        fetchBinanceUsdPriceOfBnt(),
+//        fetchBinanceUsdPriceOfBnt(),
+        fetchCoinGechoUsdPriceOfTlos(),
         new Promise(resolve => {
           wait(500).then(() => resolve(fetchUsdPriceOfBntViaRelay()));
         })
