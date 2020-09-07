@@ -1282,7 +1282,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       console.log("tokenPrices : ", tokenPrices);
 
       const tlosToken = findOrThrow(tokenPrices, token =>
-        compareString(token.code, "TLOS")
+        compareString(token.code, "BNT")
       );
 
       const usdPriceOfEth = findOrThrow(ethTokenPrices, token =>

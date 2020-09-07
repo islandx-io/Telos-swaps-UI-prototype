@@ -5,6 +5,7 @@ import {
   TokenDetail,
   BancorAPIResponseToken
 } from "@/types/bancor";
+//import RequestApi from "@/api/RequestApi";
 
 function chunk(array: any, size: number) {
   const chunked = [];
@@ -111,7 +112,7 @@ export class BancorApi implements BancorWrapper {
     );
     return chunk(res.data, 2);
   }
-/*
+
   public async getTokens(): Promise<TokenPrice[]> {
     const res = await this.request("currencies/tokens", {
       blockchainType: this.blockchain == Blockchain.EOS ? "eos" : "ethereum",
@@ -128,8 +129,8 @@ export class BancorApi implements BancorWrapper {
         this.photoBaseUrl + token.primaryCommunityImageName
     }));
   }
-*/
 
+/*
   public async getTokens(): Promise<any> {
     let params = {
       limit: 150,
@@ -149,6 +150,7 @@ export class BancorApi implements BancorWrapper {
     console.log("Google tokens response", response);
     return response.tokens;
   }
+*/
 
   public async getTokenTicker(symbol: string): Promise<BancorAPIResponseToken> {
     const endpoint = "currencies/" + symbol + "/ticker";
