@@ -298,8 +298,8 @@ export const getTokenBalances = async (
   accountName: string
 ): Promise<TokenBalances> => {
   const res = await axios.get<TokenBalances>(
-    `https://telos.caleos.io/v2/state/get_tokens?account=${accountName}`
-//    `https://telos.eosphere.io/v2/state/get_tokens?account=${accountName}`
+//    `https://telos.caleos.io/v2/state/get_tokens?account=${accountName}`
+    `https://telos.eosphere.io/v2/state/get_tokens?account=${accountName}`
   );
   return {
     ...res.data,

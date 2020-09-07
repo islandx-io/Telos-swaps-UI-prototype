@@ -37,8 +37,8 @@ export class EosTransitModule extends VuexModule.With({
   accessContext = initAccessContext({
     appName,
     network: {
-      host: "telos.caleos.io",
-//      host: "telos.eosphere.io",
+//      host: "telos.caleos.io",
+      host: "telos.eosphere.io",
       port: 443,
       protocol: "https",
       chainId:
