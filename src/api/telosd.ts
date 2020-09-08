@@ -126,9 +126,14 @@ export async function get_settings( rpc: JsonRpc, code: string ): Promise<Settin
 
   if ( !results.rows.length ) throw new Error("contract is unavailable or currently disabled for maintenance");
 
+  console.log(results.rows[0]);
+
   return {
     fee: results.rows[0].fee,
     amplifier: results.rows[0].amplifier,
+    proxy_contract: new Name(results.rows[0].proxy_contract),
+    proxy_token: new Sym(results.rows[0].proxy_token),
+    maker_token: new Sym(results.rows[0].maker_token)
   }
 }
 
@@ -145,8 +150,42 @@ export function get_slippage( quantity: Asset | string, symcode: SymbolCode | st
   return spot_price_per_unit / price - 1;
 }
 
-export function get_spot_price( base: SymbolCode | string, quote: SymbolCode | string, tokens: Tokens, settings: Settings | { amplifier: number } ): number
+export function get_pool_balance( tokens: Tokens, settings: Settings ) {
+  const proxy_token = settings.proxy_token.code();
+  let a = 0.0;
+  for (const token in tokens) {
+    if (!is_maker_token( tokens[token].sym.code(), tokens )) {
+      a += asset_to_number(tokens[token].maker_pool) * get_spot_price(proxy_token, tokens[token].sym.code(), tokens, settings);
+    }
+  }
+  return a;
+}
+
+export function get_maker_balance( tokens: Tokens, settings: Settings ) {
+  return asset_to_number(tokens[settings.maker_token.code().to_string()].balance);
+}
+
+export function is_maker_token( quote: SymbolCode, tokens: Tokens ): boolean {
+  return (tokens[ quote.to_string() ].token_type.to_string() == "liquidity");
+}
+
+export function get_maker_spot_price( base: SymbolCode, tokens: Tokens, settings: Settings ): number {
+  const proxy_spot_price = get_spot_price( base, settings.proxy_token.code().to_string(), tokens, settings );
+  const pool_balance = get_pool_balance( tokens, settings );
+  const maker_balance = get_maker_balance(tokens, settings);
+  const maker_spot_price = (maker_balance > 0) ? proxy_spot_price * pool_balance / maker_balance : 1.0;
+  console.log("proxy_spot_price : ", proxy_spot_price);
+  console.log("pool_balance : ", pool_balance);
+  console.log("maker_balance : ", maker_balance);
+  console.log("maker_spot_price : ", maker_spot_price);
+
+  return (proxy_spot_price * pool_balance) / maker_balance;
+}
+
+export function get_spot_price( base: SymbolCode | string, quote: SymbolCode | string, tokens: Tokens, settings: Settings ): number
 {
+  if ( is_maker_token( new SymbolCode( quote ), tokens ) ) return get_maker_spot_price( new SymbolCode( base ), tokens, settings );
+
   const [ base_upper, quote_upper ] = get_uppers( new SymbolCode( base ), new SymbolCode( quote ), tokens, settings )
   return base_upper / quote_upper;
 }
@@ -161,13 +200,17 @@ export async function get_tokens( rpc: JsonRpc, code: string, limit = 50 ): Prom
   const results = await rpc.get_table_rows({ json: true, code, scope, table, limit });
 
   for (const row of results.rows) {
+    console.log(row);
     const [ precision, symcode ] = row.sym.split(",");
     tokens[symcode] = {
       sym: new Sym( symcode, precision ),
       contract: new Name(row.contract),
       balance: new Asset(row.balance),
       depth: new Asset(row.depth),
-      reserve: new Asset(row.reserve)
+      reserve: new Asset(row.reserve),
+      maker_pool: new Asset(row.maker_pool),
+      token_type: new Name(row.token_type)
+
     }
   }
   return tokens;
@@ -239,6 +282,9 @@ export interface kv { [symcode: string ]: number }
 export interface Settings {
   fee: number;
   amplifier: number;
+  proxy_contract: Name;
+  proxy_token: Sym;
+  maker_token: Sym;
 }
 
 export interface Tokens {
@@ -251,6 +297,8 @@ export interface Token {
   balance: Asset;
   depth: Asset;
   reserve: Asset;
+  maker_pool: Asset;
+  token_type: Name;
 }
 
 export interface Volume {
