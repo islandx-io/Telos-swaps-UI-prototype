@@ -1,4 +1,4 @@
-import { Tokens, Token } from "sxjs";
+import { Tokens, Token } from "@/api/telosd";
 import { Contract, ContractSendMethod } from "web3-eth-contract";
 
 export interface TokenPrice {

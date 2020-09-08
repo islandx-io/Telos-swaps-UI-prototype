@@ -138,7 +138,7 @@ export const fetchBinanceUsdPriceOfBnt = async (): Promise<number> => {
 // {"telos":{"usd":0.02797187}}
 export const fetchCoinGechoUsdPriceOfTlos = async (): Promise<number> => {
   const res = await axios.get<{ telos: { usd: string } }>(
-      "https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd"
+    "https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd"
   );
   return Number(res.data.telos.usd);
 };
@@ -309,8 +309,8 @@ export const getTokenBalances = async (
   accountName: string
 ): Promise<TokenBalances> => {
   const res = await axios.get<TokenBalances>(
-//    `https://telos.caleos.io/v2/state/get_tokens?account=${accountName}`
-    `https://telos.eosphere.io/v2/state/get_tokens?account=${accountName}`
+    `https://telos.caleos.io/v2/state/get_tokens?account=${accountName}`
+//    `https://telos.eosphere.io/v2/state/get_tokens?account=${accountName}`
   );
   return {
     ...res.data,

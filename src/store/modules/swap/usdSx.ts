@@ -24,7 +24,7 @@ import {
   get_slippage,
   get_fee,
   get_spot_price
-} from "sxjs";
+} from "@/api/telosd";
 import { rpc } from "@/api/rpc";
 import {
   asset_to_number,
