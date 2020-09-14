@@ -1275,7 +1275,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   }) {
     try {
       // https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
-      const tokenData = (<any>data.data.page);
+      const tokenData: TokenPrice[] = (<any>data).data.page;
       console.log('data', tokenData)
       const [tokenPrices, ethTokenPrices] = await Promise.all([
         tokenData,
