@@ -144,7 +144,7 @@ export function get_slippage( quantity: Asset | string, symcode: SymbolCode | st
   const price = get_price( _quantity, symcode, tokens, settings );
 
   // calculate price using 1 as unit
-  const spot_price = 1 / get_spot_price( _quantity.symbol.code(), symcode, tokens, settings );
+  const spot_price = 1.0 / get_spot_price( _quantity.symbol.code(), symcode, tokens, settings );
   const spot_price_per_unit = spot_price * asset_to_number( _quantity );
 
   return spot_price_per_unit / price - 1;
@@ -174,24 +174,18 @@ export function get_maker_spot_price( base: SymbolCode, tokens: Tokens, settings
   const pool_balance = get_pool_balance( tokens, settings );
   const maker_balance = get_maker_balance(tokens, settings);
   const maker_spot_price = (maker_balance > 0) ? proxy_spot_price * pool_balance / maker_balance : 1.0;
-  console.log("proxy_spot_price : ", proxy_spot_price);
-  console.log("pool_balance : ", pool_balance);
-  console.log("maker_balance : ", maker_balance);
-  console.log("maker_spot_price : ", maker_spot_price);
-
   return (proxy_spot_price * pool_balance) / maker_balance;
 }
 
 export function get_spot_price( base: SymbolCode | string, quote: SymbolCode | string, tokens: Tokens, settings: Settings ): number
 {
   if ( is_maker_token( new SymbolCode( quote ), tokens ) ) return get_maker_spot_price( new SymbolCode( base ), tokens, settings );
-
   const [ base_upper, quote_upper ] = get_uppers( new SymbolCode( base ), new SymbolCode( quote ), tokens, settings )
   return base_upper / quote_upper;
 }
 
 export async function get_tokens( rpc: JsonRpc, code: string, limit = 50 ): Promise<Tokens> {
-  const tokens: Tokens = {}
+  const tokens: Tokens = {};
 
   // optional params
   const scope = code;

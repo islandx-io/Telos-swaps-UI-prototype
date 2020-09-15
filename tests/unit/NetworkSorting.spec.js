@@ -3,7 +3,7 @@ import { sortByNetworkTokens } from "@/api/sortByNetworkTokens";
 const buildMockRelay = reserveSymbols =>
   reserveSymbols.map(symbol => ({ symbol, amount: 5 }));
 
-const networkTokens = ["BNT", "USDB"];
+const networkTokens = ["BNT", "USDB", "TLOS"];
 
 const toSymbol = reserve => reserve.symbol;
 

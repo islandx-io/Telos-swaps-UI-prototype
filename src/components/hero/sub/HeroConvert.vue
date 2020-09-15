@@ -136,6 +136,7 @@ const appendBaseQuoteQuery = (base: string, quote: string, route: Route) => {
 };
 
 const addDefaultQueryParams = (to: Route): any => {
+  console.log("addDefaultQueryParams::to : ", to);
   switch (to.params.service) {
     case "eos":
       return appendBaseQuoteQuery(

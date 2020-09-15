@@ -1300,6 +1300,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           reserve.symbol.code().to_string()
         );
 
+        console.log("primaryReserve.symbol : ", primaryReserve.symbol.code().to_string(),", secondaryReserve.symbol : ", secondaryReserve.symbol.code().to_string());
         const token = findOrThrow(
           tokenPrices,
           price =>
@@ -1307,12 +1308,18 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           "failed to find token in possible relayfeeds from bancor API"
         );
 
-        const includeBnt = compareString(
-          relay.smartToken.symbol.code().to_string(),
-          "BNTEOS"
+//        const includeBnt = compareString(
+//          relay.smartToken.symbol.code().to_string(),
+//          "TLOSZAR"
+//        );
+        const includeTLOS = compareString(
+            secondaryReserve.symbol.code().to_string(),
+            "TLOS"
         );
 
-        const liqDepth = token.liquidityDepth * usdPriceOfEth * 2;
+//        const liqDepth = token.liquidityDepth * usdPriceOfEth * 2;
+        // should use USD price of TLOS
+        const liqDepth = token.liquidityDepth * this.usdPriceOfBnt * 2;
 
         const secondary = {
           tokenId: buildTokenId({
@@ -1340,7 +1347,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
             }),
             volume24H: token.volume24h.USD
           },
-          includeBnt
+          includeTLOS
             ? {
                 ...secondary,
                 liqDepth,
