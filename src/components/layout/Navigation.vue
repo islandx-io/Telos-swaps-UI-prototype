@@ -76,7 +76,7 @@ const defaultPaths = [
   {
     moduleId: "eos",
     base: buildTokenId({ contract: "eosio.token", symbol: "TLOS" }),
-    quote: buildTokenId({ contract: "stablecoin.z", symbol: "EZAR" })
+    quote: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" })
   },
 /*
   {

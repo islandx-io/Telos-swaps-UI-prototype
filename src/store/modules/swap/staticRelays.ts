@@ -64,6 +64,20 @@ const oldRelays = [
     ]
   },
   {
+    contract: "eos.swaps",
+    smartToken: {
+      contract: "relays.swaps",
+      symbol: "8,TLOSEOS"
+    },
+    reserves: [
+      {
+        contract: "tokens.swaps",
+        symbol: "4,EOS"
+      },
+      tlosToken
+    ]
+  },
+  {
     contract: "gem.tbn",
     smartToken: {
       contract: "gemrelay.tbn",

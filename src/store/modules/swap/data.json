@@ -42,8 +42,8 @@
            "id":"4",
            "code":"EOS",
            "name":"Eos",
-           "primaryCommunityImageName":"359b8290-0767-11e8-8744-97748b632eaf.png",
-           "liquidityDepth":1.0,
+           "primaryCommunityImageName":"wEOSv2.png",
+           "liquidityDepth":7500.0,
            "price":2.78572682249338,
            "change24h":0.9021971161331311,
            "volume24h":{
