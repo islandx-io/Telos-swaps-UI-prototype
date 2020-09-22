@@ -13,12 +13,10 @@
           Select Token
         </h5>
         <div>
-          <b-input-group>
-            <b-form-input
-              v-model="tokenSearch"
-              placeholder="Search Token"
-            ></b-form-input>
-          </b-input-group>
+          <b-form-input
+            v-model="tokenSearch"
+            placeholder="Search Token"
+          ></b-form-input>
         </div>
       </div>
       <b-row class="mx-0 mb-4">

@@ -7,21 +7,17 @@
       <h3 @click="dropdownEvent" class="mb-0 mt-0 text-white cursor">
         {{ symbol }}
       </h3>
-      <b-input-group class="mt-1">
-        <b-form-input
-          :value="amount"
-          @update="onTextUpdate"
-          class="form-control-alt"
-          placeholder="Enter Amount"
-        ></b-form-input>
-        <b-input-group-append>
-          <b-button v-if="dropdown" @click="dropdownEvent">
-            {{ symbol }}
-            <font-awesome-icon icon="angle-down" />
-          </b-button>
-          <b-button v-else>{{ symbol }}</b-button>
-        </b-input-group-append>
-      </b-input-group>
+      <b-form-input
+        :value="amount"
+        @update="onTextUpdate"
+        class="form-control-alt"
+        placeholder="Enter Amount"
+      ></b-form-input>
+      <b-button v-if="dropdown" @click="dropdownEvent">
+        {{ symbol }}
+        <font-awesome-icon icon="angle-down" />
+      </b-button>
+      <b-button v-else>{{ symbol }}</b-button>
     </div>
   </div>
 
@@ -36,31 +32,27 @@
       <div @click="click" class="font-size-lg text-white mt-3 mb-3 cursor">
         {{ symbol }}
       </div>
-      <b-input-group class="mt-1">
-        <b-form-input
-          type="number"
-          debounce="500"
-          v-model="tokenAmount"
-          class="form-control-alt"
-          placeholder="Enter Amount"
-        ></b-form-input>
-        <b-input-group-append>
-          <b-button v-if="dropdown" @click="dropdownEvent">
-            {{ symbol }}
-            <font-awesome-icon icon="angle-down" />
-          </b-button>
-          <b-button v-else>{{ symbol }}</b-button>
-          <b-button
-            v-if="toggle"
-            :variant="status ? 'success' : 'danger'"
-            @click="toggleStatus"
-            v-b-tooltip.hover
-            :title="status ? 'Sale is Enabled' : 'Sale is Disabled'"
-          >
-            <font-awesome-icon icon="power-off" />
-          </b-button>
-        </b-input-group-append>
-      </b-input-group>
+      <b-form-input
+        type="number"
+        debounce="500"
+        v-model="tokenAmount"
+        class="form-control-alt"
+        placeholder="Enter Amount"
+      ></b-form-input>
+      <b-button v-if="dropdown" @click="dropdownEvent">
+        {{ symbol }}
+        <font-awesome-icon icon="angle-down" />
+      </b-button>
+      <b-button v-else>{{ symbol }}</b-button>
+      <b-button
+        v-if="toggle"
+        :variant="status ? 'success' : 'danger'"
+        @click="toggleStatus"
+        v-b-tooltip.hover
+        :title="status ? 'Sale is Enabled' : 'Sale is Disabled'"
+      >
+        <font-awesome-icon icon="power-off" />
+      </b-button>
       <balance-label :label="label" :balance="formattedBalance" />
       <percentages
         :v-if="balance"
