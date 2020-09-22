@@ -1,17 +1,17 @@
 {
   "data":{
-     "total":23,
+     "total":16,
      "page":[
         {
            "id":"1",
            "code":"EZAR",
            "name":"EZAR",
            "primaryCommunityImageName":"EZAR.png",
-           "liquidityDepth":8071.0228,
-           "price":0.01,
-           "change24h":2.5,
+           "liquidityDepth":8481.9269,
+           "price":0.060524,
+           "change24h":-1.2682,
            "volume24h":{
-              "USD":100.00
+              "USD":68.00
            }
         },
         {
@@ -19,23 +19,23 @@
            "code":"TLOS",
            "name":"TLOS",
            "primaryCommunityImageName":"TLOS.png",
-           "liquidityDepth":1.0,
-           "price":0.000721155879208,
-           "change24h":3.040452698375408,
+           "liquidityDepth":5.0,
+           "price":0.024167,
+           "change24h":-2.7635,
            "volume24h":{
-              "USD":10.0
+              "USD":69
            }
         },
         {
            "id":"3",
            "code":"BNT",
            "name":"Bancor",
-           "primaryCommunityImageName":"f80f2a40-eaf5-11e7-9b5e-179c6e04aa7c.png",
-           "liquidityDepth":1.0,
-           "price":1.0,
-           "change24h":-5.287979667671316,
+           "primaryCommunityImageName":"wBNTv2.png",
+           "liquidityDepth":70.0000,
+           "price":0.70,
+           "change24h":-0.287979667671316,
            "volume24h":{
-              "USD":10.0
+              "USD":5.0
            }
         },
         {
@@ -92,7 +92,7 @@
            "name":"SEEDS",
            "primaryCommunityImageName":"SEEDS.png",
            "liquidityDepth":348.7058,
-           "price":0.0004676309978845,
+           "price":0.000468,
            "change24h":10.981485318275393,
            "volume24h":{
               "USD":10.0
@@ -128,7 +128,7 @@
            "name":"SAND",
            "primaryCommunityImageName":"SAND.jpeg",
            "liquidityDepth":489.0188,
-           "price":0.0044560257305242,
+           "price":0.004456,
            "change24h":-1.4794346833138432,
            "volume24h":{
               "USD":10.0
@@ -139,11 +139,11 @@
            "code":"HEART",
            "name":"HEART",
            "primaryCommunityImageName":"HEART.png",
-           "liquidityDepth":47.9364,
-           "price":0.0079020661068253,
-           "change24h":8.213714728708883,
+           "liquidityDepth":45.1107,
+           "price":0.002191,
+           "change24h":-2.3451,
            "volume24h":{
-              "USD":10.0
+              "USD":0.1
            }
         },
         {
@@ -151,11 +151,11 @@
            "code":"QBE",
            "name":"QBE",
            "primaryCommunityImageName":"QBE",
-           "liquidityDepth":489.3971,
-           "price":25.127167351546312,
-           "change24h":3.9573525778483596,
+           "liquidityDepth":458.218,
+           "price":0.000971,
+           "change24h":-12.7149,
            "volume24h":{
-              "USD":10.0
+              "USD":11.0
            }
         },
         {
@@ -172,12 +172,36 @@
         },
         {
            "id":"15",
+           "code":"TLOSDAC",
+           "name":"TLOSDAC",
+           "primaryCommunityImageName":"TLOSDAC.png",
+           "liquidityDepth":250.9844,
+           "price":0.000061,
+           "change24h":-27.2580,
+           "volume24h":{
+              "USD":1.0
+           }
+        },
+        {
+           "id":"16",
            "code":"EOSDT",
            "name":"EOSDT",
            "primaryCommunityImageName":"EOSDT.jpg",
            "liquidityDepth":1.0,
            "price":1.9302610254362982,
            "change24h":97.12729972195771,
+           "volume24h":{
+              "USD":10.0
+           }
+        },
+        {
+           "id":"17",
+           "code":"TLOSD",
+           "name":"TLOSD",
+           "primaryCommunityImageName":"TLOSD.png",
+           "liquidityDepth":400.0000,
+           "price":1.0000,
+           "change24h":0.2580,
            "volume24h":{
               "USD":10.0
            }

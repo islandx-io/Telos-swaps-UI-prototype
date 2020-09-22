@@ -279,11 +279,11 @@ export default class HeroConvert extends Vue {
     switch (this.currentNetwork) {
       case "eos":
       case "usds":
-        return `https://bloks.io/transaction/${this.success}`;
+        return `https://telos.bloks.io/transaction/${this.success}`;
 //      case "eth":
 //        return `https://etherscan.io/tx/${this.success}`;
       default:
-        return `https://bloks.io/transaction/${this.success}`;
+        return `https://telos.bloks.io/transaction/${this.success}`;
     }
   }
 

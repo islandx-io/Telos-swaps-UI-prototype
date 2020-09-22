@@ -873,7 +873,7 @@ export class EosBancorModule
         const token = findOrThrow(
           this.relaysList.flatMap(relay => relay.reserves),
           token => compareString(token.id, id),
-          `Failed to find token ${id} in this.token on EOS`
+          `Failed to find token ${id} in this.token on Telos`
         );
 
         const meta = this.tokenMetaObj(token.id);

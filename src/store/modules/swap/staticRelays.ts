@@ -36,6 +36,20 @@ const oldRelays = [
     ]
   },
   {
+    contract: "bnt.swaps",
+    smartToken: {
+      contract: "relays.swaps",
+      symbol: "8,TLOSBNT"
+    },
+    reserves: [
+      {
+        contract: "tokens.swaps",
+        symbol: "10,BNT"
+      },
+      tlosToken
+    ]
+  },
+  {
     contract: "dric.tbn",
     smartToken: {
       contract: "dricrly.tbn",
@@ -157,6 +171,34 @@ const oldRelays = [
       {
         contract: "sqrlwalletio",
         symbol: "4,SQRL"
+      },
+      tlosToken
+    ]
+  },
+  {
+    contract: "dac.tbn",
+    smartToken: {
+      contract: "dacrelay.tbn",
+      symbol: "8,TLSDAC"
+    },
+    reserves: [
+      {
+        contract: "telosdacdrop",
+        symbol: "4,TLOSDAC"
+      },
+      tlosToken
+    ]
+  },
+  {
+    contract: "tlosdx.swaps",
+    smartToken: {
+      contract: "relays.swaps",
+      symbol: "8,TLOSDX"
+    },
+    reserves: [
+      {
+        contract: "tokens.swaps",
+        symbol: "4,TLOSD"
       },
       tlosToken
     ]

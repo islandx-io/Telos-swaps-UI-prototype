@@ -595,7 +595,7 @@ export class UsdBancorModule
 
     if (poolCandidates.length == 0)
       throw new Error(
-        "Failed to find pool to facilitate trade, please convert to EOS or USDT first"
+        "Failed to find pool to facilitate trade, please convert to TLOS or TLOSD first"
       );
 
     const hydratedPools = this.stats.filter(stat =>

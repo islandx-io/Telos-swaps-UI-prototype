@@ -9,7 +9,7 @@
           <font-awesome-icon icon="search" fixed-width class="fa-3x" />
         </b-col>
         <b-col cols="12" class="d-flex justify-content-center mb-0">
-          <h3 class="text-white">Enter EOS Account to open Wallet</h3>
+          <h3 class="text-white">Enter Telos Account to open Wallet</h3>
         </b-col>
         <b-col
           md="6"
