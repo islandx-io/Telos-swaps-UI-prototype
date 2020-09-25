@@ -16,7 +16,6 @@ import { vxm } from "@/store";
 import { store } from "../../../store";
 import {
   compareString,
-  fetchUsdPriceOfBntViaRelay,
   updateArray
 } from "@/api/helpers";
 import {
@@ -271,13 +270,10 @@ export class BancorModule extends VuexModule.With({
         );
       const any = (arr: any[]) => reverse(Promise.all(arr.map(reverse)));
       const res = await any([
-        fetchCoinGechoUsdPriceOfTlos(),
-        new Promise(resolve => {
-          wait(500).then(() => resolve(fetchUsdPriceOfBntViaRelay()));
-        })
+        fetchCoinGechoUsdPriceOfTlos()
       ]);
       const usdPrice = res as number;
-      this.setUsdPriceOfBnt({
+      this.setUsdPriceOfTlos({
         price: usdPrice,
         lastChecked: new Date().getTime()
       });
@@ -300,7 +296,7 @@ export class BancorModule extends VuexModule.With({
       : (this.usdPriceOfTlos.price as number);
   }
 
-  @mutation setUsdPriceOfBnt(usdPriceOfTlos: BntPrice) {
+  @mutation setUsdPriceOfTlos(usdPriceOfTlos: BntPrice) {
     this.usdPriceOfTlos = usdPriceOfTlos;
   }
 
