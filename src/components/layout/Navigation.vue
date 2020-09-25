@@ -58,19 +58,13 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { vxm } from "@/store/";
-import wait from "waait";
-import { router } from "@/router";
-import { sync } from "vuex-router-sync";
 import {
   services,
-  Feature,
   buildTokenId,
   compareString,
   findOrThrow
 } from "@/api/helpers";
-import { store } from "../../store";
 import { ModuleParam } from "../../types/bancor";
-import { ethReserveAddress } from "../../api/ethConfig";
 import { Route } from "vue-router";
 const defaultPaths = [
   {
@@ -78,13 +72,6 @@ const defaultPaths = [
     base: buildTokenId({ contract: "eosio.token", symbol: "TLOS" }),
     quote: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" })
   },
-/*
-  {
-    moduleId: "eth",
-    base: ethReserveAddress,
-    quote: "0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c"
-  },
-*/
   {
     moduleId: "usds",
     base: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" }),
@@ -232,10 +219,6 @@ export default class Navigation extends Vue {
   onAuthentication(account: string) {
     if (account) {
       vxm.bancor.refreshBalances();
-      // @ts-ignore
-      this.$analytics.setUserId(account);
-      // @ts-ignore
-      this.$analytics.logEvent("login", { account });
     }
   }
   get language() {

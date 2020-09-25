@@ -51,14 +51,6 @@ const moduleIds: { label: string; id: string }[] = [
     label: "X-Chain Transfer",
     id: "xchain"
   }
-//  {
-//    label: "USDⓈ",
-//    id: "usds"
-//  },
-//  {
-//    label: "ETH",
-//    id: "eth"
-//  },
 ];
 
 interface Module {
