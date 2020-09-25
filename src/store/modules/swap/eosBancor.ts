@@ -28,7 +28,6 @@ import {
   TokenBalanceParam,
   TokenBalanceReturn
 } from "@/types/bancor";
-import { bancorApi, ethBancorApi } from "@/api/bancorApiWrapper";
 import {
   fetchMultiRelays,
   getBalance,
@@ -41,7 +40,8 @@ import {
   buildTokenId,
   EosAccount,
   compareToken,
-  multiSteps
+  multiSteps,
+  fetchTradeData
 } from "@/api/helpers";
 import {
   Sym as Symbol,
@@ -1156,12 +1156,12 @@ export class EosBancorModule
     }
     try {
       const [usdPriceOfTlos, v2Relays, tokenMeta] = await Promise.all([
-        vxm.bancor.fetchUsdPriceOfBnt(),
+        vxm.bancor.fetchUsdPriceOfTlos(),
         fetchMultiRelays(),
         getTokenMeta()
       ]);
       this.setTokenMeta(tokenMeta);
-      this.setBntPrice(usdPriceOfTlos);
+      this.setTlosPrice(usdPriceOfTlos);
 
       console.log("tokenMeta : ",tokenMeta);
       console.log("usdPriceOfTlos : ",usdPriceOfTlos);
@@ -1276,12 +1276,15 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     try {
       // https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
       const tokenData: TokenPrice[] = (<any>data).data.page;
-      console.log('tokenData', tokenData)
       const [tokenPrices] = await Promise.all([
         tokenData
       ]);
 
       console.log("tokenPrices : ", tokenPrices);
+
+      // Test code
+      const [tradeData] = await Promise.all([ fetchTradeData() ]);
+      console.log("tradeData : ", tradeData);
 
       const tlosToken = findOrThrow(tokenPrices, token =>
         compareString(token.code, "TLOS")
@@ -2229,7 +2232,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     this.relaysList = relays;
   }
 
-  @mutation setBntPrice(price: number) {
+  @mutation setTlosPrice(price: number) {
     this.usdPriceOfTlos = price;
   }
 

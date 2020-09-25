@@ -7,14 +7,12 @@ import {
   Asset,
   asset_to_number,
   Sym,
-  symbol,
   number_to_asset
 } from "eos-common";
 import { rpc } from "./rpc";
 import {
   TokenBalances,
   EosMultiRelay,
-  Converter,
   TokenMeta,
   BaseToken,
   TokenBalanceReturn,
@@ -26,13 +24,7 @@ import {
 import Web3 from "web3";
 import { EosTransitModule } from "@/store/modules/wallet/eosWallet";
 import wait from "waait";
-import {
-  buildConverterContract,
-  shrinkToken,
-  buildV28ConverterContract
-} from "./ethBancorCalc";
 import { sortByNetworkTokens } from "./sortByNetworkTokens";
-import { add } from "lodash";
 
 export const networkTokens = ["TLOS"];
 
@@ -127,12 +119,12 @@ export const compareString = (stringOne: string, stringTwo: string) => {
 
 // https://api.coingecko.com/api/v3/simple/price
 // {"mins":5,"price":"1.03251579"}
-export const fetchBinanceUsdPriceOfBnt = async (): Promise<number> => {
-  const res = await axios.get<{ mins: number; price: string }>(
-    "https://api.binance.com/api/v3/avgPrice?symbol=BNTUSDT"
-  );
-  return Number(res.data.price);
-};
+//export const fetchBinanceUsdPriceOfTlos = async (): Promise<number> => {
+//  const res = await axios.get<{ mins: number; price: string }>(
+//    "https://api.binance.com/api/v3/avgPrice?symbol=BNTUSDT"
+//  );
+//  return Number(res.data.price);
+//};
 
 // https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd
 // {"telos":{"usd":0.02797187}}
@@ -563,3 +555,56 @@ export interface TickerPrice {
   sell: number;
   symbol: string;
 }
+
+export const fetchTradeData = async (): Promise<any> => {
+  const rawTradeData = await eosRpc.get_table_rows({
+    code: "data.tbn",
+    table: "tradedata",
+    scope: "data.tbn",
+    limit: 100
+  });
+  console.log("tableResult : ", rawTradeData);
+
+  const dataExists = rawTradeData.rows.length > 0;
+  if (!dataExists) throw new Error("Trade data not found");
+
+  const parsedTradeData = rawTradeData.rows;
+  console.log("parsedTradeData : ", parsedTradeData);
+
+/*
+Sample record
+
+{ converter: "bnt.swaps"
+  timestamp: "2020-09-22T10:31:47",
+  volume_24h: [{key: "BNT", value: "0.3152018154 BNT"},{key: "TLOS", value: "7.8643 TLOS"}],
+  price_change_24h: [{key: "BNT", value: "-0.00290315382697393"},{key: "TLOS", value: "1.71415770245709709"}],
+  liquidity_depth: [{key: "BNT", value: "1.5000736906 BNT"},{key: "TLOS", value: "35.0378 TLOS"}],
+  price: [{key: "BNT", value: "0.03972778617302607"},{key: "TLOS", value: "25.17129939344490808"}],
+  smart_price: [{key: "BNT", value: "0.02142962415142857"},{key: "TLOS", value: "0.50053999999999998"}],
+  smart_price_change_30d: [{key: "BNT", value: "0.00000714285857143"},{key: "TLOS", value: "0.00039714285714287"}],
+  volume_cumulative: [{key: "BNT", value: "0.3152018154 BNT"},{key: "TLOS", value: "7.8643 TLOS"}]
+}
+
+Transformation
+
+{
+   "id": -> ? converter
+   "code" -> volume_24h[key != "TLOS"].key = "BNT"
+   "name" -> ?
+   "primaryCommunityImageName" -> ?
+   "liquidityDepth" -> liquidity_depth[key == "TLOS"].value * USDpriceOfTlos
+   "price" -> price[key == "TLOS"].value * USDpriceOfTlos
+   "change24h" -> price_change_24h[key == "TLOS"].value / ( price[key == "TLOS"].value - price_change_24h[key == "TLOS"].value ) * 100 + ?(TLOS 24 hour price change)?
+   "volume24h":{
+      "USD" -> volume_24h[key == "TLOS"].value * USDpriceOfTlos
+   }
+}
+
+ */
+//  const tokenData: TokenPrice[] = (<any>data).data.page;
+//  const [tokenPrices] = await Promise.all([
+//    tokenData
+//  ]);
+
+  return parsedTradeData;
+};

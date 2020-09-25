@@ -24,7 +24,7 @@ import {
 import wait from "waait";
 import { defaultModule } from "@/router";
 
-interface BntPrice {
+interface TlosPrice {
   price: null | number;
   lastChecked: number;
 }
@@ -72,7 +72,7 @@ interface Module {
 export class BancorModule extends VuexModule.With({
   namespaced: "bancor/"
 }) {
-  usdPriceOfTlos: BntPrice = {
+  usdPriceOfTlos: TlosPrice = {
     price: null,
     lastChecked: 0
   };
@@ -285,7 +285,7 @@ export class BancorModule extends VuexModule.With({
     }
   }
 
-  @action async fetchUsdPriceOfBnt() {
+  @action async fetchUsdPriceOfTlos() {
     const timeNow = new Date().getTime();
     const millisecondGap = 5000;
     const makeNetworkRequest =
@@ -296,7 +296,7 @@ export class BancorModule extends VuexModule.With({
       : (this.usdPriceOfTlos.price as number);
   }
 
-  @mutation setUsdPriceOfTlos(usdPriceOfTlos: BntPrice) {
+  @mutation setUsdPriceOfTlos(usdPriceOfTlos: TlosPrice) {
     this.usdPriceOfTlos = usdPriceOfTlos;
   }
 

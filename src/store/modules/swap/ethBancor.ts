@@ -405,7 +405,7 @@ export class EthBancorModule
       } else {
         const feed = await this.buildRelayFeed({
           relay,
-          usdPriceOfBnt: this.bntUsdPrice
+          UsdPriceOfTlos: this.bntUsdPrice
         });
         this.updateRelayFeeds(feed);
       }
@@ -1617,15 +1617,15 @@ export class EthBancorModule
     }
   }
 
-  @action async fetchBancorUsdPriceOfBnt() {
+  @action async fetchBancorUsdPriceOfTlos() {
     const tokens = await ethBancorApi.getTokens();
-    const usdPriceOfBnt = findOrThrow(tokens, token => token.code == "TLOS")
+    const UsdPriceOfTlos = findOrThrow(tokens, token => token.code == "TLOS")
       .price;
-    return usdPriceOfBnt;
+    return UsdPriceOfTlos;
   }
 
-  @action async fetchUsdPriceOfBnt() {
-    const price = await vxm.bancor.fetchUsdPriceOfBnt();
+  @action async fetchUsdPriceOfTlos() {
+    const price = await vxm.bancor.fetchUsdPriceOfTlos();
     this.setBntUsdPrice(price);
   }
 
@@ -1635,10 +1635,10 @@ export class EthBancorModule
 
   @action async buildRelayFeed({
     relay,
-    usdPriceOfBnt
+    UsdPriceOfTlos
   }: {
     relay: Relay;
-    usdPriceOfBnt: number;
+    UsdPriceOfTlos: number;
   }): Promise<RelayFeed[]> {
     const reservesBalances = await Promise.all(
       relay.reserves.map(reserve =>
@@ -1658,12 +1658,12 @@ export class EthBancorModule
     const networkReserveIsUsd = networkReserve.symbol == "TLOSD";
     const dec = networkReserveAmount / tokenAmount;
     const reverse = tokenAmount / networkReserveAmount;
-    const main = networkReserveIsUsd ? dec : dec * usdPriceOfBnt;
+    const main = networkReserveIsUsd ? dec : dec * UsdPriceOfTlos;
 
     const liqDepth =
       (networkReserveIsUsd
         ? networkReserveAmount
-        : networkReserveAmount * usdPriceOfBnt) * 2;
+        : networkReserveAmount * UsdPriceOfTlos) * 2;
 
     return [
       {
@@ -1862,7 +1862,7 @@ export class EthBancorModule
         this.fetchContractAddresses(),
         fetchSmartTokens().catch(e => [] as HistoryItem[]),
         this.warmEthApi().catch(e => [] as TokenPrice[]),
-        this.fetchUsdPriceOfBnt()
+        this.fetchUsdPriceOfTlos()
       ]);
 
       console.log({ contractAddresses });
