@@ -70,7 +70,7 @@ import wait from "waait";
 import { getHardCodedRelays } from "./staticRelays";
 import { sortByNetworkTokens } from "@/api/sortByNetworkTokens";
 import { liquidateAction } from "@/api/singleContractTx";
-import * as data from './data.json';
+import * as data from "./data.json";
 
 const compareAgnosticToBalanceParam = (
   agnostic: AgnosticToken,
@@ -531,18 +531,11 @@ export class EosBancorModule
     return (id: string) => {
       const isAuthenticated = this.isAuthenticated;
       const relay = this.relaysList.find(relay => compareString(relay.id, id))!;
-      if (!relay.isMultiContract) return ["removeLiquidity"];
       const features: Feature[] = [
         ["addLiquidity", () => true],
         [
           "removeLiquidity",
           relay => relay.reserves.some(reserve => reserve.amount > 0)
-        ],
-        ["setFee", isOwner],
-        ["changeOwner", isOwner],
-        [
-          "deleteRelay",
-          relay => relay.reserves.every(reserve => reserve.amount == 0)
         ]
       ];
       return features
@@ -861,7 +854,7 @@ export class EosBancorModule
   }
 
   get token(): (arg0: string) => ViewToken {
-//    console.log(this.tokens);
+    //    console.log(this.tokens);
     return (id: string) => {
       const tradableToken = this.tokens.find(token =>
         compareString(token.id, id)
@@ -935,7 +928,7 @@ export class EosBancorModule
           symbol: sortedReserves[1].symbol,
           smartTokenSymbol: relay.smartToken.symbol,
           liqDepth: relayFeed && relayFeed.liqDepth,
-//          addLiquiditySupported: relay.isMultiContract,
+          //          addLiquiditySupported: relay.isMultiContract,
           addLiquiditySupported: true,
           removeLiquiditySupported: true,
           focusAvailable: false,
@@ -1164,15 +1157,15 @@ export class EosBancorModule
       this.setTokenMeta(tokenMeta);
       this.setTlosPrice(usdPriceOfTlos);
 
-      console.log("tokenMeta : ",tokenMeta);
-      console.log("usdPriceOfTlos : ",usdPriceOfTlos);
+      console.log("tokenMeta : ", tokenMeta);
+      console.log("usdPriceOfTlos : ", usdPriceOfTlos);
 
       const v1Relays = getHardCodedRelays();
-      console.log("v1Relays : ",v1Relays);
+      console.log("v1Relays : ", v1Relays);
       const allDry = [...v1Relays, ...v2Relays.map(multiToDry)].filter(
         noBlackListedReservesDry(blackListedTokens)
       );
-      console.log("allDry : ",allDry);
+      console.log("allDry : ", allDry);
 
       this.fetchTokenBalancesIfPossible(
         _.uniqWith(
@@ -1189,7 +1182,7 @@ export class EosBancorModule
         param.tradeQuery.base &&
         param.tradeQuery.quote;
 
-      console.log("quickTrade : ",quickTrade);
+      console.log("quickTrade : ", quickTrade);
       if (quickTrade) {
         const { base: fromId, quote: toId } = param!.tradeQuery!;
         await this.bareMinimumForTrade({
@@ -1234,7 +1227,7 @@ export class EosBancorModule
     this.updateRelayFeed(feeds);
   }
 
-/*
+  /*
 change24h: -2.287651124147028
 code: "BNT"
 id: "594bb7e468a95e00203b048d"
@@ -1277,14 +1270,12 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     try {
       // https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
       const tokenData: TokenPrice[] = (<any>data).data.page;
-      const [tokenPrices] = await Promise.all([
-        tokenData
-      ]);
+      const [tokenPrices] = await Promise.all([tokenData]);
 
       console.log("tokenPrices : ", tokenPrices);
 
       // Test code
-      const [tradeData] = await Promise.all([ fetchTradeData() ]);
+      const [tradeData] = await Promise.all([fetchTradeData()]);
       console.log("tradeData : ", tradeData);
 
       const tlosToken = findOrThrow(tokenPrices, token =>
@@ -1299,7 +1290,12 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           reserve.symbol.code().to_string()
         );
 
-        console.log("primaryReserve.symbol : ", primaryReserve.symbol.code().to_string(),", secondaryReserve.symbol : ", secondaryReserve.symbol.code().to_string());
+        console.log(
+          "primaryReserve.symbol : ",
+          primaryReserve.symbol.code().to_string(),
+          ", secondaryReserve.symbol : ",
+          secondaryReserve.symbol.code().to_string()
+        );
         const token = findOrThrow(
           tokenPrices,
           price =>

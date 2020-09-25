@@ -5,7 +5,6 @@ import Onboard from "bnc-onboard";
 
 import {
   Asset,
-  asset_to_number,
   Sym,
   number_to_asset
 } from "eos-common";
@@ -17,7 +16,6 @@ import {
   BaseToken,
   TokenBalanceReturn,
   TokenBalanceParam,
-  Section,
   Step,
   OnUpdate
 } from "@/types/bancor";

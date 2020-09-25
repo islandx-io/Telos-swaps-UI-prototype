@@ -124,7 +124,6 @@ import { Watch, Component, Vue } from "vue-property-decorator";
 import { vxm } from "@/store";
 import SortIcons from "@/components/common/SortIcons.vue";
 import { TokenPrice, TradingModule, LiquidityModule } from "@/types/bancor";
-import { multiContract } from "@/api/multiContractTx";
 import Velocity from "velocity-animate";
 import { State, Getter, Action, namespace } from "vuex-class";
 import _ from "lodash";
