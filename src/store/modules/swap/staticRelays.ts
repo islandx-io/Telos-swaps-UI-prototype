@@ -8,6 +8,20 @@ const tlosToken = {
 
 const oldRelays = [
   {
+    contract: "tlosdx.swaps",
+    smartToken: {
+      contract: "relays.swaps",
+      symbol: "8,TLOSDX"
+    },
+    reserves: [
+      {
+        contract: "tokens.swaps",
+        symbol: "4,TLOSD"
+      },
+      tlosToken
+    ]
+  },
+  {
     contract: "zar.tbn",
     smartToken: {
       contract: "zarrelay.tbn",
@@ -199,20 +213,6 @@ const oldRelays = [
       {
         contract: "telosdacdrop",
         symbol: "4,TLOSDAC"
-      },
-      tlosToken
-    ]
-  },
-  {
-    contract: "tlosdx.swaps",
-    smartToken: {
-      contract: "relays.swaps",
-      symbol: "8,TLOSDX"
-    },
-    reserves: [
-      {
-        contract: "tokens.swaps",
-        symbol: "4,TLOSD"
       },
       tlosToken
     ]

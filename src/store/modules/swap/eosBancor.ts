@@ -512,7 +512,7 @@ export class EosBancorModule
   relayFeed: RelayFeed[] = [];
   loadingPools: boolean = true;
   usdPrice = 0;
-  usdPriceOfBnt = 0;
+  usdPriceOfTlos = 0;
   tokenMeta: TokenMeta[] = [];
   moreTokensAvailable = false;
   loadingTokens = false;
@@ -631,7 +631,7 @@ export class EosBancorModule
       {
         ...tlos,
         id: buildTokenId(tlos),
-        usdValue: this.usdPriceOfBnt
+        usdValue: this.usdPriceOfTlos
       },
       {
         ...tlosd,
@@ -1155,16 +1155,16 @@ export class EosBancorModule
       return this.refresh();
     }
     try {
-      const [usdPriceOfBnt, v2Relays, tokenMeta] = await Promise.all([
+      const [usdPriceOfTlos, v2Relays, tokenMeta] = await Promise.all([
         vxm.bancor.fetchUsdPriceOfBnt(),
         fetchMultiRelays(),
         getTokenMeta()
       ]);
       this.setTokenMeta(tokenMeta);
-      this.setBntPrice(usdPriceOfBnt);
+      this.setBntPrice(usdPriceOfTlos);
 
       console.log("tokenMeta : ",tokenMeta);
-      console.log("usdPriceOfBnt : ",usdPriceOfBnt);
+      console.log("usdPriceOfTlos : ",usdPriceOfTlos);
 
       const v1Relays = getHardCodedRelays();
       console.log("v1Relays : ",v1Relays);
@@ -1227,7 +1227,7 @@ export class EosBancorModule
     const feeds = relays.flatMap(relay =>
       buildTwoFeedsFromRelay(relay, [
         { symbol: "TLOSD", unitPrice: 1 },
-        { symbol: "TLOS", unitPrice: this.usdPriceOfBnt }
+        { symbol: "TLOS", unitPrice: this.usdPriceOfTlos }
       ])
     );
     this.updateRelayFeed(feeds);
@@ -1276,21 +1276,16 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     try {
       // https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
       const tokenData: TokenPrice[] = (<any>data).data.page;
-      console.log('data', tokenData)
-      const [tokenPrices, ethTokenPrices] = await Promise.all([
-        tokenData,
-        ethBancorApi.getTokens()
+      console.log('tokenData', tokenData)
+      const [tokenPrices] = await Promise.all([
+        tokenData
       ]);
 
       console.log("tokenPrices : ", tokenPrices);
 
       const tlosToken = findOrThrow(tokenPrices, token =>
-        compareString(token.code, "BNT")
+        compareString(token.code, "TLOS")
       );
-
-      const usdPriceOfEth = findOrThrow(ethTokenPrices, token =>
-        compareString(token.code, "ETH")
-      ).price;
 
       const relayFeeds: RelayFeed[] = relays.flatMap(relay => {
         const [
@@ -1308,18 +1303,14 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           "failed to find token in possible relayfeeds from bancor API"
         );
 
-//        const includeBnt = compareString(
-//          relay.smartToken.symbol.code().to_string(),
-//          "TLOSZAR"
-//        );
         const includeTLOS = compareString(
-            secondaryReserve.symbol.code().to_string(),
-            "TLOS"
+          secondaryReserve.symbol.code().to_string(),
+          "TLOS"
         );
 
-//        const liqDepth = token.liquidityDepth * usdPriceOfEth * 2;
+        // const liqDepth = token.liquidityDepth * usdPriceOfEth * 2;
         // should use USD price of TLOS
-        const liqDepth = token.liquidityDepth * this.usdPriceOfBnt * 2;
+        const liqDepth = token.liquidityDepth * this.usdPriceOfTlos * 2;
 
         const secondary = {
           tokenId: buildTokenId({
@@ -2239,7 +2230,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   }
 
   @mutation setBntPrice(price: number) {
-    this.usdPriceOfBnt = price;
+    this.usdPriceOfTlos = price;
   }
 
   @mutation setTokenMeta(tokens: TokenMeta[]) {

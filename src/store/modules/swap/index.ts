@@ -20,7 +20,6 @@ import {
   updateArray
 } from "@/api/helpers";
 import {
-  fetchBinanceUsdPriceOfBnt,
   fetchCoinGechoUsdPriceOfTlos
 } from "@/api/helpers";
 import wait from "waait";
@@ -74,7 +73,7 @@ interface Module {
 export class BancorModule extends VuexModule.With({
   namespaced: "bancor/"
 }) {
-  usdPriceOfBnt: BntPrice = {
+  usdPriceOfTlos: BntPrice = {
     price: null,
     lastChecked: 0
   };
@@ -272,7 +271,6 @@ export class BancorModule extends VuexModule.With({
         );
       const any = (arr: any[]) => reverse(Promise.all(arr.map(reverse)));
       const res = await any([
-//        fetchBinanceUsdPriceOfBnt(),
         fetchCoinGechoUsdPriceOfTlos(),
         new Promise(resolve => {
           wait(500).then(() => resolve(fetchUsdPriceOfBntViaRelay()));
@@ -295,15 +293,15 @@ export class BancorModule extends VuexModule.With({
     const timeNow = new Date().getTime();
     const millisecondGap = 5000;
     const makeNetworkRequest =
-      !this.usdPriceOfBnt.lastChecked ||
-      this.usdPriceOfBnt.lastChecked + millisecondGap < timeNow;
+      !this.usdPriceOfTlos.lastChecked ||
+      this.usdPriceOfTlos.lastChecked + millisecondGap < timeNow;
     return makeNetworkRequest
       ? this.getUsdPrice()
-      : (this.usdPriceOfBnt.price as number);
+      : (this.usdPriceOfTlos.price as number);
   }
 
-  @mutation setUsdPriceOfBnt(usdPriceOfBnt: BntPrice) {
-    this.usdPriceOfBnt = usdPriceOfBnt;
+  @mutation setUsdPriceOfBnt(usdPriceOfTlos: BntPrice) {
+    this.usdPriceOfTlos = usdPriceOfTlos;
   }
 
   @action async loadMoreTokens(tokenIds?: string[]) {
