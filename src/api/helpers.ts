@@ -215,6 +215,7 @@ export const getBalance = async (
     table: "accounts",
     limit: 99
   });
+  console.log("getBalance : (", contract, ", ", symbolName, ")");
   const balance = res.rows.find(balance =>
     compareString(
       new Asset(balance.balance).symbol.code().to_string(),
@@ -426,71 +427,7 @@ export const buildTokenId = ({ contract, symbol }: BaseToken): string =>
   contract + "-" + symbol;
 
 export const fetchMultiRelays = async (): Promise<EosMultiRelay[]> => {
-  try {
-    const contractName = process.env.VUE_APP_MULTICONTRACT!;
-
-    const rawRelays: {
-      rows: ConverterV2Row[];
-      more: boolean;
-    } = await rpc.get_table_rows({
-      code: process.env.VUE_APP_MULTICONTRACT,
-      table: "converter.v2",
-      scope: process.env.VUE_APP_MULTICONTRACT,
-      limit: 99
-    });
-    if (rawRelays.more) {
-      console.warn("Warning, there are more than 99 multi relays!");
-    }
-    const parsedRelays = rawRelays.rows;
-    const passedRelays = parsedRelays
-      .filter(
-        relay =>
-          relay.reserve_weights.reduce(
-            (acc, reserve) => reserve.value + acc,
-            0
-          ) == 1000000
-      )
-      .filter(relay => relay.reserve_balances.length == 2);
-
-    const smartTokenContract = process.env.VUE_APP_SMARTTOKENCONTRACT!;
-
-    const relays: EosMultiRelay[] = passedRelays.map(relay => ({
-      id: buildTokenId({
-        contract: smartTokenContract,
-        symbol: symToBaseSymbol(new Sym(relay.currency)).symbol
-      }),
-      reserves: relay.reserve_balances.map(({ value }) => ({
-        ...assetStringtoBaseSymbol(value.quantity),
-        id: buildTokenId({
-          contract: value.contract,
-          symbol: assetStringtoBaseSymbol(value.quantity).symbol
-        }),
-        contract: value.contract,
-        network: "eos",
-        amount: asset_to_number(new Asset(value.quantity))
-      })),
-      contract: contractName,
-      owner: relay.owner,
-      isMultiContract: true,
-      smartToken: {
-        ...symToBaseSymbol(new Sym(relay.currency)),
-        id: buildTokenId({
-          contract: smartTokenContract,
-          symbol: symToBaseSymbol(new Sym(relay.currency)).symbol
-        }),
-        contract: smartTokenContract!,
-        amount: 0,
-        network: "eos"
-      },
-      fee: relay.fee / 1000000
-    }));
-
-    return relays;
-  } catch (e) {
-    console.error(e);
-
-    return [];
-  }
+  return [];
 };
 
 export const fetchMultiRelay = async (

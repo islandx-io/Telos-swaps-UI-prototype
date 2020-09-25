@@ -101,9 +101,6 @@ import HeroWrapper from "@/components/hero/HeroWrapper.vue";
 import ModalSelect from "@/components/modals/ModalSelect.vue";
 import TwoTokenHero from "./TwoTokenHero.vue";
 import {
-  OpposingLiquid,
-  ViewToken,
-  ViewRelay,
   LiquidityModule,
   TradingModule,
   Step,
@@ -261,8 +258,6 @@ export default class HeroRelay extends Vue {
       case "eos":
       case "usds":
         return `https://bloks.io/transaction/${this.success}`;
-//      case "eth":
-//        return `https://etherscan.io/tx/${this.success}`;
       default:
         return `https://bloks.io/transaction/${this.success}`;
     }
@@ -273,8 +268,6 @@ export default class HeroRelay extends Vue {
       case "eos":
       case "usds":
         return `Bloks.io`;
-//      case "eth":
-//        return `Etherscan`;
       default:
         return `Bloks.io`;
     }
@@ -441,6 +434,7 @@ export default class HeroRelay extends Vue {
   }
 
   get defaultFocusedId() {
+    console.log("defaultFocusedId : ", this.relays);
     return this.relays.find(
       relay => relay.addLiquiditySupported && relay.removeLiquiditySupported
     )!.id;

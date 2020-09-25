@@ -935,7 +935,8 @@ export class EosBancorModule
           symbol: sortedReserves[1].symbol,
           smartTokenSymbol: relay.smartToken.symbol,
           liqDepth: relayFeed && relayFeed.liqDepth,
-          addLiquiditySupported: relay.isMultiContract,
+//          addLiquiditySupported: relay.isMultiContract,
+          addLiquiditySupported: true,
           removeLiquiditySupported: true,
           focusAvailable: false,
           reserves: sortedReserves.map((reserve: AgnosticToken) => ({
