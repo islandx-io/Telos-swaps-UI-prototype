@@ -117,15 +117,6 @@ export const compareString = (stringOne: string, stringTwo: string) => {
   return stringOne.toLowerCase() == stringTwo.toLowerCase();
 };
 
-// https://api.coingecko.com/api/v3/simple/price
-// {"mins":5,"price":"1.03251579"}
-//export const fetchBinanceUsdPriceOfTlos = async (): Promise<number> => {
-//  const res = await axios.get<{ mins: number; price: string }>(
-//    "https://api.binance.com/api/v3/avgPrice?symbol=BNTUSDT"
-//  );
-//  return Number(res.data.price);
-//};
-
 // https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd
 // {"telos":{"usd":0.02797187}}
 export const fetchCoinGechoUsdPriceOfTlos = async (): Promise<number> => {
@@ -306,8 +297,7 @@ export const identifyVersionBySha3ByteCodeHash = (sha3Hash: string): string => {
 };
 
 export type EosAccount = string;
-export type EthereumAddress = string;
-export type ContractAccount = EosAccount | EthereumAddress;
+export type ContractAccount = EosAccount;
 
 export interface Token {
   symbol: string;
@@ -378,15 +368,6 @@ export const services: Service[] = [
 //      Feature.CreatePool
     ]
   },
-  /*
-  {
-    namespace: "eth",
-    features: [
-      Feature.Trade,
-      Feature.Liquidity,
-      Feature.CreatePool]
-  },
-  */
   { namespace: "usds", features: [
       Feature.Trade,
       Feature.Wallet
