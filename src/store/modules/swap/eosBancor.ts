@@ -1458,9 +1458,10 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     const relay = await this.relayById(relayId);
     const tokenAmounts = await this.viewAmountToTokenAmounts(reserves);
 
+    console.log("addLiquidity(", relay, ")");
     const tokenContractsAndSymbols: BaseToken[] = [
       {
-        contract: process.env.VUE_APP_SMARTTOKENCONTRACT!,
+        contract: relay.smartToken.contract,
         symbol: relay.smartToken.symbol
       },
       ...tokenAmounts.map(tokenAmount => ({
@@ -1641,12 +1642,13 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     return actions;
   }
 
-  @action async removeLiquidityV1({
+  @action async removeLiquidity({
     reserves,
     id: relayId,
     onUpdate
   }: LiquidityParams): Promise<string> {
     const relay = await this.relayById(relayId);
+    console.log("removeLiquidity", relay);
 
     const supply = await fetchTokenStats(
       relay.smartToken.contract,
@@ -1700,52 +1702,6 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       lastTxId = txRes.transaction_id as string;
     }
     return lastTxId;
-  }
-
-  @action async removeLiquidity({
-    reserves,
-    id: relayId,
-    onUpdate
-  }: LiquidityParams) {
-    const relay = await this.relayById(relayId);
-    const smartTokenSymbol = relay.smartToken.symbol;
-
-    const isMultiRelay = relay.isMultiContract;
-
-    if (!isMultiRelay) {
-      return this.removeLiquidityV1({ reserves, id: relayId, onUpdate });
-    }
-
-    const { smartTokenAmount } = await this.calculateOpposingWithdraw({
-      id: relayId,
-      reserve: reserves[0]
-    });
-
-    const liquidityAsset = smartTokenAmount;
-
-    const action = multiContract.removeLiquidityAction(liquidityAsset);
-
-    const tokenContractsAndSymbols = [
-      {
-        contract: process.env.VUE_APP_SMARTTOKENCONTRACT!,
-        symbol: smartTokenSymbol
-      },
-      ...relay.reserves.map(reserve => ({
-        contract: reserve.contract,
-        symbol: reserve.symbol
-      }))
-    ];
-
-    const [txRes, originalBalances] = await Promise.all([
-      this.triggerTx([action]),
-      vxm.eosNetwork.getBalances({
-        tokens: tokenContractsAndSymbols
-      })
-    ]);
-    vxm.eosNetwork.pingTillChange({ originalBalances });
-    this.waitAndUpdate(6000);
-
-    return txRes.transaction_id as string;
   }
 
   @action async waitAndUpdate(time: number = 4000) {
@@ -1939,7 +1895,8 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     const reserveBalance = asset_to_number(sameReserve);
     const percent = Number(tokenAmount) / reserveBalance;
 
-    const smartTokenAmount = percent * smartSupply;
+    // Added this to correct error where withdrawal was 2x what was requested
+    const smartTokenAmount = (percent * smartSupply) / 2.0;
 
     const opposingAmountNumber = percent * asset_to_number(opposingReserve);
     const opposingAsset = number_to_asset(

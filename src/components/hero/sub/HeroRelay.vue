@@ -257,9 +257,9 @@ export default class HeroRelay extends Vue {
     switch (this.currentNetwork) {
       case "eos":
       case "usds":
-        return `https://bloks.io/transaction/${this.success}`;
+        return `https://telos.bloks.io/transaction/${this.success}`;
       default:
-        return `https://bloks.io/transaction/${this.success}`;
+        return `https://telos.bloks.io/transaction/${this.success}`;
     }
   }
 

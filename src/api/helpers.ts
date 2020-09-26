@@ -192,6 +192,7 @@ export const fetchTokenSymbol = async (
     scope: symbolName,
     table: "stat"
   });
+  console.log("fetchTokenSymbol(",contractName,"",symbolName,")");
   if (statRes.rows.length == 0)
     throw new Error(
       `Unexpected stats table return from tokenContract ${contractName} ${symbolName}`
@@ -225,6 +226,7 @@ export const getBalance = async (
     if (typeof precision == "number") {
       return number_to_asset(0, new Sym(symbolName, precision)).to_string();
     } else {
+      console.log("no balance - getBalance(",contract,",",symbolName,")");
       const symbol = await fetchTokenSymbol(contract, symbolName);
       return number_to_asset(0, symbol).to_string();
     }
