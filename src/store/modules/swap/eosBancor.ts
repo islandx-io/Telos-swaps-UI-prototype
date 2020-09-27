@@ -1,75 +1,72 @@
-import { createModule, mutation, action } from "vuex-class-component";
+import { action, createModule, mutation } from "vuex-class-component";
 import {
-  ProposedConvertTransaction,
-  TokenPrice,
-  TradingModule,
-  LiquidityModule,
-  ViewToken,
-  ConvertReturn,
-  LiquidityParams,
-  OpposingLiquidParams,
-  OpposingLiquid,
-  EosMultiRelay,
   AgnosticToken,
-  CreatePoolModule,
-  ModalChoice,
-  NetworkChoice,
-  FeeParams,
-  NewOwnerParams,
   BaseToken,
+  ConvertReturn,
+  CreatePoolModule,
   CreatePoolParams,
-  ViewRelay,
-  Step,
-  TokenMeta,
-  ViewAmount,
+  EosMultiRelay,
+  FeeParams,
+  LiquidityModule,
+  LiquidityParams,
+  ModalChoice,
+  ModuleParam,
+  NetworkChoice,
+  NewOwnerParams,
+  OpposingLiquid,
+  OpposingLiquidParams,
+  ProposedConvertTransaction,
   ProposedFromTransaction,
   ProposedToTransaction,
-  ModuleParam,
   TokenBalanceParam,
-  TokenBalanceReturn
+  TokenBalanceReturn,
+  TokenMeta,
+  TokenPrice,
+  TradingModule,
+  ViewAmount,
+  ViewRelay,
+  ViewToken
 } from "@/types/bancor";
 import {
-  fetchMultiRelays,
-  getBalance,
-  fetchTokenStats,
-  compareString,
-  findOrThrow,
-  getTokenMeta,
-  updateArray,
-  fetchMultiRelay,
   buildTokenId,
-  EosAccount,
+  compareString,
   compareToken,
-  multiSteps,
-  fetchTradeData
+  EosAccount,
+  fetchMultiRelay,
+  fetchMultiRelays,
+  fetchTokenStats,
+  fetchTradeData,
+  findOrThrow,
+  getBalance,
+  getTokenMeta,
+  updateArray
 } from "@/api/helpers";
 import {
-  Sym as Symbol,
   Asset,
   asset_to_number,
   number_to_asset,
+  Sym as Symbol,
   Sym
 } from "eos-common";
 import { multiContract } from "@/api/multiContractTx";
-import { multiContractAction } from "@/contracts/multi";
 import { vxm } from "@/store";
 import { rpc } from "@/api/rpc";
 import {
-  findCost,
-  relaysToConvertPaths,
+  calculateFundReturn,
   composeMemo,
   DryRelay,
-  HydratedRelay,
+  findCost,
+  findNewPath,
   findReturn,
-  calculateFundReturn,
-  TokenAmount,
-  findNewPath
+  HydratedRelay,
+  relaysToConvertPaths,
+  TokenAmount
 } from "@/api/eosBancorCalc";
 import _ from "lodash";
 import wait from "waait";
 import { getHardCodedRelays } from "./staticRelays";
 import { sortByNetworkTokens } from "@/api/sortByNetworkTokens";
-import { liquidateAction } from "@/api/singleContractTx";
+import { liquidateAction, hydrateAction } from "@/api/singleContractTx";
 import * as data from "./data.json";
 
 const compareAgnosticToBalanceParam = (
@@ -1458,123 +1455,200 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     const relay = await this.relayById(relayId);
     const tokenAmounts = await this.viewAmountToTokenAmounts(reserves);
 
-    console.log("addLiquidity(", relay, ")");
-    const tokenContractsAndSymbols: BaseToken[] = [
-      {
-        contract: relay.smartToken.contract,
-        symbol: relay.smartToken.symbol
-      },
-      ...tokenAmounts.map(tokenAmount => ({
-        contract: tokenAmount.contract,
-        symbol: tokenAmount.amount.symbol.code().to_string()
-      }))
-    ];
+/*
+    console.log("addLiquidity - relayId : ", relayId);
+    console.log("addLiquidity - reserves : ", reserves);
+    console.log("addLiquidity - relay : ", relay);
+    console.log("addLiquidity - tokenAmounts : ", tokenAmounts);
 
-    const originalBalances = await vxm.eosNetwork.getBalances({
-      tokens: tokenContractsAndSymbols
+    console.log("addLiquidity - tokenAmounts[0].contract : ",tokenAmounts[0].contract);
+    console.log("addLiquidity - tokenAmounts[0].symbol : ",tokenAmounts[0].amount.symbol.code().to_string());
+    console.log("addLiquidity - tokenAmounts[0].amount : ",tokenAmounts[0].amount.to_string());
+
+    console.log("addLiquidity - tokenAmounts[1].contract : ",tokenAmounts[1].contract);
+    console.log("addLiquidity - tokenAmounts[1].symbol : ",tokenAmounts[1].amount.symbol.code().to_string());
+    console.log("addLiquidity - tokenAmounts[1].amount : ",tokenAmounts[1].amount.to_string());
+*/
+
+    const relayContract = relay.smartToken.contract;
+    const relaySymbol = new Symbol(
+      relay.smartToken.symbol,
+      relay.smartToken.precision
+    );
+    const relaySymbolCode = relaySymbol.code().to_string();
+
+    if (tokenAmounts.length !== 2)
+      throw new Error("Was expecting 2 reserve assets");
+
+    // TODO handle tokenAmounts as array
+    const action1 = hydrateAction(
+      tokenAmounts[0].amount,
+      tokenAmounts[0].contract,
+      number_to_asset(0, relaySymbol),
+      relay.contract,
+      this.isAuthenticated
+    );
+    const action2 = hydrateAction(
+      tokenAmounts[1].amount,
+      tokenAmounts[1].contract,
+      number_to_asset(0, relaySymbol),
+      relay.contract,
+      this.isAuthenticated
+    );
+    let depositActions = [action1, action2];
+/*
+    TODO fix this, relay token precision is wrong
+    const existingBalance = await this.hasExistingBalance({
+      contract: relayContract,
+      symbol: relaySymbolCode
     });
 
-    const finalState = await multiSteps({
-      items: [
-        {
-          description: "Depositing liquidity...",
-          task: async () => {
-            const addLiquidityActions = multiContract.addLiquidityActions(
-              relay.smartToken.symbol,
-              tokenAmounts
-            );
+    if (!existingBalance) {
+      const openActions = await this.generateOpenActions({
+        contract: relayContract,
+        symbol: relaySymbol
+      });
+      depositActions = [...openActions, ...depositActions];
+    }
+*/
+    console.log("convertActions : ", depositActions);
 
-            const { smartTokenAmount } = await this.calculateOpposingDeposit({
-              id: relayId,
-              reserve: reserves[0]
-            });
+//    if (depositActions.length > 0) {
+//      await this.triggerTx(depositActions);
+//    }
 
-            const fundAmount = smartTokenAmount;
+    const txRes = await this.triggerTx(depositActions);
+    console.log("txRes : ", txRes);
 
-            const fundAction = multiContractAction.fund(
-              this.isAuthenticated,
-              smartTokenAmount.to_string()
-            );
-
-            const actions = [...addLiquidityActions, fundAction];
-
-            try {
-              const txRes = await this.triggerTx(actions);
-              return {
-                failedDueToBadCalculation: false,
-                txRes
-              };
-            } catch (e) {
-              if (
-                e.message !==
-                "assertion failure with message: insufficient balance"
-              )
-                throw new Error(e);
-              return {
-                failedDueToBadCalculation: true,
-                addLiquidityActions,
-                fundAmount
-              };
-            }
-          }
-        },
-        {
-          description: "Fund failed, trying again...",
-          task: async state => {
-            const {
-              failedDueToBadCalculation
-            }: { failedDueToBadCalculation: boolean } = state;
-            if (failedDueToBadCalculation) {
-              const { fundAmount, addLiquidityActions } = state;
-              const backupFundAction = multiContractAction.fund(
-                vxm.wallet.isAuthenticated,
-                number_to_asset(
-                  Number(fundAmount) * 0.96,
-                  new Symbol(relay.smartToken.symbol, 4)
-                ).to_string()
-              );
-
-              const newActions = [...addLiquidityActions, backupFundAction];
-              const txRes = await this.triggerTx(newActions);
-              return { txRes };
-            }
-          }
-        },
-        {
-          description: "Waiting for catchup...",
-          task: async () => wait(5000)
-        },
-        {
-          description: `Checking and collecting any left over dust...`,
-          task: async () => {
-            const bankBalances = await this.fetchBankBalances({
-              smartTokenSymbol: relay.smartToken.symbol,
-              accountHolder: this.isAuthenticated
-            });
-
-            const aboveZeroBalances = bankBalances
-              .map(balance => ({
-                ...balance,
-                quantity: new Asset(balance.quantity)
-              }))
-              .filter(balance => asset_to_number(balance.quantity) > 0);
-
-            const withdrawActions = aboveZeroBalances.map(balance =>
-              multiContract.withdrawAction(balance.symbl, balance.quantity)
-            );
-            if (withdrawActions.length > 0) {
-              await this.triggerTx(withdrawActions);
-            }
-          }
-        }
-      ],
-      onUpdate
-    });
-
-    vxm.eosNetwork.pingTillChange({ originalBalances });
-    return finalState.txRes.transaction_id as string;
+    return txRes.transaction_id as string;
   }
 
+  /*
+      @action async addLiquidity({
+        id: relayId,
+        reserves,
+        onUpdate
+      }: LiquidityParams) {
+        const relay = await this.relayById(relayId);
+        const tokenAmounts = await this.viewAmountToTokenAmounts(reserves);
+    
+        console.log("addLiquidity(", relay, ")");
+        const tokenContractsAndSymbols: BaseToken[] = [
+          {
+            contract: relay.smartToken.contract,
+            symbol: relay.smartToken.symbol
+          },
+          ...tokenAmounts.map(tokenAmount => ({
+            contract: tokenAmount.contract,
+            symbol: tokenAmount.amount.symbol.code().to_string()
+          }))
+        ];
+    
+        const originalBalances = await vxm.eosNetwork.getBalances({
+          tokens: tokenContractsAndSymbols
+        });
+    
+        const finalState = await multiSteps({
+          items: [
+            {
+              description: "Depositing liquidity...",
+              task: async () => {
+                const addLiquidityActions = multiContract.addLiquidityActions(
+                  relay.smartToken.symbol,
+                  tokenAmounts
+                );
+    
+                const { smartTokenAmount } = await this.calculateOpposingDeposit({
+                  id: relayId,
+                  reserve: reserves[0]
+                });
+    
+                const fundAmount = smartTokenAmount;
+    
+                const fundAction = multiContractAction.fund(
+                  this.isAuthenticated,
+                  smartTokenAmount.to_string()
+                );
+    
+                const actions = [...addLiquidityActions, fundAction];
+    
+                try {
+                  const txRes = await this.triggerTx(actions);
+                  return {
+                    failedDueToBadCalculation: false,
+                    txRes
+                  };
+                } catch (e) {
+                  if (
+                    e.message !==
+                    "assertion failure with message: insufficient balance"
+                  )
+                    throw new Error(e);
+                  return {
+                    failedDueToBadCalculation: true,
+                    addLiquidityActions,
+                    fundAmount
+                  };
+                }
+              }
+            },
+            {
+              description: "Fund failed, trying again...",
+              task: async state => {
+                const {
+                  failedDueToBadCalculation
+                }: { failedDueToBadCalculation: boolean } = state;
+                if (failedDueToBadCalculation) {
+                  const { fundAmount, addLiquidityActions } = state;
+                  const backupFundAction = multiContractAction.fund(
+                    vxm.wallet.isAuthenticated,
+                    number_to_asset(
+                      Number(fundAmount) * 0.96,
+                      new Symbol(relay.smartToken.symbol, 4)
+                    ).to_string()
+                  );
+    
+                  const newActions = [...addLiquidityActions, backupFundAction];
+                  const txRes = await this.triggerTx(newActions);
+                  return { txRes };
+                }
+              }
+            },
+            {
+              description: "Waiting for catchup...",
+              task: async () => wait(5000)
+            },
+            {
+              description: `Checking and collecting any left over dust...`,
+              task: async () => {
+                const bankBalances = await this.fetchBankBalances({
+                  smartTokenSymbol: relay.smartToken.symbol,
+                  accountHolder: this.isAuthenticated
+                });
+    
+                const aboveZeroBalances = bankBalances
+                  .map(balance => ({
+                    ...balance,
+                    quantity: new Asset(balance.quantity)
+                  }))
+                  .filter(balance => asset_to_number(balance.quantity) > 0);
+    
+                const withdrawActions = aboveZeroBalances.map(balance =>
+                  multiContract.withdrawAction(balance.symbl, balance.quantity)
+                );
+                if (withdrawActions.length > 0) {
+                  await this.triggerTx(withdrawActions);
+                }
+              }
+            }
+          ],
+          onUpdate
+        });
+    
+        vxm.eosNetwork.pingTillChange({ originalBalances });
+        return finalState.txRes.transaction_id as string;
+      }
+    */
   @action async fetchBankBalances({
     smartTokenSymbol,
     accountHolder
