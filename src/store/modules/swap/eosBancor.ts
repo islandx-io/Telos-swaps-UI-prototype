@@ -1265,7 +1265,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     relays: DryRelay[];
   }) {
     try {
-      // https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
+// https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
 //      const tokenData: TokenPrice[] = (<any>data).data.page;
 //      const [tokenPrices] = await Promise.all([tokenData]);
 
@@ -1277,8 +1277,6 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
         compareString(token.code, "TLOS")
       );
 
-      console.log("tlosToken : ", tlosToken);
-
       const relayFeeds: RelayFeed[] = relays.flatMap(relay => {
         const [
           secondaryReserve,
@@ -1287,16 +1285,12 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           reserve.symbol.code().to_string()
         );
 
-        console.log("primaryReserve.symbol : ", primaryReserve.symbol.code().to_string(), ", secondaryReserve.symbol : ",secondaryReserve.symbol.code().to_string());
-
         const token = findOrThrow(
           tokenPrices,
           price =>
             compareString(price.code, primaryReserve.symbol.code().to_string()),
           "failed to find token in possible relayfeeds from bancor API"
         );
-
-        console.log("token : ", token);
 
         const includeTLOS = compareString(
           secondaryReserve.symbol.code().to_string(),
@@ -1452,23 +1446,23 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   }: LiquidityParams) {
     const relay = await this.relayById(relayId);
     const tokenAmounts = await this.viewAmountToTokenAmounts(reserves);
-/*
-    console.log("addLiquidity - relayId : ", relayId);
-    console.log("addLiquidity - reserves : ", reserves);
-    console.log("addLiquidity - relay : ", relay);
-    console.log("addLiquidity - tokenAmounts : ", tokenAmounts);
+    /*
+        console.log("addLiquidity - relayId : ", relayId);
+        console.log("addLiquidity - reserves : ", reserves);
+        console.log("addLiquidity - relay : ", relay);
+        console.log("addLiquidity - tokenAmounts : ", tokenAmounts);
 
-    console.log("addLiquidity - tokenAmounts[0].contract : ",tokenAmounts[0].contract);
-    console.log("addLiquidity - tokenAmounts[0].symbol : ",tokenAmounts[0].amount.symbol.code().to_string());
-    console.log("addLiquidity - tokenAmounts[0].amount : ",tokenAmounts[0].amount.to_string());
+        console.log("addLiquidity - tokenAmounts[0].contract : ",tokenAmounts[0].contract);
+        console.log("addLiquidity - tokenAmounts[0].symbol : ",tokenAmounts[0].amount.symbol.code().to_string());
+        console.log("addLiquidity - tokenAmounts[0].amount : ",tokenAmounts[0].amount.to_string());
 
-    console.log("addLiquidity - tokenAmounts[1].contract : ",tokenAmounts[1].contract);
-    console.log("addLiquidity - tokenAmounts[1].symbol : ",tokenAmounts[1].amount.symbol.code().to_string());
-    console.log("addLiquidity - tokenAmounts[1].amount : ",tokenAmounts[1].amount.to_string());
+        console.log("addLiquidity - tokenAmounts[1].contract : ",tokenAmounts[1].contract);
+        console.log("addLiquidity - tokenAmounts[1].symbol : ",tokenAmounts[1].amount.symbol.code().to_string());
+        console.log("addLiquidity - tokenAmounts[1].amount : ",tokenAmounts[1].amount.to_string());
 
-    console.log("addLiquidity - relay.smartToken.symbol : ", relay.smartToken.symbol);
-    console.log("addLiquidity - relay.smartToken.precision : ", relay.smartToken.precision);
-*/
+        console.log("addLiquidity - relay.smartToken.symbol : ", relay.smartToken.symbol);
+        console.log("addLiquidity - relay.smartToken.precision : ", relay.smartToken.precision);
+    */
     // TODO figure out why smart token precision is wrong
     const relayContract = relay.smartToken.contract;
     const relaySymbol = new Symbol(
@@ -1515,9 +1509,9 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
 
     console.log("convertActions : ", depositActions);
 
-//    if (depositActions.length > 0) {
-//      await this.triggerTx(depositActions);
-//    }
+    //    if (depositActions.length > 0) {
+    //      await this.triggerTx(depositActions);
+    //    }
 
     const txRes = await this.triggerTx(depositActions);
     console.log("txRes : ", txRes);

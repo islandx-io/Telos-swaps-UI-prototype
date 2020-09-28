@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios";
 import { vxm } from "@/store";
 import { JsonRpc } from "eosjs";
 import Onboard from "bnc-onboard";
-
 import {
   Asset,
   Sym,
@@ -16,6 +15,7 @@ import {
   BaseToken,
   TokenBalanceReturn,
   TokenBalanceParam,
+  TokenPrice,
   Step,
   OnUpdate
 } from "@/types/bancor";
@@ -192,7 +192,7 @@ export const fetchTokenSymbol = async (
     scope: symbolName,
     table: "stat"
   });
-  console.log("fetchTokenSymbol(",contractName,"",symbolName,")");
+//  console.log("fetchTokenSymbol(",contractName,"",symbolName,")");
   if (statRes.rows.length == 0)
     throw new Error(
       `Unexpected stats table return from tokenContract ${contractName} ${symbolName}`
@@ -461,7 +461,7 @@ export const getTokenMeta = async (): Promise<TokenMeta[]> => {
     tokenMetaDataEndpoint
   );
 
-  console.log([...res.data]);
+//  console.log([...res.data]);
 
 //  return [...res.data, ...hardCoded()]
   return [...res.data]
@@ -479,8 +479,8 @@ export interface TickerPrice {
   sell: number;
   symbol: string;
 }
-
-export const fetchTradeData = async (): Promise<any> => {
+//      //  getTokens(): Promise<TokenPrice[]>;
+export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   const rawTradeData = await eosRpc.get_table_rows({
     code: "data.tbn",
     table: "tradedata",
@@ -522,6 +522,8 @@ export const fetchTradeData = async (): Promise<any> => {
     let volume24h: any = {};
     volume24h.USD = itemObject.volume_24h.find((token: any) => compareString(token.key, "TLOS")).value.split(" ")[0] * usdPriceOfTlos;
     newObj.volume24h = volume24h;
+
+    // console.log(">>>> ", newObj.code, itemObject.volume_24h.find((token: any) => compareString(token.key, "TLOS")));
 
     newTlosObj.liquidityDepth += newObj.liquidityDepth;
     newTlosObj.volume24h.USD += newObj.volume24h.USD;
