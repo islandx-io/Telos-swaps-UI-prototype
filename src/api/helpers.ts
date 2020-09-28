@@ -23,6 +23,7 @@ import Web3 from "web3";
 import { EosTransitModule } from "@/store/modules/wallet/eosWallet";
 import wait from "waait";
 import { sortByNetworkTokens } from "./sortByNetworkTokens";
+import { forEach } from 'lodash';
 
 export const networkTokens = ["TLOS"];
 
@@ -495,6 +496,76 @@ export const fetchTradeData = async (): Promise<any> => {
   const parsedTradeData = rawTradeData.rows;
   console.log("parsedTradeData : ", parsedTradeData);
 
+  let usdPrice = await vxm.bancor.fetchUsdPriceOfTlos();
+  let telosPrice = 1;
+  let newArr = [];
+
+  parsedTradeData.forEach(function(itemObject: any) {
+    let newObj = {};
+    let code = "";
+    Object.keys(itemObject).forEach(key => {
+      if (compareString(key, "converter")) key = "id";
+      if (compareString(key, "volume_24h")) {
+        //itemObject[key].filter(function(item: any){ return !compareString(item.key, "TLOS")});
+        let element = itemObject[key];
+        let Price24h = itemObject[key].find(token => compareString(token.key, "TLOS")).value.split(" ")[0];
+        key = "volume24h";
+        debugger;
+        itemObject[key] = {
+          USD: Price24h * usdPrice
+        };
+
+        code = element.reduce(function(
+          start: string,
+          current: any
+        ) {
+          start = "TLOS";
+          if (!compareString(current.key, start)) return current.key;
+        });
+        /*for (let i =0; i < itemObject[key].length; i++) {
+          if (!compareString(itemObject[i], "TLOS")) return itemObject[i].key;
+        }*/
+        console.log("code", code);
+      }
+
+      if (compareString(key, "liquidity_depth")) {
+        let token: any = itemObject[key].find(token => compareString(token.key, "TLOS")).value.split(" ")[0] * usdPrice;
+        key = "liquidityDepth";
+        itemObject[key] = token;
+      }
+
+      if (compareString(key, "price")) {
+        telosPrice = itemObject[key].find(token => compareString(token.key, "TLOS")).value;
+        itemObject[key] = telosPrice * usdPrice;
+      }
+
+      if (compareString(key, "price_change_24h")) {
+        let Price24h = itemObject[key].find(token => compareString(token.key, "TLOS")).value;
+        key = "change24h";
+        itemObject[key] = Price24h / (telosPrice - Price24h) * 100;
+      }
+
+      if (compareString(key, "volume_24h")) {
+        let Price24h = itemObject[key].find(token => compareString(token.key, "TLOS")).value.split(" ")[0];
+        key = "volume24h";
+        debugger;
+        itemObject[key] = {
+          USD: Price24h * usdPrice
+        };
+      }
+
+      newObj = {
+        ...newObj, 
+        [key]: itemObject[key],
+        name: "",
+        primaryCommunityImageName: "",
+        code: code
+      };
+    });
+    newArr.push(newObj);
+  });
+  console.log("new", newArr);
+
 /*
 Sample record
 
@@ -513,7 +584,7 @@ Transformation
 
 {
    "id": -> ? converter
-   "code" -> volume_24h[key != "TLOS"].key = "BNT"
+   "code" -> volume_24h[key != "TLOS"].key = "BNT" code must not be tlos
    "name" -> ?
    "primaryCommunityImageName" -> ?
    "liquidityDepth" -> liquidity_depth[key == "TLOS"].value * USDpriceOfTlos
