@@ -24,6 +24,7 @@ import { EosTransitModule } from "@/store/modules/wallet/eosWallet";
 import wait from "waait";
 import { sortByNetworkTokens } from "./sortByNetworkTokens";
 import { forEach } from 'lodash';
+import { buildConverterContract } from './ethBancorCalc';
 
 export const networkTokens = ["TLOS"];
 
@@ -498,55 +499,71 @@ export const fetchTradeData = async (): Promise<any> => {
 
   let usdPrice = await vxm.bancor.fetchUsdPriceOfTlos();
   let telosPrice = 1;
-  let newArr = [];
-
+  let newArr: any = [];
+  let converter = "";
   parsedTradeData.forEach(function(itemObject: any) {
-    let newObj = {};
+    let newObj: any = {};
     let code = "";
     Object.keys(itemObject).forEach(key => {
-      if (compareString(key, "converter")) key = "id";
+      if (compareString(key, "converter")) {
+        let tmpval = itemObject[key];
+        key = "id";
+        itemObject[key] = tmpval;
+      }
+
       if (compareString(key, "volume_24h")) {
         //itemObject[key].filter(function(item: any){ return !compareString(item.key, "TLOS")});
         let element = itemObject[key];
-        let Price24h = itemObject[key].find(token => compareString(token.key, "TLOS")).value.split(" ")[0];
+        let Price24h = itemObject[key]
+          .find(function(token: any){
+            compareString(token.key, "TLOS");
+          })
+          .value.split(" ")[0];
         key = "volume24h";
         debugger;
         itemObject[key] = {
           USD: Price24h * usdPrice
         };
 
-        code = element.reduce(function(
-          start: string,
-          current: any
-        ) {
+        code = element.reduce(function(start: string, current: any) {
           start = "TLOS";
           if (!compareString(current.key, start)) return current.key;
         });
-        /*for (let i =0; i < itemObject[key].length; i++) {
-          if (!compareString(itemObject[i], "TLOS")) return itemObject[i].key;
-        }*/
+
         console.log("code", code);
       }
 
       if (compareString(key, "liquidity_depth")) {
-        let token: any = itemObject[key].find(token => compareString(token.key, "TLOS")).value.split(" ")[0] * usdPrice;
+        let token: any =
+          itemObject[key]
+            .find(function(token: any){
+              compareString(token.key, "TLOS");
+            })
+            .value.split(" ")[0] * usdPrice;
         key = "liquidityDepth";
         itemObject[key] = token;
       }
 
       if (compareString(key, "price")) {
-        telosPrice = itemObject[key].find(token => compareString(token.key, "TLOS")).value;
+        telosPrice = itemObject[key].find(function(token: any){
+          compareString(token.key, "TLOS");
+        }).value;
         itemObject[key] = telosPrice * usdPrice;
       }
 
       if (compareString(key, "price_change_24h")) {
-        let Price24h = itemObject[key].find(token => compareString(token.key, "TLOS")).value;
+        let Price24h = itemObject[key].find(function(token: any){
+          compareString(token.key, "TLOS");
+        }).value;
         key = "change24h";
-        itemObject[key] = Price24h / (telosPrice - Price24h) * 100;
+        itemObject[key] = (Price24h / (telosPrice - Price24h)) * 100; //add tlos price
       }
 
       if (compareString(key, "volume_24h")) {
-        let Price24h = itemObject[key].find(token => compareString(token.key, "TLOS")).value.split(" ")[0];
+        let Price24h = itemObject[key].find(function(token: any) {
+            compareString(token.key, "TLOS");
+          })
+          .value.split(" ")[0];
         key = "volume24h";
         debugger;
         itemObject[key] = {
@@ -555,7 +572,8 @@ export const fetchTradeData = async (): Promise<any> => {
       }
 
       newObj = {
-        ...newObj, 
+        ...newObj,
+        //id: converter, 
         [key]: itemObject[key],
         name: "",
         primaryCommunityImageName: "",
