@@ -1266,18 +1266,18 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   }) {
     try {
       // https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
-      const tokenData: TokenPrice[] = (<any>data).data.page;
-      const [tokenPrices] = await Promise.all([tokenData]);
+//      const tokenData: TokenPrice[] = (<any>data).data.page;
+//      const [tokenPrices] = await Promise.all([tokenData]);
 
+      // Pull token prices from chain
+      const [tokenPrices] = await Promise.all([fetchTradeData()]);
       console.log("tokenPrices : ", tokenPrices);
-
-      // Test code
-      const [tradeData] = await Promise.all([fetchTradeData()]);
-      console.log("tradeData : ", tradeData);
 
       const tlosToken = findOrThrow(tokenPrices, token =>
         compareString(token.code, "TLOS")
       );
+
+      console.log("tlosToken : ", tlosToken);
 
       const relayFeeds: RelayFeed[] = relays.flatMap(relay => {
         const [
@@ -1287,18 +1287,16 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           reserve.symbol.code().to_string()
         );
 
-        console.log(
-          "primaryReserve.symbol : ",
-          primaryReserve.symbol.code().to_string(),
-          ", secondaryReserve.symbol : ",
-          secondaryReserve.symbol.code().to_string()
-        );
+        console.log("primaryReserve.symbol : ", primaryReserve.symbol.code().to_string(), ", secondaryReserve.symbol : ",secondaryReserve.symbol.code().to_string());
+
         const token = findOrThrow(
           tokenPrices,
           price =>
             compareString(price.code, primaryReserve.symbol.code().to_string()),
           "failed to find token in possible relayfeeds from bancor API"
         );
+
+        console.log("token : ", token);
 
         const includeTLOS = compareString(
           secondaryReserve.symbol.code().to_string(),
@@ -1307,7 +1305,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
 
         // const liqDepth = token.liquidityDepth * usdPriceOfEth * 2;
         // should use USD price of TLOS
-        const liqDepth = token.liquidityDepth * this.usdPriceOfTlos * 2;
+        const liqDepth = token.liquidityDepth;
 
         const secondary = {
           tokenId: buildTokenId({
