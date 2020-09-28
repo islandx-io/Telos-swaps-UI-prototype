@@ -214,7 +214,6 @@ export const getBalance = async (
     table: "accounts",
     limit: 99
   });
-  console.log("getBalance : (", contract, ", ", symbolName, ")");
   const balance = res.rows.find(balance =>
     compareString(
       new Asset(balance.balance).symbol.code().to_string(),
@@ -231,6 +230,8 @@ export const getBalance = async (
       return number_to_asset(0, symbol).to_string();
     }
   }
+
+  console.log("getBalance : (", account, ", ", contract, ", ", symbolName, ") = ",balance.balance);
   return balance.balance;
 };
 
@@ -278,14 +279,19 @@ const isValidBalance = (data: any): boolean =>
 export const getTokenBalances = async (
   accountName: string
 ): Promise<TokenBalances> => {
+  /*
   const res = await axios.get<TokenBalances>(
     `https://telos.caleos.io/v2/state/get_tokens?account=${accountName}`
 //    `https://telos.eosphere.io/v2/state/get_tokens?account=${accountName}`
   );
+  console.log("getTokenBalances : ", res);
   return {
     ...res.data,
     tokens: res.data.tokens.filter(isValidBalance)
   };
+
+   */
+  return {account: "", query_time: 0, tokens: []};
 };
 
 export const identifyVersionBySha3ByteCodeHash = (sha3Hash: string): string => {

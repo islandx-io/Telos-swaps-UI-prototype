@@ -1454,7 +1454,6 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   }: LiquidityParams) {
     const relay = await this.relayById(relayId);
     const tokenAmounts = await this.viewAmountToTokenAmounts(reserves);
-
 /*
     console.log("addLiquidity - relayId : ", relayId);
     console.log("addLiquidity - reserves : ", reserves);
@@ -1468,8 +1467,11 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     console.log("addLiquidity - tokenAmounts[1].contract : ",tokenAmounts[1].contract);
     console.log("addLiquidity - tokenAmounts[1].symbol : ",tokenAmounts[1].amount.symbol.code().to_string());
     console.log("addLiquidity - tokenAmounts[1].amount : ",tokenAmounts[1].amount.to_string());
-*/
 
+    console.log("addLiquidity - relay.smartToken.symbol : ", relay.smartToken.symbol);
+    console.log("addLiquidity - relay.smartToken.precision : ", relay.smartToken.precision);
+*/
+    // TODO figure out why smart token precision is wrong
     const relayContract = relay.smartToken.contract;
     const relaySymbol = new Symbol(
       relay.smartToken.symbol,
@@ -1496,8 +1498,9 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       this.isAuthenticated
     );
     let depositActions = [action1, action2];
-/*
-    TODO fix this, relay token precision is wrong
+
+    /*
+    // TODO fix this, relay token precision is wrong
     const existingBalance = await this.hasExistingBalance({
       contract: relayContract,
       symbol: relaySymbolCode
@@ -1510,7 +1513,8 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       });
       depositActions = [...openActions, ...depositActions];
     }
-*/
+     */
+
     console.log("convertActions : ", depositActions);
 
 //    if (depositActions.length > 0) {
@@ -1713,6 +1717,8 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
         this.isAuthenticated
       )
     );
+
+    console.log("doubleLiquidateActions : ", actions);
     return actions;
   }
 
@@ -2099,6 +2105,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       convertActions = [...openActions, ...convertActions];
     }
 
+    console.log("convert : ", convertActions);
     const txRes = await this.triggerTxAndWatchBalances({
       actions: convertActions,
       tokenIds: [from.id, to.id]
