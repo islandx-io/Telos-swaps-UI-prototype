@@ -86,7 +86,7 @@ export class BancorApi implements BancorWrapper {
   public async convert(payload: ConvertPayload) {
     const final = {
       ...payload,
-      blockchainType: this.blockchain == Blockchain.EOS ? "eos" : "ethereum",
+      blockchainType: this.blockchain == Blockchain.EOS ? "tlos" : "ethereum",
       ...(this.blockchain == Blockchain.EOS && { format: "json" })
     };
     const res = await this.post("currencies/convert", final);
@@ -115,7 +115,7 @@ export class BancorApi implements BancorWrapper {
 
   public async getTokens(): Promise<TokenPrice[]> {
     const res = await this.request("currencies/tokens", {
-      blockchainType: this.blockchain == Blockchain.EOS ? "eos" : "ethereum",
+      blockchainType: this.blockchain == Blockchain.EOS ? "tlos" : "ethereum",
       fromCurrencyCode: "USD",
       includeTotal: true,
       limit: 150,

@@ -501,8 +501,8 @@ const VuexModule = createModule({
   strict: false
 });
 
-export class EosBancorModule
-  extends VuexModule.With({ namespaced: "eosBancor/" })
+export class TlosBancorModule
+  extends VuexModule.With({ namespaced: "tlosBancor/" })
   implements TradingModule, LiquidityModule, CreatePoolModule {
   initialised: boolean = false;
   relaysList: EosMultiRelay[] = [];
@@ -547,7 +547,7 @@ export class EosBancorModule
   }
 
   get wallet() {
-    return "eos";
+    return "tlos";
   }
 
   get balance() {
@@ -1425,7 +1425,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
               amount: 0,
               contract: relay.smartToken.contract,
               precision: 4,
-              network: "eos",
+              network: "tlos",
               symbol: smartTokenSymbol
             },
             reserves: mergedBalances.map(reserve => ({
@@ -1434,7 +1434,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
                 contract: reserve.contract,
                 symbol: assetToSymbolName(reserve.amount)
               }),
-              network: "eos",
+              network: "tlos",
               precision: reserve.amount.symbol.precision(),
               contract: reserve.contract,
               symbol: assetToSymbolName(reserve.amount),
@@ -2270,7 +2270,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
 
   @action async triggerTx(actions: any[]) {
     // @ts-ignore
-    return this.$store.dispatch("eosWallet/tx", actions, { root: true });
+    return this.$store.dispatch("tlosWallet/tx", actions, { root: true });
   }
 
   @mutation setMultiRelays(relays: EosMultiRelay[]) {

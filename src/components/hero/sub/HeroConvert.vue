@@ -138,7 +138,7 @@ const appendBaseQuoteQuery = (base: string, quote: string, route: Route) => {
 const addDefaultQueryParams = (to: Route): any => {
   console.log("addDefaultQueryParams::to : ", to);
   switch (to.params.service) {
-    case "eos":
+    case "tlos":
       return appendBaseQuoteQuery(
         buildTokenId({ contract: "eosio.token", symbol: "TLOS" }),
         buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" }),
@@ -277,7 +277,7 @@ export default class HeroConvert extends Vue {
 
   get explorerLink() {
     switch (this.currentNetwork) {
-      case "eos":
+      case "tlos":
       case "usds":
         return `https://telos.bloks.io/transaction/${this.success}`;
 //      case "eth":
@@ -289,7 +289,7 @@ export default class HeroConvert extends Vue {
 
   get explorerName() {
     switch (this.currentNetwork) {
-      case "eos":
+      case "tlos":
       case "usds":
         return `Bloks.io`;
 //      case "eth":

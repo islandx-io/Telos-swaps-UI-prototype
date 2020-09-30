@@ -45,7 +45,7 @@ const moduleIds: { label: string; id: string }[] = [
   },
   {
     label: "Telos Swaps",
-    id: "eos"
+    id: "tlos"
 //  },
 //  {
 //    label: "X-Chain Transfer",

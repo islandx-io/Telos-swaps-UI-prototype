@@ -15,7 +15,7 @@ import whalevault from "eos-transit-whalevault-provider";
 import keycat from "eos-transit-keycat-provider";
 import anchor from "eos-transit-anchorlink-provider";
 
-interface EosWalletAction {
+interface tlosWalletAction {
   name: string;
   data: any;
   authorization?: {
@@ -25,14 +25,14 @@ interface EosWalletAction {
   account: string;
 }
 
-const appName = "XNation";
+const appName = "TLOSD";
 
 const VuexModule = createModule({
   strict: false
 });
 
 export class EosTransitModule extends VuexModule.With({
-  namespaced: "eosWallet/"
+  namespaced: "tlosWallet/"
 }) {
   accessContext = initAccessContext({
     appName,
@@ -92,9 +92,9 @@ export class EosTransitModule extends VuexModule.With({
     this.isMobile = isMobile;
   }
 
-  @action async tx(actions: EosWalletAction[]) {
+  @action async tx(actions: tlosWalletAction[]) {
     const authIncluded = actions.every(
-      (action: EosWalletAction) => action.authorization
+      (action: tlosWalletAction) => action.authorization
     );
 
     const builtActions = authIncluded

@@ -110,10 +110,10 @@ export default class App extends Vue {
   async created() {
     const autoLogin = localStorage.getItem("autoLogin");
     if (autoLogin) {
-      const provider = vxm.eosWallet.walletProviders.find(
+      const provider = vxm.tlosWallet.walletProviders.find(
         (p: WalletProvider) => p.id === autoLogin
       );
-      if (provider) vxm.eosWallet.initLogin(provider);
+      if (provider) vxm.tlosWallet.initLogin(provider);
     }
     vxm.general.setLanguage();
     this.loadBancor();

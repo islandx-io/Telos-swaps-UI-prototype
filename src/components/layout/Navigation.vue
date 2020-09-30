@@ -68,7 +68,7 @@ import { ModuleParam } from "../../types/bancor";
 import { Route } from "vue-router";
 const defaultPaths = [
   {
-    moduleId: "eos",
+    moduleId: "tlos",
     base: buildTokenId({ contract: "eosio.token", symbol: "TLOS" }),
     quote: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" })
   },
@@ -233,7 +233,7 @@ export default class Navigation extends Vue {
     vxm.general.setLanguage(lang);
   }
   get loginStatus() {
-    return vxm.eosWallet.loginStatus;
+    return vxm.tlosWallet.loginStatus;
   }
   get shortenedEthAddress() {
     const isAuthenticated = vxm.ethWallet.isAuthenticated;
@@ -247,7 +247,7 @@ export default class Navigation extends Vue {
       : isAuthenticated;
   }
   get loginButtonLabel() {
-    if (this.selectedWallet == "eos") {
+    if (this.selectedWallet == "tlos") {
       return this.loginStatus[0];
     } else {
       const isAuthenticated = vxm.ethWallet.isAuthenticated;
@@ -257,7 +257,7 @@ export default class Navigation extends Vue {
     }
   }
   get icon() {
-    if (this.selectedWallet == "eos") {
+    if (this.selectedWallet == "tlos") {
       return this.loginStatus[1];
     } else {
       return vxm.ethWallet.isAuthenticated ? "power-off" : "arrow-circle-right";
@@ -283,7 +283,7 @@ export default class Navigation extends Vue {
       status !== "Connecting" &&
       status !== "Fetching"
     ) {
-      vxm.eosWallet.logout();
+      vxm.tlosWallet.logout();
     }
   }
   async loginActionEth() {
@@ -295,7 +295,7 @@ export default class Navigation extends Vue {
   }
   async loginAction() {
     const wallet = this.selectedWallet;
-    if (wallet == "eos") this.loginActionEos();
+    if (wallet == "tlos") this.loginActionEos();
     else this.loginActionEth();
   }
 }

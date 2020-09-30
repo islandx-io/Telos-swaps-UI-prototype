@@ -92,24 +92,24 @@ export default class ModalLogin extends Vue {
 
   get walletProviders(): WalletProvider[] {
     return this.isMobile
-      ? vxm.eosWallet.walletProviders.filter(
+      ? vxm.tlosWallet.walletProviders.filter(
           isMobileCompatible(mobileCompatibleWallets)
         )
-      : vxm.eosWallet.walletProviders;
+      : vxm.tlosWallet.walletProviders;
   }
 
   get selectedProvider() {
-    return vxm.eosWallet.selectedProvider;
+    return vxm.tlosWallet.selectedProvider;
   }
 
   get loginStatus() {
-    return vxm.eosWallet.loginStatus;
+    return vxm.tlosWallet.loginStatus;
   }
 
   async initLogin(p: WalletProvider) {
     this.loading = true;
     try {
-      await vxm.eosWallet.initLogin(p);
+      await vxm.tlosWallet.initLogin(p);
       this.$bvModal.hide("modal-login");
     } catch (e) {
       this.error = e;

@@ -42,7 +42,7 @@ const includedInTokens = (tokens: TokenBalanceParam[]) => (
   token: TokenBalanceReturn
 ) => tokens.some(t => compareToken(token, t));
 
-export class EosNetworkModule
+export class TlosNetworkModule
   extends VuexModule.With({ namespaced: "eosNetwork/" })
   implements NetworkModule {
   tokenBalances: TokenBalanceReturn[] = [];
@@ -62,7 +62,7 @@ export class EosNetworkModule
 
   get isAuthenticated() {
     // @ts-ignore
-    return this.$store.rootGetters["eosWallet/isAuthenticated"];
+    return this.$store.rootGetters["tlosWallet/isAuthenticated"];
   }
 
   get networkId() {
@@ -107,7 +107,7 @@ export class EosNetworkModule
   @action async transfer({ to, amount, id, memo }: TransferParam) {
     if (!this.isAuthenticated) throw new Error("Not authenticated!");
     const symbol = id;
-    const dirtyReserve = vxm.eosBancor.relaysList
+    const dirtyReserve = vxm.tlosBancor.relaysList
       .flatMap(relay => relay.reserves)
       .find(reserve => compareString(reserve.symbol, symbol));
     if (!dirtyReserve) throw new Error("Failed finding dirty reserve");
@@ -125,7 +125,7 @@ export class EosNetworkModule
     const originalBalances = await this.getBalances({
       tokens: [{ contract, symbol }]
     });
-    await vxm.eosWallet.tx(actions);
+    await vxm.tlosWallet.tx(actions);
     this.pingTillChange({ originalBalances });
   }
 

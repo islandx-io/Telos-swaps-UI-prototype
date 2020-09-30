@@ -317,7 +317,7 @@ class MultiContractTx {
 }
 
 const getAuth: GetAuth = () => {
-  const wallet = vxm.eosWallet.wallet;
+  const wallet = vxm.tlosWallet.wallet;
   return [
     {
       // @ts-ignore

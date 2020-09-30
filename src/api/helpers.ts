@@ -20,7 +20,7 @@ import {
   OnUpdate
 } from "@/types/bancor";
 import Web3 from "web3";
-import { EosTransitModule } from "@/store/modules/wallet/eosWallet";
+import { EosTransitModule } from "@/store/modules/wallet/tlosWallet";
 import wait from "waait";
 import { sortByNetworkTokens } from "./sortByNetworkTokens";
 
@@ -207,7 +207,7 @@ export const getBalance = async (
   symbolName: string,
   precision?: number
 ): Promise<string> => {
-  const account = isAuthenticatedViaModule(vxm.eosWallet);
+  const account = isAuthenticatedViaModule(vxm.tlosWallet);
   const res: { rows: { balance: string }[] } = await rpc.get_table_rows({
     code: contract,
     scope: account,
@@ -338,7 +338,7 @@ export const getBankBalance = async (): Promise<{
   quantity: string;
   symbl: string;
 }[]> => {
-  const account = isAuthenticatedViaModule(vxm.eosWallet);
+  const account = isAuthenticatedViaModule(vxm.tlosWallet);
   const res: {
     rows: {
       id: number;
@@ -367,7 +367,7 @@ export interface Service {
 
 export const services: Service[] = [
   {
-    namespace: "eos",
+    namespace: "tlos",
     features: [
       Feature.Trade,
       Feature.Liquidity,

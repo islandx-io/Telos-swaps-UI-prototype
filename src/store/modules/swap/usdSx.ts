@@ -193,7 +193,7 @@ export class UsdBancorModule
   lastLoaded: number = 0;
 
   get wallet() {
-    return "eos";
+    return "tlos";
   }
 
   get moreTokensAvailable() {
@@ -221,7 +221,7 @@ export class UsdBancorModule
         const { contract, symbol } = token;
 
         try {
-          const eosModuleBorrowed = vxm.eosBancor.tokenMeta.find(
+          const eosModuleBorrowed = vxm.tlosBancor.tokenMeta.find(
             tokenMeta => tokenMeta.symbol == token.symbol
           )!;
 
@@ -311,7 +311,7 @@ export class UsdBancorModule
       return this.refresh();
     }
     console.time("sx");
-    vxm.eosBancor.init();
+    vxm.tlosBancor.init();
 
     const registryData = await getSxContracts();
     if (this.isAuthenticated) {
@@ -527,7 +527,7 @@ export class UsdBancorModule
 
   @action async triggerTx(actions: any[]) {
     // @ts-ignore
-    return this.$store.dispatch("eosWallet/tx", actions, { root: true });
+    return this.$store.dispatch("tlosWallet/tx", actions, { root: true });
   }
 
   @action async checkRefresh() {
