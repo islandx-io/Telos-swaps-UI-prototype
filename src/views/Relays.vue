@@ -77,8 +77,8 @@
               <template v-slot:cell(smartTokenSymbol)="data">
                 <span> {{ data.item.smartTokenSymbol }}</span>
               </template>
-              <template v-slot:cell(ratio)>
-                50 - 50
+              <template v-slot:cell(apy)>
+                --
               </template>
               <template v-slot:cell(actions)="data">
                 <div class="actionButtons">
@@ -168,9 +168,10 @@ export default class Relays extends Vue {
       formatter: (value: any) => this.shortenEthAddress(value)
     },
     {
-      key: "ratio",
-      tdClass: "font-w700",
-      class: "noWrap"
+      key: "apy",
+      sortable: true,
+      label: "APY",
+      class: ["text-right", "font-w700"]
     },
     {
       key: "liqDepth",

@@ -1057,6 +1057,22 @@ export class EosBancorModule
 
   @action async refresh() {
     console.log("refresh called, nothing");
+
+    const v1Relays = getHardCodedRelays();
+    console.log("v1Relays : ", v1Relays);
+    //    const allDry = [...v1Relays].filter(
+    //        noBlackListedReservesDry(blackListedTokens)
+    //    );
+
+    this.fetchTokenBalancesIfPossible(
+      _.uniqWith(
+        v1Relays.flatMap(x =>
+          x.reserves.map(x => ({ ...x, symbol: x.symbol.code().to_string() }))
+        ),
+        compareToken
+      )
+    );
+
     return;
   }
 
@@ -1265,9 +1281,9 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     relays: DryRelay[];
   }) {
     try {
-// https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
-//      const tokenData: TokenPrice[] = (<any>data).data.page;
-//      const [tokenPrices] = await Promise.all([tokenData]);
+      // https://api.bancor.network/0.1/currencies/tokens?blockchainType=eos&fromCurrencyCode=USD&includeTotal=true&limit=150&orderBy=volume24h&skip=0&sortOrder=desc
+      //      const tokenData: TokenPrice[] = (<any>data).data.page;
+      //      const [tokenPrices] = await Promise.all([tokenData]);
 
       // Pull token prices from chain
       const [tokenPrices] = await Promise.all([fetchTradeData()]);
@@ -2097,12 +2113,14 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       convertActions = [...openActions, ...convertActions];
     }
 
-    console.log("convert : ", convertActions);
+    console.log("convert.convertActions : ", convertActions);
     const txRes = await this.triggerTxAndWatchBalances({
       actions: convertActions,
       tokenIds: [from.id, to.id]
     });
 
+    console.log("convert.txRes : ", txRes);
+    this.refresh();
     return txRes.transaction_id;
   }
 
