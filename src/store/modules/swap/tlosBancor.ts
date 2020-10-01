@@ -1846,7 +1846,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   @action async getUserBalances(relayId: string) {
     const relay = await this.relayById(relayId);
     const [[smartTokenBalance], reserves, supply] = await Promise.all([
-      vxm.network.getBalances({
+      vxm.eosNetwork.getBalances({
         tokens: [
           {
             contract: relay.smartToken.contract,
