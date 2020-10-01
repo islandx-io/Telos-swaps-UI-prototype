@@ -531,9 +531,9 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
     // TODO smart token APR needs to be incuded in "pools" tab, calculations follow, APR in TLOS
     console.log("fetchTradeData.itemObject : ", itemObject);
     let smartPrice = itemObject.smart_price.find((token: any) => compareString(token.key, "TLOS")).value.split(" ")[0];
-    let smartPriceApy = itemObject.smart_price_change_30d.find((token: any) => compareString(token.key, "TLOS")).value.split(" ")[0];
-    smartPriceApy = smartPriceApy / (smartPrice - smartPriceApy) * 100.0 * 12;
-    console.log("fetchTradeData.smart_price(", newObj.code, "), price", smartPrice, ", APY", smartPriceApy);
+    let smartPriceApr = itemObject.smart_price_change_30d.find((token: any) => compareString(token.key, "TLOS")).value.split(" ")[0];
+    smartPriceApr = smartPriceApr / (smartPrice - smartPriceApr) * 100.0 * 12;
+    console.log("fetchTradeData.smart_price(", newObj.code, "), price", smartPrice, ", APR", smartPriceApr);
 
     // TODO need to add USD price changes into trade data from Delphi Oracle
     // prices will then be where symbol = USD, not TLOS

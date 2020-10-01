@@ -39,6 +39,7 @@ export class EosTransitModule extends VuexModule.With({
     network: {
       host: "telos.caleos.io",
 //      host: "telos.eosphere.io",
+//      host: "api.telos.africa",
       port: 443,
       protocol: "https",
       chainId:

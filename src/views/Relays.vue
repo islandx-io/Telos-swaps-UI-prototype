@@ -77,7 +77,7 @@
               <template v-slot:cell(smartTokenSymbol)="data">
                 <span> {{ data.item.smartTokenSymbol }}</span>
               </template>
-              <template v-slot:cell(apy)>
+              <template v-slot:cell(apr)>
                 --
               </template>
               <template v-slot:cell(actions)="data">
@@ -168,9 +168,9 @@ export default class Relays extends Vue {
       formatter: (value: any) => this.shortenEthAddress(value)
     },
     {
-      key: "apy",
+      key: "apr",
       sortable: true,
-      label: "APY",
+      label: "APR",
       class: ["text-right", "font-w700"]
     },
     {

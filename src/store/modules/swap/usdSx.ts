@@ -299,7 +299,7 @@ export class UsdBancorModule
       })
     );
 
-    console.log(prices, "are prices");
+    console.log("usdsPrices", prices);
   }
 
   @action async refresh() {
