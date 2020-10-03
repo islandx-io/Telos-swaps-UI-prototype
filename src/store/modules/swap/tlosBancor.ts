@@ -510,6 +510,7 @@ export class TlosBancorModule
   loadingPools: boolean = true;
   usdPrice = 0;
   usdPriceOfTlos = 0;
+  usdTlos24hPriceMove = 0;
   tokenMeta: TokenMeta[] = [];
   moreTokensAvailable = false;
   loadingTokens = false;
@@ -1169,9 +1170,11 @@ export class TlosBancorModule
       ]);
       this.setTokenMeta(tokenMeta);
       this.setTlosPrice(usdPriceOfTlos);
+      this.setTlos24hPriceMove(-4.25);
 
       console.log("tokenMeta : ", tokenMeta);
       console.log("usdPriceOfTlos : ", usdPriceOfTlos);
+      console.log("usdTlos24hPriceMove : ", this.usdTlos24hPriceMove);
 
       const v1Relays = getHardCodedRelays();
       console.log("v1Relays : ", v1Relays);
@@ -2279,6 +2282,10 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
 
   @mutation setTlosPrice(price: number) {
     this.usdPriceOfTlos = price;
+  }
+
+  @mutation setTlos24hPriceMove(priceMove: number) {
+    this.usdTlos24hPriceMove = priceMove;
   }
 
   @mutation setTokenMeta(tokens: TokenMeta[]) {

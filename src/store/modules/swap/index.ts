@@ -29,6 +29,11 @@ interface TlosPrice {
   lastChecked: number;
 }
 
+interface Tlos24hPriceMove {
+  percent_change_24h: null | number;
+  lastChecked: number;
+}
+
 const VuexModule = createModule({
   strict: false
 });
@@ -68,6 +73,12 @@ export class BancorModule extends VuexModule.With({
     price: null,
     lastChecked: 0
   };
+
+  usdTlos24hPriceMove: Tlos24hPriceMove = {
+    percent_change_24h: null,
+    lastChecked: 0
+  };
+
   modules: Module[] = moduleIds.map(({ id, label }) => ({
     id,
     label,
@@ -261,6 +272,10 @@ export class BancorModule extends VuexModule.With({
           Promise.resolve(promise).then(reject, resolve)
         );
       const any = (arr: any[]) => reverse(Promise.all(arr.map(reverse)));
+//      const res1 = await any([
+//        fetchCmcUsdPriceOfTlos()
+//      ]);
+//      console.log("getUsdPrice.fetchCoinCmcUsdPriceOfTlos", res1);
       const res = await any([
         fetchCoinGechoUsdPriceOfTlos()
       ]);

@@ -2,11 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { vxm } from "@/store";
 import { JsonRpc } from "eosjs";
 import Onboard from "bnc-onboard";
-import {
-  Asset,
-  Sym,
-  number_to_asset
-} from "eos-common";
+import { Asset, Sym, number_to_asset } from "eos-common";
 import { rpc } from "./rpc";
 import {
   TokenBalances,
@@ -124,6 +120,104 @@ export const fetchCoinGechoUsdPriceOfTlos = async (): Promise<number> => {
   return Number(res.data.telos.usd);
 };
 
+// 902e192a-d57a-49ac-986d-01b5f3a1b922
+//
+// curl -H "X-CMC_PRO_API_KEY: 902e192a-d57a-49ac-986d-01b5f3a1b922" -H "Accept: application/json" -d "id=4660" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest
+/*
+curl -H "X-CMC_PRO_API_KEY: 902e192a-d57a-49ac-986d-01b5f3a1b922" -H "Accept: application/json" -d "symbol=TLOS&convert=USD" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest
+curl -H "X-CMC_PRO_API_KEY: 902e192a-d57a-49ac-986d-01b5f3a1b922" -H "Accept: application/json" -d "id=4660&convert=USD" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest
+
+https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=4660&convert=USD&CMC_PRO_API_KEY=902e192a-d57a-49ac-986d-01b5f3a1b922
+
+{
+   "status":{
+      "timestamp":"2020-10-03T08:37:14.664Z",
+      "error_code":0,
+      "error_message":null,
+      "elapsed":10,
+      "credit_count":1,
+      "notice":null
+   },
+   "data":{
+      "TLOS":{
+         "id":4660,
+         "name":"Telos",
+         "symbol":"TLOS",
+         "slug":"telos",
+         "num_market_pairs":4,
+         "date_added":"2019-09-17T00:00:00.000Z",
+         "tags":[
+            "services",
+            "enterprise-solutions"
+         ],
+         "max_supply":null,
+         "circulating_supply":270123443.84430003,
+         "total_supply":355208370.6674,
+         "platform":{
+            "id":1765,
+            "name":"EOS",
+            "symbol":"EOS",
+            "slug":"eos",
+            "token_address":""
+         },
+         "is_active":1,
+         "cmc_rank":675,
+         "is_fiat":0,
+         "last_updated":"2020-10-03T08:36:43.000Z",
+         "quote":{
+            "USD":{
+               "price":0.01815647220941,
+               "volume_24h":37271.37537728,
+               "percent_change_1h":-0.55264775,
+               "percent_change_24h":-10.14481831,
+               "percent_change_7d":-19.06913511,
+               "market_cap":4904488.801269156,
+               "last_updated":"2020-10-03T08:36:43.000Z"
+            }
+         }
+      }
+   }
+}
+
+curl -H "X-CMC_PRO_API_KEY: 902e192a-d57a-49ac-986d-01b5f3a1b922" -H "Accept: application/json" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/map
+
+      {
+         "id":4660,
+         "name":"Telos",
+         "symbol":"TLOS",
+         "slug":"telos",
+         "rank":668,
+         "is_active":1,
+         "first_historical_data":"2019-09-19T05:29:13.000Z",
+         "last_historical_data":"2020-10-03T08:24:42.000Z",
+         "platform":{
+            "id":1765,
+            "name":"EOS",
+            "symbol":"EOS",
+            "slug":"eos",
+            "token_address":""
+         }
+      }
+ */
+
+//export const fetchCmcUsdPriceOfTlos = async (): Promise<number> => {
+//  const res = await axios.get< any >(
+//    "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=4660&convert=USD&CMC_PRO_API_KEY=902e192a-d57a-49ac-986d-01b5f3a1b922"
+//  );
+//  console.log("fetchCoinCmcUsdPriceOfTlos", res);
+
+//  const CoinMarketCap = require("coinmarketcap-api");
+
+//  const apiKey = "902e192a-d57a-49ac-986d-01b5f3a1b922";
+//  const client = new CoinMarketCap(apiKey);
+//  client
+//    .getQuotes({ symbol: "TLOS" })
+//    .then(console.log)
+//    .catch(console.error);
+
+//  return Number(1.0);
+//};
+
 export const updateArray = <T>(
   arr: T[],
   conditioner: (element: T) => boolean,
@@ -192,7 +286,7 @@ export const fetchTokenSymbol = async (
     scope: symbolName,
     table: "stat"
   });
-//  console.log("fetchTokenSymbol(",contractName,"",symbolName,")");
+  //  console.log("fetchTokenSymbol(",contractName,"",symbolName,")");
   if (statRes.rows.length == 0)
     throw new Error(
       `Unexpected stats table return from tokenContract ${contractName} ${symbolName}`
@@ -225,13 +319,13 @@ export const getBalance = async (
     if (typeof precision == "number") {
       return number_to_asset(0, new Sym(symbolName, precision)).to_string();
     } else {
-      console.log("no balance - getBalance(",contract,",",symbolName,")");
+      console.log("no balance - getBalance(", contract, ",", symbolName, ")");
       const symbol = await fetchTokenSymbol(contract, symbolName);
       return number_to_asset(0, symbol).to_string();
     }
   }
 
-  console.log("getBalance : (", account, ", ", contract, ", ", symbolName, ") = ",balance.balance);
+  console.log("getBalance : (", account, ", ", contract, ", ", symbolName, ") = ", balance.balance);
   return balance.balance;
 };
 
@@ -291,7 +385,7 @@ export const getTokenBalances = async (
   };
 
    */
-  return {account: "", query_time: 0, tokens: []};
+  return { account: "", query_time: 0, tokens: [] };
 };
 
 export const identifyVersionBySha3ByteCodeHash = (sha3Hash: string): string => {
@@ -372,14 +466,10 @@ export const services: Service[] = [
       Feature.Trade,
       Feature.Liquidity,
       Feature.Wallet
-//      Feature.CreatePool
+      //      Feature.CreatePool
     ]
   },
-  { namespace: "usds", features: [
-      Feature.Trade,
-      Feature.Wallet
-    ]
-  }
+  { namespace: "usds", features: [Feature.Trade, Feature.Wallet] }
 ];
 
 export interface ReserveTableRow {
@@ -461,9 +551,9 @@ export const getTokenMeta = async (): Promise<TokenMeta[]> => {
     tokenMetaDataEndpoint
   );
 
-//  console.log([...res.data]);
+  //  console.log([...res.data]);
 
-//  return [...res.data, ...hardCoded()]
+  //  return [...res.data, ...hardCoded()]
   return [...res.data]
     .filter(token => compareString(token.chain, "eos"))
     .map(token => ({
@@ -494,6 +584,10 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   const parsedTradeData = rawTradeData.rows;
 
   let usdPriceOfTlos = await vxm.bancor.fetchUsdPriceOfTlos();
+  // TODO read usdTlos24hPriceMove from CMC, use as follows
+  // let usdTlos24hPriceMove = fetchTlos24hUsdPriceOfTlos(usdTlos24hPriceMove) / 100.0;
+  // hardcoded for now
+  let usdTlos24hPriceMove = -4.25 / 100.0;
 
   let newTlosObj: any = {};
   newTlosObj.id = 1;
@@ -502,7 +596,7 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   newTlosObj.primaryCommunityImageName = newTlosObj.code;
   newTlosObj.liquidityDepth = 0.0;
   newTlosObj.price = usdPriceOfTlos;
-  newTlosObj.change24h = 0.0;
+  newTlosObj.change24h = 100.0 * usdTlos24hPriceMove;
   let volume24h: any = {};
   volume24h.USD = 0.0;
   newTlosObj.volume24h = volume24h;
@@ -512,27 +606,47 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   parsedTradeData.forEach(function(itemObject: any) {
     let newObj: any = {};
     newObj.id = i;
-    newObj.code = itemObject.liquidity_depth.find((token: any) => !compareString(token.key, "TLOS")).key;
+    newObj.code = itemObject.liquidity_depth.find(
+      (token: any) => !compareString(token.key, "TLOS")
+    ).key;
     newObj.name = newObj.code;
     newObj.primaryCommunityImageName = newObj.code;
-    newObj.liquidityDepth = itemObject.liquidity_depth.find((token: any) => compareString(token.key, "TLOS")).value.split(" ")[0] * usdPriceOfTlos * 2.0;
-    newObj.price = itemObject.price.find((token: any) => compareString(token.key, "TLOS")).value * usdPriceOfTlos;
-    newObj.change24h = itemObject.price_change_24h.find((token: any) => compareString(token.key, "TLOS")).value * usdPriceOfTlos;
-    newObj.change24h = newObj.change24h / (newObj.price - newObj.change24h ) * 100.0;
-    let volume24h: any = {};
-    volume24h.USD = itemObject.volume_24h.find((token: any) => compareString(token.key, "TLOS")).value.split(" ")[0] * usdPriceOfTlos;
-    newObj.volume24h = volume24h;
+    newObj.liquidityDepth =
+      itemObject.liquidity_depth
+        .find((token: any) => compareString(token.key, "TLOS"))
+        .value.split(" ")[0] * usdPriceOfTlos * 2.0;
+    newObj.price =
+      itemObject.price.find((token: any) => compareString(token.key, "TLOS"))
+        .value * usdPriceOfTlos;
 
-    // console.log(">>>> ", newObj.code, itemObject.volume_24h.find((token: any) => compareString(token.key, "TLOS")));
+    // This is to convert from % change in TLOS to USD
+    let raw24hChange =
+      itemObject.price_change_24h.find((token: any) =>
+        compareString(token.key, "TLOS")
+      ).value * usdPriceOfTlos;
+    let a = 1.0 / (1.0 + usdTlos24hPriceMove);
+    newObj.change24h = 100.0*((newObj.price) / (a * (newObj.price - raw24hChange)) - 1.0);
+    console.log("change24h(", newObj.code, ") : usdTlos24hPriceMove : ", usdTlos24hPriceMove, ", a : ", a, ", % change : ", newObj.change24h);
+
+    let volume24h: any = {};
+    volume24h.USD =
+      itemObject.volume_24h
+        .find((token: any) => compareString(token.key, "TLOS"))
+        .value.split(" ")[0] * usdPriceOfTlos;
+    newObj.volume24h = volume24h;
 
     newTlosObj.liquidityDepth += newObj.liquidityDepth;
     newTlosObj.volume24h.USD += newObj.volume24h.USD;
 
     // TODO smart token APR needs to be incuded in "pools" tab, calculations follow, APR in TLOS
     console.log("fetchTradeData.itemObject : ", itemObject);
-    let smartPrice = itemObject.smart_price.find((token: any) => compareString(token.key, "TLOS")).value.split(" ")[0];
-    let smartPriceApr = itemObject.smart_price_change_30d.find((token: any) => compareString(token.key, "TLOS")).value.split(" ")[0];
-    smartPriceApr = smartPriceApr / (smartPrice - smartPriceApr) * 100.0 * 12;
+    let smartPrice = itemObject.smart_price
+      .find((token: any) => compareString(token.key, "TLOS"))
+      .value.split(" ")[0];
+    let smartPriceApr = itemObject.smart_price_change_30d
+      .find((token: any) => compareString(token.key, "TLOS"))
+      .value.split(" ")[0];
+    smartPriceApr = (smartPriceApr / (smartPrice - smartPriceApr)) * 100.0 * 12;
     console.log("fetchTradeData.smart_price(", newObj.code, "), price", smartPrice, ", APR", smartPriceApr);
 
     // TODO need to add USD price changes into trade data from Delphi Oracle
