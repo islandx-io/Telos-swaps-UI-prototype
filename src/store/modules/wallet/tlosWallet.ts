@@ -7,12 +7,12 @@ import {
   WalletState
 } from "eos-transit";
 import scatter from "eos-transit-scatter-provider";
-import lynx from "eos-transit-lynx-provider";
+//import lynx from "eos-transit-lynx-provider";
 import ledger from "eos-transit-ledger-provider";
-import tp from "eos-transit-tokenpocket-provider";
-import meetone from "eos-transit-meetone-provider";
-import whalevault from "eos-transit-whalevault-provider";
-import keycat from "eos-transit-keycat-provider";
+//import tp from "eos-transit-tokenpocket-provider";
+//import meetone from "eos-transit-meetone-provider";
+//import whalevault from "eos-transit-whalevault-provider";
+//import keycat from "eos-transit-keycat-provider";
 import anchor from "eos-transit-anchorlink-provider";
 
 interface tlosWalletAction {
@@ -47,12 +47,12 @@ export class EosTransitModule extends VuexModule.With({
     },
     walletProviders: [
       scatter(),
-      lynx(),
+//      lynx(),
       ledger(),
-      tp(),
-      meetone(),
-      whalevault(),
-      keycat(),
+//      tp(),
+//      meetone(),
+//      whalevault(),
+//      keycat(),
       anchor(appName)
     ]
   });

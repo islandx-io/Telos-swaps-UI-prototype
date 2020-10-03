@@ -65,11 +65,11 @@ import { vxm } from "@/store/";
 import { WalletProvider } from "eos-transit";
 
 const mobileCompatibleWallets = [
-  "EOS Lynx",
-  "TokenPocket",
-  "meetone_provider",
-  "whalevault",
-  "Keycat",
+//  "EOS Lynx",
+//  "TokenPocket",
+//  "meetone_provider",
+//  "whalevault",
+//  "Keycat",
   "anchor-link"
 ];
 
@@ -125,16 +125,16 @@ export default class ModalLogin extends Vue {
         return "scatter.svg";
       case "ledger":
         return "ledger.png";
-      case "meetone_provider":
-        return "meetone.jpg";
-      case "Keycat":
-        return "keycat.svg";
-      case "TokenPocket":
-        return "tp.jpg";
-      case "EOS Lynx":
-        return "lynx.jpg";
-      case "whalevault":
-        return "whalevault.png";
+//      case "meetone_provider":
+//        return "meetone.jpg";
+//      case "Keycat":
+//        return "keycat.svg";
+//      case "TokenPocket":
+//        return "tp.jpg";
+//      case "EOS Lynx":
+//        return "lynx.jpg";
+//      case "whalevault":
+//        return "whalevault.png";
       default:
         return "eos.png";
     }
