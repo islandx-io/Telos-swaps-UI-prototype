@@ -40,6 +40,6 @@ export const vxm = {
   ethBancor: createProxy(store, EthBancorModule),
   usdsBancor: createProxy(store, UsdBancorModule),
   bancor: createProxy(store, BancorModule),
-  eosNetwork: createProxy(store, TlosNetworkModule),
+  tlosNetwork: createProxy(store, TlosNetworkModule),
   network: createProxy(store, NetworkModule)
 };

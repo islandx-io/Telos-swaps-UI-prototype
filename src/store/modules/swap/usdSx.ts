@@ -239,7 +239,7 @@ export class UsdBancorModule
           contract,
           symbol
         };
-        const tokenBalance = vxm.eosNetwork.balance(baseToken);
+        const tokenBalance = vxm.tlosNetwork.balance(baseToken);
 
         return {
           ...token,
@@ -315,7 +315,7 @@ export class UsdBancorModule
 
     const registryData = await getSxContracts();
     if (this.isAuthenticated) {
-      vxm.eosNetwork.getBalances({
+      vxm.tlosNetwork.getBalances({
         tokens: registryData.flatMap(data => data.tokens),
         slow: false
       });
@@ -469,7 +469,7 @@ export class UsdBancorModule
       compareString(token.symbol, symbolName)
     );
     if (this.isAuthenticated) {
-      vxm.eosNetwork.getBalances({
+      vxm.tlosNetwork.getBalances({
         tokens: tokens.map(token => ({
           contract: token.contract,
           symbol: token.symbol
@@ -516,11 +516,11 @@ export class UsdBancorModule
           }
         }
       ]),
-      vxm.eosNetwork.getBalances({
+      vxm.tlosNetwork.getBalances({
         tokens
       })
     ]);
-    vxm.eosNetwork.pingTillChange({ originalBalances });
+    vxm.tlosNetwork.pingTillChange({ originalBalances });
 
     return txRes.transaction_id;
   }

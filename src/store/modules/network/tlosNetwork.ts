@@ -43,7 +43,7 @@ const includedInTokens = (tokens: TokenBalanceParam[]) => (
 ) => tokens.some(t => compareToken(token, t));
 
 export class TlosNetworkModule
-  extends VuexModule.With({ namespaced: "eosNetwork/" })
+  extends VuexModule.With({ namespaced: "tlosNetwork/" })
   implements NetworkModule {
   tokenBalances: TokenBalanceReturn[] = [];
 
