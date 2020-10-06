@@ -143,7 +143,7 @@ export default class HeroTransfer extends Vue {
   }
 
   async initTransfer() {
-    await vxm.eosNetwork.transfer({
+    await vxm.tlosNetwork.transfer({
       to: this.recipient,
       memo: this.memo,
       id: this.focusedToken.symbol,

@@ -637,7 +637,7 @@ export class TlosBancorModule
   }
 
   get currentUserBalances(): TokenBalanceReturn[] {
-    return vxm.eosNetwork.balances;
+    return vxm.tlosNetwork.balances;
   }
 
   @action async fetchTokenBalancesIfPossible(tokens: TokenBalanceParam[]) {
@@ -661,7 +661,7 @@ export class TlosBancorModule
       compareToken
     );
 
-    return vxm.eosNetwork.getBalances({ tokens: tokensToAskFor, slow: false });
+    return vxm.tlosNetwork.getBalances({ tokens: tokensToAskFor, slow: false });
   }
 
   @action async updateFee({ fee, id }: FeeParams) {
@@ -838,7 +838,7 @@ export class TlosBancorModule
         const tokenMeta = findOrThrow(this.tokenMeta, token =>
           compareString(token.id, id)
         );
-        const tokenBalance = vxm.eosNetwork.balance({
+        const tokenBalance = vxm.tlosNetwork.balance({
           contract,
           symbol
         });
@@ -1092,7 +1092,7 @@ export class TlosBancorModule
         compareString(a.contract, b.contract)
     );
 
-    return vxm.eosNetwork.getBalances({
+    return vxm.tlosNetwork.getBalances({
       tokens: uniqueTokens,
       slow: false
     });
@@ -1452,10 +1452,10 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   @action async refreshBalances(tokens: BaseToken[] = []) {
     if (!this.isAuthenticated) return;
     if (tokens.length > 0) {
-      await vxm.eosNetwork.getBalances({ tokens });
+      await vxm.tlosNetwork.getBalances({ tokens });
       return;
     }
-    await vxm.eosNetwork.getBalances();
+    await vxm.tlosNetwork.getBalances();
   }
 
   @action async addLiquidity({
@@ -1559,7 +1559,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           }))
         ];
     
-        const originalBalances = await vxm.eosNetwork.getBalances({
+        const originalBalances = await vxm.tlosNetwork.getBalances({
           tokens: tokenContractsAndSymbols
         });
     
@@ -1660,7 +1660,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           onUpdate
         });
     
-        vxm.eosNetwork.pingTillChange({ originalBalances });
+        vxm.tlosNetwork.pingTillChange({ originalBalances });
         return finalState.txRes.transaction_id as string;
       }
     */
@@ -2160,11 +2160,11 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     const tokens: BaseToken[] = fullTokens;
     const [txRes, originalBalances] = await Promise.all([
       this.triggerTx(actions),
-      vxm.eosNetwork.getBalances({
+      vxm.tlosNetwork.getBalances({
         tokens
       })
     ]);
-    vxm.eosNetwork.pingTillChange({ originalBalances });
+    vxm.tlosNetwork.pingTillChange({ originalBalances });
     return txRes;
   }
 
