@@ -133,7 +133,7 @@ h2 {
 }
 
 #loading {
-  background-color: #324856;
+  background-color: #02003b;
   height: 100%;
   padding-top: 95px;
 }
