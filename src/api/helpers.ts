@@ -202,7 +202,7 @@ curl -H "X-CMC_PRO_API_KEY: 902e192a-d57a-49ac-986d-01b5f3a1b922" -H "Accept: ap
 
 //export const fetchCmcUsdPriceOfTlos = async (): Promise<number> => {
 //  const res = await axios.get< any >(
-//    "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=4660&convert=USD&CMC_PRO_API_KEY=902e192a-d57a-49ac-986d-01b5f3a1b922"
+//    "http://localhost/quotes/latest?id=4660&convert=USD&CMC_PRO_API_KEY=902e192a-d57a-49ac-986d-01b5f3a1b922"
 //  );
 //  console.log("fetchCoinCmcUsdPriceOfTlos", res);
 
@@ -587,7 +587,7 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   // TODO read usdTlos24hPriceMove from CMC, use as follows
   // let usdTlos24hPriceMove = fetchTlos24hUsdPriceOfTlos(usdTlos24hPriceMove) / 100.0;
   // hardcoded for now
-  let usdTlos24hPriceMove = 0.12 / 100.0;
+  let usdTlos24hPriceMove = -4.44 / 100.0;
 
   let newTlosObj: any = {};
   newTlosObj.id = 1;

@@ -19,6 +19,7 @@ import {
   updateArray
 } from "@/api/helpers";
 import {
+//  fetchCmcUsdPriceOfTlos,
   fetchCoinGechoUsdPriceOfTlos
 } from "@/api/helpers";
 import wait from "waait";
