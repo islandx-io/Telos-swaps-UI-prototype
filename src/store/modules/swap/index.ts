@@ -52,10 +52,10 @@ const moduleIds: { label: string; id: string }[] = [
   {
     label: "Telos Swaps",
     id: "tlos"
-//  },
-//  {
-//    label: "X-Chain Transfer",
-//    id: "xchain"
+  },
+  {
+    label: "X-Chain Transfer",
+    id: "xchain"
   }
 ];
 
