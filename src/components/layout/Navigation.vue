@@ -76,6 +76,11 @@ const defaultPaths = [
     moduleId: "usds",
     base: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" }),
     quote: buildTokenId({ contract: "tokens.swaps", symbol: "USDT" })
+  },
+  {
+    moduleId: "xchain",
+    base: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" }),
+    quote: buildTokenId({ contract: "tokens.swaps", symbol: "USDT" })
   }
 ];
 const appendBaseQuoteQuery = (base: string, quote: string, route: Route) => ({

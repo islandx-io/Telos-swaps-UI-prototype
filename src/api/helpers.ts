@@ -469,7 +469,8 @@ export const services: Service[] = [
       //      Feature.CreatePool
     ]
   },
-  { namespace: "usds", features: [Feature.Trade, Feature.Wallet] }
+  { namespace: "usds", features: [Feature.Trade, Feature.Wallet] },
+  { namespace: "xchain", features: [Feature.Trade, Feature.Wallet] }
 ];
 
 export interface ReserveTableRow {
