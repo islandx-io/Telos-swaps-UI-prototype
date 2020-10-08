@@ -114,12 +114,12 @@ const environmentCanBeTrusted = () => {
 const trusted = environmentCanBeTrusted();
 
 const contractDb: BaseToken[] = [
-  { contract: "eosio.token", symbol: "TLOS" },
-  { contract: "tokens.swaps", symbol: "TLOSD" },
-  { contract: "tokens.swaps", symbol: "TLOSM" },
-  { contract: "tokens.swaps", symbol: "USDT" },
-  { contract: "tokens.swaps", symbol: "EOSDT" },
-  { contract: "tokens.swaps", symbol: "VIGOR" }
+//  { contract: "eosio.token", symbol: "TLOS" },
+//  { contract: "tokens.swaps", symbol: "TLOSD" },
+//  { contract: "tokens.swaps", symbol: "TLOSM" },
+//  { contract: "tokens.swaps", symbol: "USDT" },
+//  { contract: "tokens.swaps", symbol: "EOSDT" },
+//  { contract: "tokens.swaps", symbol: "VIGOR" }
 ];
 
 const symbolNameToContract = (symbolName: string) =>

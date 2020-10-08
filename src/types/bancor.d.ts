@@ -495,8 +495,7 @@ export interface Settings {
 export enum Feature {
   Trade,
   Wallet,
-  Liquidity,
-  CreatePool
+  Liquidity
 }
 
 export interface Service {

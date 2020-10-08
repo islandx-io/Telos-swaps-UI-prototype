@@ -14,7 +14,6 @@ import {
   get_settings,
   get_volume,
   get_rate,
-  get_price,
   get_inverse_rate,
   Tokens,
   Settings,
@@ -23,8 +22,14 @@ import {
   Volume,
   get_slippage,
   get_fee,
-  get_spot_price
-} from "@/api/telosd";
+  get_spot_price,
+  get_xchain_settings,
+  get_xchain_tokens,
+  get_xchain_remote_tokens,
+  XchainTokens,
+  XchainToken,
+  XchainSettings
+} from "@/api/xChain";
 import { rpc } from "@/api/rpc";
 import {
   asset_to_number,
@@ -113,14 +118,7 @@ const environmentCanBeTrusted = () => {
 };
 const trusted = environmentCanBeTrusted();
 
-const contractDb: BaseToken[] = [
-  { contract: "eosio.token", symbol: "TLOS" },
-  { contract: "tokens.swaps", symbol: "TLOSD" },
-  { contract: "tokens.swaps", symbol: "TLOSM" },
-  { contract: "tokens.swaps", symbol: "USDT" },
-  { contract: "tokens.swaps", symbol: "EOSDT" },
-  { contract: "tokens.swaps", symbol: "VIGOR" }
-];
+const contractDb: BaseToken[] = [];
 
 const symbolNameToContract = (symbolName: string) =>
   findOrThrow(
@@ -162,6 +160,13 @@ interface Stat {
   contract: string;
 }
 
+interface XchainStat {
+  tokens: XchainTokens;
+  remote_tokens: XchainTokens;
+  settings: XchainSettings;
+  contract: string;
+}
+
 interface MiniRelay {
   id: string;
   tokenIds: string[];
@@ -190,6 +195,8 @@ export class xChainModule
   initiated: boolean = false;
   contracts: string[] = [];
   stats: Stat[] = [];
+  xChainContracts: string[] = ["telosd.io"];
+  xchainStats: XchainStat[] = [];
   lastLoaded: number = 0;
 
   get wallet() {
@@ -280,6 +287,16 @@ export class xChainModule
     return { tokens, volume, settings, contract };
   }
 
+  @action async fetchXchainContract(contract: string): Promise<XchainStat> {
+    const [tokens, remote_tokens, settings] = await Promise.all([
+      retryPromise(() => get_xchain_tokens(rpc, contract), 4, 500),
+      retryPromise(() => get_xchain_remote_tokens(rpc, contract), 4, 500),
+      retryPromise(() => get_xchain_settings(rpc, contract), 4, 500)
+    ]);
+
+    return { tokens, remote_tokens, settings, contract };
+  }
+
   @action async checkPrices(contracts: string[]) {
     console.log(contracts);
 
@@ -340,6 +357,8 @@ export class xChainModule
       )
     );
 
+    const allXchainTokens = await Promise.all(this.xChainContracts.map(this.fetchXchainContract));
+
     setInterval(() => this.checkRefresh(), 20000);
 
     const allWithId: SxToken[] = all.flatMap(x =>
@@ -390,7 +409,7 @@ export class xChainModule
     this.setNewTokens(newTokens);
     this.moduleInitiated();
     await wait(10);
-    console.timeEnd("sx");
+    console.timeEnd("xchain");
   }
 
   @action async buildTokens({

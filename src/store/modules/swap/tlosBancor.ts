@@ -531,10 +531,7 @@ export class TlosBancorModule
       const relay = this.relaysList.find(relay => compareString(relay.id, id))!;
       const features: Feature[] = [
         ["addLiquidity", () => true],
-        [
-          "removeLiquidity",
-          relay => relay.reserves.some(reserve => reserve.amount > 0)
-        ]
+        ["removeLiquidity", relay => relay.reserves.some(reserve => reserve.amount > 0)]
       ];
       return features
         .filter(([name, test]) => test(relay, isAuthenticated))

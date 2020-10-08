@@ -64,8 +64,6 @@
 <script lang="ts">
 import { Prop, Watch, Component, Vue } from "vue-property-decorator";
 import { vxm } from "@/store";
-import { bancorApi } from "@/api/bancorApiWrapper";
-import { TokenPrice } from "@/types/bancor";
 import SortIcons from "@/components/common/SortIcons.vue";
 import numeral from "numeral";
 
