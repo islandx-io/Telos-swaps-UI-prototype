@@ -11,24 +11,24 @@ import {
 } from "@/types/bancor";
 import { vxm } from "@/store";
 import {
-  get_settings,
+  get_legacy_settings,
   get_volume,
   get_rate,
   get_inverse_rate,
-  Tokens,
-  Settings,
-  get_tokens,
-  Token,
+  LegacyTokens,
+  LegacySettings,
+  get_legacy_tokens,
+  LegacyToken,
   Volume,
   get_slippage,
   get_fee,
   get_spot_price,
-  get_xchain_settings,
-  get_xchain_tokens,
-  get_xchain_remote_tokens,
-  XchainTokens,
-  XchainToken,
-  XchainSettings
+  get_settings,
+  get_tokens,
+  get_remote_tokens,
+  Tokens,
+  Token,
+  Settings
 } from "@/api/xChain";
 import { rpc } from "@/api/rpc";
 import {
@@ -60,8 +60,8 @@ interface RateDetail {
 const getRate = (
   asset: Asset,
   sym: Sym,
-  tokens: Tokens,
-  settings: Settings
+  tokens: LegacyTokens,
+  settings: LegacySettings
 ): RateDetail => {
   const rate = get_rate(asset, sym.code(), tokens, settings);
   const slippage = get_slippage(asset, sym.code(), tokens, settings);
@@ -73,8 +73,8 @@ const getRate = (
 const getInverseRate = (
   asset: Asset,
   sym: Sym,
-  tokens: Tokens,
-  settings: Settings
+  tokens: LegacyTokens,
+  settings: LegacySettings
 ): RateDetail => {
   const rate = get_inverse_rate(asset, sym.code(), tokens, settings);
   const slippage = get_slippage(rate, sym.code(), tokens, settings);
@@ -98,17 +98,7 @@ interface SxToken {
 
 const addNumbers = (acc: number, num: number) => acc + num;
 
-const accumulateLiq = (acc: SxToken, token: SxToken) => ({
-  ...acc,
-  liqDepth: acc.liqDepth + token.liqDepth
-});
-
-const accumulateVolume = (acc: SxToken, token: SxToken) => ({
-  ...acc,
-  volume24h: acc.volume24h + token.volume24h
-});
-
-const tokensToArray = (tokens: Tokens): Token[] =>
+const tokensToArray = (tokens: LegacyTokens): LegacyToken[] =>
   Object.keys(tokens).map(key => tokens[key]);
 
 const environmentCanBeTrusted = () => {
@@ -127,7 +117,7 @@ const symbolNameToContract = (symbolName: string) =>
     "failed to find hardcoded contract"
   ).contract;
 
-const tokenToId = (token: Token) => {
+const tokenToId = (token: LegacyToken) => {
   const symbolName = token.sym.code().to_string();
   return buildTokenId({
     contract: trusted
@@ -137,46 +127,27 @@ const tokenToId = (token: Token) => {
   });
 };
 
-interface AddedVolume extends Token {
+interface AddedVolume extends LegacyToken {
   volume24h?: number;
 }
 
-const contract = process.env.VUE_APP_USDSTABLE!;
-
-interface SXToken {
-  id: string;
-  symbol: string;
-  precision: number;
+interface LegacyStat {
+  tokens: LegacyTokens;
+  volume: Volume[];
+  settings: LegacySettings;
   contract: string;
-  volume24h: number;
-  price: number;
-  liqDepth: number;
 }
 
 interface Stat {
   tokens: Tokens;
-  volume: Volume[];
+  remote_tokens: Tokens;
   settings: Settings;
-  contract: string;
-}
-
-interface XchainStat {
-  tokens: XchainTokens;
-  remote_tokens: XchainTokens;
-  settings: XchainSettings;
   contract: string;
 }
 
 interface MiniRelay {
   id: string;
   tokenIds: string[];
-}
-
-interface TradeProposal {
-  fromId: string;
-  toId: string;
-  amount: Asset;
-  calculator: (token: Token, setting: Settings) => Asset;
 }
 
 interface PoolReturn {
@@ -193,10 +164,10 @@ export class xChainModule
   implements TradingModule {
   newTokens: SxToken[] = [];
   initiated: boolean = false;
-  contracts: string[] = [];
-  stats: Stat[] = [];
-  xChainContracts: string[] = ["telosd.io"];
-  xchainStats: XchainStat[] = [];
+  legacyContracts: string[] = [];
+  legacyStats: LegacyStat[] = [];
+  contracts: string[] = ["telosd.io"];
+  xchainStats: Stat[] = [];
   lastLoaded: number = 0;
 
   get wallet() {
@@ -270,28 +241,28 @@ export class xChainModule
   }
 
   @mutation setContracts(contracts: string[]) {
-    this.contracts = contracts;
+    this.legacyContracts = contracts;
   }
 
   @mutation moduleInitiated() {
     this.initiated = true;
   }
 
-  @action async fetchContract(contract: string): Promise<Stat> {
+  @action async fetchLegacyContract(contract: string): Promise<LegacyStat> {
     const [tokens, volume, settings] = await Promise.all([
-      retryPromise(() => get_tokens(rpc, contract), 4, 500),
+      retryPromise(() => get_legacy_tokens(rpc, contract), 4, 500),
       retryPromise(() => get_volume(rpc, contract, 1), 4, 500),
-      retryPromise(() => get_settings(rpc, contract), 4, 500)
+      retryPromise(() => get_legacy_settings(rpc, contract), 4, 500)
     ]);
 
     return { tokens, volume, settings, contract };
   }
 
-  @action async fetchXchainContract(contract: string): Promise<XchainStat> {
+  @action async fetchXchainContract(contract: string): Promise<Stat> {
     const [tokens, remote_tokens, settings] = await Promise.all([
-      retryPromise(() => get_xchain_tokens(rpc, contract), 4, 500),
-      retryPromise(() => get_xchain_remote_tokens(rpc, contract), 4, 500),
-      retryPromise(() => get_xchain_settings(rpc, contract), 4, 500)
+      retryPromise(() => get_tokens(rpc, contract), 4, 500),
+      retryPromise(() => get_remote_tokens(rpc, contract), 4, 500),
+      retryPromise(() => get_settings(rpc, contract), 4, 500)
     ]);
 
     return { tokens, remote_tokens, settings, contract };
@@ -342,13 +313,13 @@ export class xChainModule
 
     this.checkPrices(contracts);
     this.setContracts(contracts);
-    const allTokens = await Promise.all(contracts.map(this.fetchContract));
-    this.setStats(allTokens);
+    const allLegacyTokens = await Promise.all(contracts.map(this.fetchLegacyContract));
+    this.setStats(allLegacyTokens);
 
     retryPromise(() => this.updateStats(), 4, 1000);
 
     const all = await Promise.all(
-      allTokens.flatMap(token =>
+      allLegacyTokens.flatMap(token =>
         this.buildTokens({
           tokens: token.tokens,
           volume: token.volume[0],
@@ -357,7 +328,7 @@ export class xChainModule
       )
     );
 
-    const allXchainTokens = await Promise.all(this.xChainContracts.map(this.fetchXchainContract));
+    const allXchainTokens = await Promise.all(this.contracts.map(this.fetchXchainContract));
 
     setInterval(() => this.checkRefresh(), 20000);
 
@@ -414,14 +385,14 @@ export class xChainModule
 
   @action async buildTokens({
     tokens,
-    volume,
-    settings
+    settings,
+    volume
   }: {
-    tokens: Tokens;
-    settings: Settings;
+    tokens: LegacyTokens;
+    settings: LegacySettings;
     volume: Volume;
   }) {
-    const tokensArray: Token[] = tokensToArray(tokens);
+    const tokensArray: LegacyToken[] = tokensToArray(tokens);
     const addedPossibleVolumes: AddedVolume[] = tokensArray.map(token => {
       const symbolName = token.sym.code().to_string();
       const hasVolume = Object.keys(volume.volume).includes(symbolName);
@@ -593,13 +564,13 @@ export class xChainModule
     calculator,
     tokenIds
   }: {
-    calculator: (tokens: Tokens, settings: Settings) => RateDetail;
+    calculator: (tokens: LegacyTokens, settings: LegacySettings) => RateDetail;
     tokenIds: string[];
   }): Promise<PoolReturn[]> {
     if (tokenIds.length !== 2)
       throw new Error("Can only trade between two tokens");
 
-    const miniRelays: MiniRelay[] = this.stats.map(
+    const miniRelays: MiniRelay[] = this.legacyStats.map(
       (stat): MiniRelay => ({
         id: stat.contract,
         tokenIds: tokensToArray(stat.tokens).map(tokenToId)
@@ -617,7 +588,7 @@ export class xChainModule
         "Failed to find pool to facilitate trade, please convert to TLOS or TLOSD first"
       );
 
-    const hydratedPools = this.stats.filter(stat =>
+    const hydratedPools = this.legacyStats.filter(stat =>
       poolCandidates.some(pool => compareString(stat.contract, pool.id))
     );
 
@@ -699,14 +670,14 @@ export class xChainModule
 
   @action async updateStats() {
     this.resetTimer();
-    const contracts = this.contracts;
-    const allTokens = await Promise.all(contracts.map(this.fetchContract));
+    const contracts = this.legacyContracts;
+    const allLegacyTokens = await Promise.all(contracts.map(this.fetchLegacyContract));
 
-    this.setStats(allTokens);
+    this.setStats(allLegacyTokens);
   }
 
-  @mutation setStats(stats: Stat[]) {
-    this.stats = stats;
+  @mutation setStats(legacyStats: LegacyStat[]) {
+    this.legacyStats = legacyStats;
     this.lastLoaded = new Date().getTime();
   }
 }

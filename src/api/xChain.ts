@@ -55,7 +55,7 @@ export function check_quantity(quantity: Asset | string): void {
 
 export function check_remaining_reserve(
   out: Asset | string,
-  tokens: Tokens
+  tokens: LegacyTokens
 ): void {
   // validate input
   const token = tokens[new Asset(out).symbol.code().to_string()];
@@ -70,7 +70,7 @@ export function check_remaining_reserve(
 
 export function get_fee(
   quantity: Asset | string,
-  settings: Settings | { fee: number }
+  settings: LegacySettings | { fee: number }
 ): Asset {
   const { amount, symbol } = asset(quantity);
   const fee = (settings.fee * Number(amount)) / 10000;
@@ -80,7 +80,7 @@ export function get_fee(
 
 export function get_inverse_fee(
   out: Asset | string,
-  settings: Settings | { fee: number }
+  settings: LegacySettings | { fee: number }
 ): Asset {
   const { amount, symbol } = asset(out);
   const fee =
@@ -92,8 +92,8 @@ export function get_inverse_fee(
 export function get_price(
   quantity: Asset | string,
   symcode: SymbolCode | string,
-  tokens: Tokens,
-  settings: Settings | { amplifier: number }
+  tokens: LegacyTokens,
+  settings: LegacySettings | { amplifier: number }
 ): number {
   // params
   const _quantity = new Asset(quantity);
@@ -114,8 +114,8 @@ export function get_price(
 export function get_inverse_price(
   out: Asset | string,
   symcode: SymbolCode | string,
-  tokens: Tokens,
-  settings: Settings | { amplifier: number }
+  tokens: LegacyTokens,
+  settings: LegacySettings | { amplifier: number }
 ): Asset {
   // params
   const _out = new Asset(out);
@@ -142,8 +142,8 @@ export function get_inverse_price(
 export function get_rate(
   quantity: Asset | string,
   symcode: SymbolCode | string,
-  tokens: Tokens,
-  settings: Settings
+  tokens: LegacyTokens,
+  settings: LegacySettings
 ): Asset {
   // params
   const _quantity = new Asset(quantity);
@@ -161,8 +161,8 @@ export function get_rate(
 export function get_inverse_rate(
   out: Asset | string,
   symcode: SymbolCode | string,
-  tokens: Tokens,
-  settings: Settings
+  tokens: LegacyTokens,
+  settings: LegacySettings
 ): Asset {
   const price = get_inverse_price(out, symcode, tokens, settings);
   const fee = get_inverse_fee(price, settings);
@@ -171,10 +171,10 @@ export function get_inverse_rate(
   return rate;
 }
 
-export async function get_settings(
+export async function get_legacy_settings(
   rpc: JsonRpc,
   code: string
-): Promise<Settings> {
+): Promise<LegacySettings> {
   // optional params
   const scope = code;
   const table = "settings";
@@ -202,10 +202,10 @@ export async function get_settings(
   };
 }
 
-export async function get_xchain_settings(
+export async function get_settings(
   rpc: JsonRpc,
   code: string
-): Promise<XchainSettings> {
+): Promise<Settings> {
   // optional params
   const scope = code;
   const table = "settings";
@@ -234,8 +234,8 @@ export async function get_xchain_settings(
 export function get_slippage(
   quantity: Asset | string,
   symcode: SymbolCode | string,
-  tokens: Tokens,
-  settings: Settings
+  tokens: LegacyTokens,
+  settings: LegacySettings
 ): number {
   const _quantity = new Asset(quantity);
 
@@ -250,7 +250,7 @@ export function get_slippage(
   return spot_price_per_unit / price - 1;
 }
 
-export function get_pool_balance(tokens: Tokens, settings: Settings) {
+export function get_pool_balance(tokens: LegacyTokens, settings: LegacySettings) {
   const proxy_token = settings.proxy_token.code();
   let a = 0.0;
   for (const token in tokens) {
@@ -263,20 +263,20 @@ export function get_pool_balance(tokens: Tokens, settings: Settings) {
   return a;
 }
 
-export function get_maker_balance(tokens: Tokens, settings: Settings) {
+export function get_maker_balance(tokens: LegacyTokens, settings: LegacySettings) {
   return asset_to_number(
     tokens[settings.maker_token.code().to_string()].balance
   );
 }
 
-export function is_maker_token(quote: SymbolCode, tokens: Tokens): boolean {
+export function is_maker_token(quote: SymbolCode, tokens: LegacyTokens): boolean {
   return tokens[quote.to_string()].token_type.to_string() == "liquidity";
 }
 
 export function get_maker_spot_price(
   base: SymbolCode,
-  tokens: Tokens,
-  settings: Settings
+  tokens: LegacyTokens,
+  settings: LegacySettings
 ): number {
   const proxy_spot_price = get_spot_price(
     base,
@@ -294,8 +294,8 @@ export function get_maker_spot_price(
 export function get_spot_price(
   base: SymbolCode | string,
   quote: SymbolCode | string,
-  tokens: Tokens,
-  settings: Settings
+  tokens: LegacyTokens,
+  settings: LegacySettings
 ): number {
   if (is_maker_token(new SymbolCode(quote), tokens))
     return get_maker_spot_price(new SymbolCode(base), tokens, settings);
@@ -308,12 +308,12 @@ export function get_spot_price(
   return base_upper / quote_upper;
 }
 
-export async function get_tokens(
+export async function get_legacy_tokens(
   rpc: JsonRpc,
   code: string,
   limit = 50
-): Promise<Tokens> {
-  const tokens: Tokens = {};
+): Promise<LegacyTokens> {
+  const tokens: LegacyTokens = {};
 
   // optional params
   const scope = code;
@@ -343,13 +343,13 @@ export async function get_tokens(
   return tokens;
 }
 
-export async function get_xchain_tokens(
+export async function get_tokens(
   rpc: JsonRpc,
   code: string,
   limit = 50
-): Promise<XchainTokens> {
-  const tokens: XchainTokens = {};
-  //  const remote_tokens: XchainTokens = {};
+): Promise<Tokens> {
+  const tokens: Tokens = {};
+  //  const remote_tokens: Tokens = {};
 
   // optional params
   const scope = code;
@@ -362,10 +362,10 @@ export async function get_xchain_tokens(
     table,
     limit
   });
-  console.log("get_xchain_tokens:", results);
+  console.log("get_tokens:", results);
 
   for (const row of results.rows) {
-    console.log("get_xchain_tokens.row", row);
+    console.log("get_tokens.row", row);
     const [precision, symcode] = row.token_info.sym.split(",");
     tokens[symcode] = {
       chain: "telos",
@@ -373,18 +373,18 @@ export async function get_xchain_tokens(
       sym: new Sym(symcode, precision),
       min_quantity: new Asset(row.min_quantity)
     };
-    console.log("get_xchain_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
+    console.log("get_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
   }
 
   return tokens;
 }
 
-export async function get_xchain_remote_tokens(
+export async function get_remote_tokens(
   rpc: JsonRpc,
   code: string,
   limit = 50
-): Promise<XchainTokens> {
-  const tokens: XchainTokens = {};
+): Promise<Tokens> {
+  const tokens: Tokens = {};
 
   // optional params
   const scope = code;
@@ -397,10 +397,10 @@ export async function get_xchain_remote_tokens(
     table,
     limit
   });
-  console.log("get_xchain_remote_tokens:", results);
+  console.log("get_remote_tokens:", results);
 
   for (const row of results.rows) {
-    console.log("get_xchain_remote_tokens.row", row);
+    console.log("get_remote_tokens.row", row);
     const [precision, symcode] = row.remote_token.sym.split(",");
     tokens[symcode] = {
       chain: row.token_info.remote_chain,
@@ -408,7 +408,7 @@ export async function get_xchain_remote_tokens(
       sym: new Sym(symcode, precision),
       min_quantity: new Asset(row.min_quantity)
     };
-    console.log("get_xchain_remote_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
+    console.log("get_remote_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
   }
 
   return tokens;
@@ -417,8 +417,8 @@ export async function get_xchain_remote_tokens(
 export function get_uppers(
   base: SymbolCode,
   quote: SymbolCode,
-  tokens: Tokens,
-  settings: Settings | { amplifier: number }
+  tokens: LegacyTokens,
+  settings: LegacySettings | { amplifier: number }
 ): [number, number] {
   // balances
   const base_balance = asset_to_number(tokens[base.to_string()].balance);
@@ -495,7 +495,7 @@ export interface kv {
   [symcode: string]: number;
 }
 
-export interface Settings {
+export interface LegacySettings {
   fee: number;
   amplifier: number;
   proxy_contract: Name;
@@ -503,17 +503,17 @@ export interface Settings {
   maker_token: Sym;
 }
 
-export interface XchainSettings {
+export interface Settings {
   chain: string;
   enabled: boolean;
   fee: number;
 }
 
-export interface Tokens {
-  [symcode: string]: Token;
+export interface LegacyTokens {
+  [symcode: string]: LegacyToken;
 }
 
-export interface Token {
+export interface LegacyToken {
   sym: Sym;
   contract: Name;
   balance: Asset;
@@ -523,11 +523,11 @@ export interface Token {
   token_type: Name;
 }
 
-export interface XchainTokens {
-  [symcode: string]: XchainToken;
+export interface Tokens {
+  [symcode: string]: Token;
 }
 
-export interface XchainToken {
+export interface Token {
   chain: string;
   contract: Name;
   sym: Sym;
