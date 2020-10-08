@@ -79,7 +79,7 @@ const defaultPaths = [
   },
   {
     moduleId: "xchain",
-    base: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" }),
+    base: buildTokenId({ contract: "tokens.swaps", symbol: "BTC" }),
     quote: buildTokenId({ contract: "tokens.swaps", symbol: "USDT" })
   }
 ];

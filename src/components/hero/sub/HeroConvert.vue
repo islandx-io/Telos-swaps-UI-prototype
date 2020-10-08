@@ -158,6 +158,12 @@ const addDefaultQueryParams = (to: Route): any => {
         buildTokenId({ contract: "tokens.swaps", symbol: "USDT" }),
         to
       );
+    case "xchain":
+      return appendBaseQuoteQuery(
+        buildTokenId({ contract: "tokens.swaps", symbol: "BTC" }),
+        buildTokenId({ contract: "tokens.swaps", symbol: "EOS" }),
+        to
+      );
     default:
       throw new Error("Unrecognised service!");
   }

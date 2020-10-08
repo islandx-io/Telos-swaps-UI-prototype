@@ -65,6 +65,26 @@ interface TraditionalStat {
   max_supply: Asset;
 }
 
+/*
+1
+telosd.swaps
+[ "USDT", "TLOSD", "TLOSM", "EOSDT" ]
+[ { "sym": "4,USDT", "contract": "tokens.swaps" }, { "sym": "4,TLOSD", "contract": "tokens.swaps" }, { "sym": "8,TLOSM", "contract": "tokens.swaps" }, { "sym": "9,EOSDT", "contract": "tokens.swaps" } ]
+
+telosd.io
+[ "BTC", "EOS", "BNT", "USDT", "VIGOR", "EOSDT" ]
+[ { "sym": "8,BTC", "contract": "tokens.swaps" }, { "sym": "4,EOS", "contract": "tokens.swaps" }, { "sym": "10,BNT", "contract": "tokens.swaps" }, { "sym": "4,USDT", "contract": "tokens.swaps" }, { "sym": "4,VIGOR", "contract": "tokens.swaps" }, { "sym": "9,EOSDT", "contract": "tokens.swaps" } ]
+
+
+
+1	{ "sym": "8,BTC", "contract": "tokens.swaps" }	1	0.00010000 BTC	eos	{ "sym": "8,PBTC", "contract": "btc.ptokens" }	1
+2	{ "sym": "4,EOS", "contract": "tokens.swaps" }	1	0.2500 EOS	eos	{ "sym": "4,EOS", "contract": "eosio.token" }	1
+3	{ "sym": "10,BNT", "contract": "tokens.swaps" }	1	0.2500000000 BNT	eos	{ "sym": "10,BNT", "contract": "bntbntbntbnt" }	1
+4	{ "sym": "4,USDT", "contract": "tokens.swaps" }	1	1.0000 USDT	eos	{ "sym": "4,USDT", "contract": "tethertether" }	1
+5	{ "sym": "4,VIGOR", "contract": "tokens.swaps" }	1	1.0000 VIGOR	eos	{ "sym": "4,VIGOR", "contract": "vigortoken11" }	1
+6	{ "sym": "9,EOSDT", "contract": "tokens.swaps" }	1	1.000000000 EOSDT	eos	{ "sym": "9,EOSDT", "contract": "eosdtsttoken" }	1
+
+ */
 export const getSxContracts = async () => {
   const res = (await rpc.get_table_rows({
     code: "config.swaps",

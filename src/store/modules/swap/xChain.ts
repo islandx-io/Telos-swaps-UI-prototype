@@ -98,16 +98,6 @@ interface SxToken {
 
 const addNumbers = (acc: number, num: number) => acc + num;
 
-const accumulateLiq = (acc: SxToken, token: SxToken) => ({
-  ...acc,
-  liqDepth: acc.liqDepth + token.liqDepth
-});
-
-const accumulateVolume = (acc: SxToken, token: SxToken) => ({
-  ...acc,
-  volume24h: acc.volume24h + token.volume24h
-});
-
 const tokensToArray = (tokens: Tokens): Token[] =>
   Object.keys(tokens).map(key => tokens[key]);
 
@@ -118,7 +108,14 @@ const environmentCanBeTrusted = () => {
 };
 const trusted = environmentCanBeTrusted();
 
-const contractDb: BaseToken[] = [];
+const contractDb: BaseToken[] = [
+  { contract: "tokens.swaps", symbol: "BTC" },
+  { contract: "tokens.swaps", symbol: "EOS" },
+  { contract: "tokens.swaps", symbol: "BNT" },
+  { contract: "tokens.swaps", symbol: "USDT" },
+  { contract: "tokens.swaps", symbol: "VIGOR" },
+  { contract: "tokens.swaps", symbol: "EOSDT" }
+];
 
 const symbolNameToContract = (symbolName: string) =>
   findOrThrow(
@@ -141,18 +138,6 @@ interface AddedVolume extends Token {
   volume24h?: number;
 }
 
-const contract = process.env.VUE_APP_USDSTABLE!;
-
-interface SXToken {
-  id: string;
-  symbol: string;
-  precision: number;
-  contract: string;
-  volume24h: number;
-  price: number;
-  liqDepth: number;
-}
-
 interface Stat {
   tokens: Tokens;
   volume: Volume[];
@@ -170,13 +155,6 @@ interface XchainStat {
 interface MiniRelay {
   id: string;
   tokenIds: string[];
-}
-
-interface TradeProposal {
-  fromId: string;
-  toId: string;
-  amount: Asset;
-  calculator: (token: Token, setting: Settings) => Asset;
 }
 
 interface PoolReturn {

@@ -253,13 +253,13 @@ export function get_slippage(
 export function get_pool_balance(tokens: Tokens, settings: Settings) {
   const proxy_token = settings.proxy_token.code();
   let a = 0.0;
-  for (const token in tokens) {
-    if (!is_maker_token(tokens[token].sym.code(), tokens)) {
-      a +=
-        asset_to_number(tokens[token].maker_pool) *
-        get_spot_price(proxy_token, tokens[token].sym.code(), tokens, settings);
-    }
-  }
+//  for (const token in tokens) {
+//    if (!is_maker_token(tokens[token].sym.code(), tokens)) {
+//      a +=
+//        asset_to_number(tokens[token].maker_pool) *
+//        get_spot_price(proxy_token, tokens[token].sym.code(), tokens, settings);
+//    }
+//  }
   return a;
 }
 
@@ -270,7 +270,8 @@ export function get_maker_balance(tokens: Tokens, settings: Settings) {
 }
 
 export function is_maker_token(quote: SymbolCode, tokens: Tokens): boolean {
-  return tokens[quote.to_string()].token_type.to_string() == "liquidity";
+//  return tokens[quote.to_string()].token_type.to_string() == "liquidity";
+  return false;
 }
 
 export function get_maker_spot_price(
@@ -314,30 +315,65 @@ export async function get_tokens(
   limit = 50
 ): Promise<Tokens> {
   const tokens: Tokens = {};
-
+/*
   // optional params
   const scope = code;
   const table = "tokens";
 
-  const results = await rpc.get_table_rows({
+  const results2 = await rpc.get_table_rows({
     json: true,
     code,
     scope,
     table,
     limit
   });
+*/
+  const results = {
+    more: false,
+    rows: [
+      {sym: "8,BTC", contract: "tokens.swaps", balance: "0.00000000 BTC", depth: "1.00000000 BTC", reserve: "1.00000000 BTC", maker_pool: "1.00000000 BTC", token_type: "token", enabled: 1},
+      {sym: "4,EOS", contract: "tokens.swaps", balance: "0.0000 EOS", depth: "1.0000 EOS", reserve: "1.0000 EOS", maker_pool: "1.0000 EOS", token_type: "token", enabled: 1},
+      {sym: "10,BNT", contract: "tokens.swaps", balance: "0.0000000000 BNT", depth: "1.0000000000 BNT", reserve: "1.0000000000 BNT", maker_pool: "1.0000000000 BNT", token_type: "token", enabled: 1},
+      {sym: "4,USDT", contract: "tokens.swaps", balance: "0.0000 USDT", depth: "1.0000 USDT", reserve: "1.0000 USDT", maker_pool: "1.0000 USDT", token_type: "token", enabled: 1},
+      {sym: "4,VIGOR", contract: "tokens.swaps", balance: "0.0000 VIGOR", depth: "1.0000 VIGOR", reserve: "1.0000 VIGOR", maker_pool: "1.0000 VIGOR", token_type: "token", enabled: 1},
+      {sym: "9,EOSDT", contract: "tokens.swaps", balance: "0.000000000 EOSDT", depth: "1.000000000 EOSDT", reserve: "1.000000000 EOSDT", maker_pool: "1.000000000 EOSDT", token_type: "token", enabled: 1},
+    ]
+  };
 
+/*
+token_info do_issue min_quantity remote_chain remote_token enabled
+1	{ "sym": "8,BTC", "contract": "tokens.swaps" }	1	0.00010000 BTC	eos	{ "sym": "8,PBTC", "contract": "btc.ptokens" }	1
+2	{ "sym": "4,EOS", "contract": "tokens.swaps" }	1	0.2500 EOS	eos	{ "sym": "4,EOS", "contract": "eosio.token" }	1
+3	{ "sym": "10,BNT", "contract": "tokens.swaps" }	1	0.2500000000 BNT	eos	{ "sym": "10,BNT", "contract": "bntbntbntbnt" }	1
+4	{ "sym": "4,USDT", "contract": "tokens.swaps" }	1	1.0000 USDT	eos	{ "sym": "4,USDT", "contract": "tethertether" }	1
+5	{ "sym": "4,VIGOR", "contract": "tokens.swaps" }	1	1.0000 VIGOR	eos	{ "sym": "4,VIGOR", "contract": "vigortoken11" }	1
+6	{ "sym": "9,EOSDT", "contract": "tokens.swaps" }	1	1.000000000 EOSDT	eos	{ "sym": "9,EOSDT", "contract": "eosdtsttoken" }	1
+
+rows: Array(4)
+0:
+balance: "730.1138 USDT"
+contract: "tokens.swaps"
+depth: "500.0000 USDT"
+enabled: 1
+maker_pool: "495.1188 USDT"
+reserve: "730.1138 USDT"
+sym: "4,USDT"
+token_type: "token"
+ */
+
+  console.log("Result structure", results);
   for (const row of results.rows) {
-    //    console.log(row);
+    console.log("Result structure - row", row);
     const [precision, symcode] = row.sym.split(",");
+//    const precision = +precision_str;
     tokens[symcode] = {
-      sym: new Sym(symcode, precision),
+      sym: new Sym(symcode, +precision),
       contract: new Name(row.contract),
       balance: new Asset(row.balance),
       depth: new Asset(row.depth),
-      reserve: new Asset(row.reserve),
-      maker_pool: new Asset(row.maker_pool),
-      token_type: new Name(row.token_type)
+      reserve: new Asset(row.reserve)
+//      maker_pool: new Asset(row.maker_pool),
+//      token_type: new Name(row.token_type)
     };
   }
   return tokens;
@@ -519,8 +555,8 @@ export interface Token {
   balance: Asset;
   depth: Asset;
   reserve: Asset;
-  maker_pool: Asset;
-  token_type: Name;
+//  maker_pool: Asset;
+//  token_type: Name;
 }
 
 export interface XchainTokens {
