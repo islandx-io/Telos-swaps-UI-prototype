@@ -9,6 +9,7 @@ import RelayDetail from "@/views/RelayDetail.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import HeroConvert from "@/components/hero/sub/HeroConvert.vue";
 import HeroTransfer from "@/components/hero/sub/HeroTransfer.vue";
+import HeroBridge from "@/components/hero/sub/HeroBridge.vue";
 import HeroRelay from "@/components/hero/sub/HeroRelay.vue";
 import HeroCreate from "@/components/hero/sub/HeroCreate.vue";
 import Navigation from "@/components/layout/Navigation.vue";
@@ -90,6 +91,16 @@ export const router = new Router({
       props: true
     },
     {
+      path: "/:service/xtransfer/:id",
+      name: "Xtransfer",
+      components: {
+        Nav: Navigation,
+        default: BridgeAccount,
+        Hero: HeroBridge
+      },
+      props: true
+    },
+    {
       path: "/:service/bridge",
       name: "Bridge",
       components: {
@@ -102,7 +113,7 @@ export const router = new Router({
       name: "BridgeAccount",
       components: {
         Nav: Navigation,
-        Hero: HeroTransfer,
+        Hero: HeroBridge,
         default: BridgeAccount
       },
       props: true

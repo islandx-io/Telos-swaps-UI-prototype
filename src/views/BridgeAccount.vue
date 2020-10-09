@@ -97,22 +97,22 @@ export default class BridgeAccount extends Vue {
       class: ["text-center"],
       sortable: true
     },
+    //    {
+    //      key: "price",
+    //      sortable: true,
+    //      label: "Price USD",
+    //      class: ["text-center"],
+    //      formatter: (value: any, key: any, item: any) =>
+    //        numeral(value).format("$0,0.00")
+    //    },
     {
-      key: "price",
+      key: "value",
       sortable: true,
-      label: "Price USD",
+      sortByFormatted: true,
       class: ["text-center"],
       formatter: (value: any, key: any, item: any) =>
-        numeral(value).format("$0,0.00")
+        numeral(item.price * item.balance).format("$0,0.00")
     },
-//    {
-//      key: "value",
-//      sortable: true,
-//      sortByFormatted: true,
-//      class: ["text-center"],
-//      formatter: (value: any, key: any, item: any) =>
-//        numeral(item.price * item.balance).format("$0,0.00")
-//    },
     {
       key: "actions",
       class: ["text-right"],
@@ -128,9 +128,9 @@ export default class BridgeAccount extends Vue {
   }
 
   get tokens() {
-//    return vxm.bancor.tokens.filter(
-//      (token: any) => Number(token.balance) > 0.0000001
-//    );
+    //    return vxm.bancor.tokens.filter(
+    //      (token: any) => Number(token.balance) > 0.0000001
+    //    );
     return vxm.bancor.tokens;
   }
 
@@ -150,7 +150,7 @@ export default class BridgeAccount extends Vue {
     this.scrollToTop();
 
     this.$router.push({
-      name: "Transfer",
+      name: "Xtransfer",
       params: { id }
     });
   }

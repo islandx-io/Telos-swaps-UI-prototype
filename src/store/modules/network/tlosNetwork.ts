@@ -18,7 +18,13 @@ import { vxm } from "@/store";
 import _ from "lodash";
 import { multiContract } from "@/api/multiContractTx";
 import wait from "waait";
-import { Asset, asset_to_number, number_to_asset, Sym } from "eos-common";
+import {
+  Asset,
+  asset_to_number,
+  number_to_asset,
+  Sym,
+  symbol
+} from "eos-common";
 
 const requiredProps = ["balance", "contract", "symbol"];
 
@@ -91,7 +97,8 @@ export class TlosNetworkModule
         if (!newBalanceArray) return [];
         const allBalancesDifferent = originalBalances.every(
           balance =>
-            newBalanceArray.find(b => compareString(b.symbol, balance.symbol))?.balance !== balance.balance
+            newBalanceArray.find(b => compareString(b.symbol, balance.symbol))
+              ?.balance !== balance.balance
         );
         if (allBalancesDifferent) {
           this.updateTokenBalances(newBalanceArray);
@@ -105,6 +112,7 @@ export class TlosNetworkModule
   }
 
   @action async transfer({ to, amount, id, memo }: TransferParam) {
+    console.log("telosNetwork.transfer", to, amount, id, memo);
     if (!this.isAuthenticated) throw new Error("Not authenticated!");
     const symbol = id;
     const dirtyReserve = vxm.tlosBancor.relaysList
@@ -120,6 +128,36 @@ export class TlosNetworkModule
       to,
       quantity: asset.to_string(),
       memo
+    });
+
+    const originalBalances = await this.getBalances({
+      tokens: [{ contract, symbol }]
+    });
+    await vxm.tlosWallet.tx(actions);
+    this.pingTillChange({ originalBalances });
+  }
+
+  @action async xtransfer({ to, amount, id, memo }: TransferParam) {
+    console.log("telosNetwork.xtransfer", to, amount, id, memo);
+    if (!this.isAuthenticated) throw new Error("Not authenticated!");
+    const symbol = id;
+    const tokens = vxm.xchainBancor.tokens;
+    //    console.log("xtransfer.tokens", symbol, tokens);
+    const token = tokens.find(x => compareString(x.symbol.toString(), symbol));
+    if (!token) throw new Error("Failed finding token");
+    //    console.log("xtransfer.token", token);
+    const contract = token.contract;
+    const precision = token.precision;
+
+    const asset = number_to_asset(amount, new Sym(symbol, precision));
+    const new_memo = to.toString() + "@eos" + (memo === "" ? "" : "|" + memo);
+    //    console.log("telosNetwork.xtransfer", new_memo);
+    const bridge_account = "telosd.io";
+
+    const actions = await multiContract.tokenTransfer(contract, {
+      to: bridge_account,
+      quantity: asset.to_string(),
+      memo: new_memo
     });
 
     const originalBalances = await this.getBalances({
