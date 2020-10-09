@@ -470,7 +470,8 @@ export const getBankBalance = async (): Promise<{
 export enum Feature {
   Trade,
   Wallet,
-  Liquidity
+  Liquidity,
+  Bridge
 }
 
 export interface Service {
@@ -484,7 +485,7 @@ export const services: Service[] = [
     features: [Feature.Trade, Feature.Liquidity, Feature.Wallet]
   },
   { namespace: "usds", features: [Feature.Trade, Feature.Wallet] },
-  { namespace: "xchain", features: [Feature.Trade, Feature.Wallet] }
+  { namespace: "xchain", features: [Feature.Trade, Feature.Bridge] }
 ];
 
 export interface ReserveTableRow {

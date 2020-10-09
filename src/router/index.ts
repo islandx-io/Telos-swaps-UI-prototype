@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Wallet from "@/views/Wallet.vue";
 import WalletAccount from "@/views/WalletAccount.vue";
+import BridgeAccount from "@/views/BridgeAccount.vue";
 import Tokens from "@/views/Tokens.vue";
 import Relays from "@/views/Relays.vue";
 import RelayDetail from "@/views/RelayDetail.vue";
@@ -13,6 +14,7 @@ import HeroCreate from "@/components/hero/sub/HeroCreate.vue";
 import Navigation from "@/components/layout/Navigation.vue";
 import Privacy from "@/components/common/Privacy.vue";
 import { services } from "@/api/helpers";
+import Bridge from "@/views/Bridge.vue";
 
 Vue.use(Router);
 
@@ -84,6 +86,24 @@ export const router = new Router({
         Nav: Navigation,
         Hero: HeroTransfer,
         default: WalletAccount
+      },
+      props: true
+    },
+    {
+      path: "/:service/bridge",
+      name: "Bridge",
+      components: {
+        Nav: Navigation,
+        default: Bridge
+      }
+    },
+    {
+      path: "/:service/bridge/:account",
+      name: "BridgeAccount",
+      components: {
+        Nav: Navigation,
+        Hero: HeroTransfer,
+        default: BridgeAccount
       },
       props: true
     },

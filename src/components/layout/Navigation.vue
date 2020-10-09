@@ -158,14 +158,14 @@ export default class Navigation extends Vue {
         icon: "swimming-pool",
         active: this.$route.name == "Relay" || this.$route.name == "Relays"
       },
-      {
-        label: "Create",
-        destination: createDirectRoute("Create"),
-        disabled: !this.isAuthenticated,
-        icon: "plus",
-        render: this.selectedService!.features.includes(3),
-        active: this.$route.name == "Create"
-      },
+//      {
+//        label: "Create",
+//        destination: createDirectRoute("Create"),
+//        disabled: !this.isAuthenticated,
+//        icon: "plus",
+//        render: this.selectedService!.features.includes(3),
+//        active: this.$route.name == "Create"
+//      },
       ...[
         this.selectedService!.features.includes(1)
           ? this.isAuthenticated
@@ -184,6 +184,29 @@ export default class Navigation extends Vue {
                 destination: createDirectRoute("Wallet"),
                 icon: "wallet",
                 active: this.$route.name == "Wallet",
+                disabled: false,
+                render: true
+              }
+          : []
+      ],
+      ...[
+        this.selectedService!.features.includes(3)
+          ? this.isAuthenticated
+            ? {
+                label: "Telos->EOS",
+                destination: createDirectRoute("BridgeAccount", {
+                  account: this.isAuthenticated
+                }),
+                icon: "wallet",
+                active: this.$route.name == "Bridge",
+                disabled: false,
+                render: true
+              }
+            : {
+                label: "Telos->EOS",
+                destination: createDirectRoute("Wallet"),
+                icon: "wallet",
+                active: this.$route.name == "Bridge",
                 disabled: false,
                 render: true
               }
