@@ -12,7 +12,7 @@
         </b-col>
         <b-col
           md="4"
-          class="d-flex justify-content-center align-items-end"
+          class="d-flex justify-content-center align-items-center"
           style="min-height: 230px"
         >
           <div>

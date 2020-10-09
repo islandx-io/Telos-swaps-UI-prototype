@@ -14,6 +14,7 @@ import ledger from "eos-transit-ledger-provider";
 //import whalevault from "eos-transit-whalevault-provider";
 //import keycat from "eos-transit-keycat-provider";
 import anchor from "eos-transit-anchorlink-provider";
+import {vxm} from "@/store";
 
 interface tlosWalletAction {
   name: string;
@@ -27,6 +28,30 @@ interface tlosWalletAction {
 
 const appName = "TLOSD";
 
+export enum Chain {telos, eos}
+
+const telos_chain_options = {
+  appName,
+  network: {
+    host: "api.telos.africa",
+    port: 443,
+    protocol: "https",
+    chainId: "4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11"
+  },
+  walletProviders: [scatter(), ledger(), anchor(appName)]
+};
+
+const eos_chain_options = {
+  appName,
+  network: {
+    host: "eos.greymass.com",
+    port: 443,
+    protocol: "https",
+    chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
+  },
+  walletProviders: [scatter(), ledger(), anchor(appName)]
+};
+
 const VuexModule = createModule({
   strict: false
 });
@@ -34,28 +59,8 @@ const VuexModule = createModule({
 export class EosTransitModule extends VuexModule.With({
   namespaced: "tlosWallet/"
 }) {
-  accessContext = initAccessContext({
-    appName,
-    network: {
-      host: "telos.caleos.io",
-//      host: "telos.eosphere.io",
-//      host: "api.telos.africa",
-      port: 443,
-      protocol: "https",
-      chainId:
-        "4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11"
-    },
-    walletProviders: [
-      scatter(),
-//      lynx(),
-      ledger(),
-//      tp(),
-//      meetone(),
-//      whalevault(),
-//      keycat(),
-      anchor(appName)
-    ]
-  });
+  chain = Chain.telos;
+  accessContext = initAccessContext(telos_chain_options);
   isMobile = false;
 
   walletProviders: WalletProvider[] = this.accessContext.getWalletProviders();
@@ -186,5 +191,30 @@ export class EosTransitModule extends VuexModule.With({
 
   @mutation setWalletState(state: WalletState | false) {
     this.walletState = state;
+  }
+
+  @mutation setAccessContext(chain: Chain) {
+    // TODO figure out how to re-login
+    console.log("setAccessContext.chain", chain);
+    vxm.tlosWallet.logout();
+    switch(chain) {
+      case 0:
+        // Telos
+        this.accessContext = initAccessContext(telos_chain_options);
+        break;
+      case 1:
+        // EOS
+        this.accessContext = initAccessContext(eos_chain_options);
+        break;
+      default:
+        // Telos
+        this.accessContext = initAccessContext(telos_chain_options);
+    }
+    this.chain = chain;
+
+    console.log("setAccessContext.accessContext", this.accessContext);
+    const provider = vxm.tlosWallet.selectedProvider;
+    console.log("setAccessContext.provider", provider);
+    if (provider) vxm.tlosWallet.initLogin(provider);
   }
 }

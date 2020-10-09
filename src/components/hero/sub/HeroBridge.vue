@@ -12,14 +12,28 @@
         </b-col>
         <b-col
           md="4"
-          class="d-flex justify-content-center align-items-end"
+          class="d-flex justify-content-center align-items-center"
           style="min-height: 230px"
         >
           <div>
-            <font-awesome-icon
-              icon="long-arrow-alt-right"
-              class="fa-2x text-white"
-            />
+            <div>
+              <font-awesome-icon
+                icon="long-arrow-alt-right"
+                class="fa-2x text-white"
+              />
+            </div>
+            <span @click="switchChain" class="cursor font-size-sm text-white-50">
+              <font-awesome-icon icon="exchange-alt" fixed-width />SWITCH
+            </span>
+
+            <!--div class="d-flex justify-content-center">
+              <b-btn
+                @click="initXTransfer" variant="info" v-ripple class="px-4 py-2 d-block">
+                <font-awesome-icon icon="exchange-alt" fixed-width class="mr-2"/>
+                <span class="font-w700">SWITCH</span>
+              </b-btn>
+            </div-->
+
             <div class="mb-3 mt-3">
               <span class="text-white font-size-sm"
                 >Value: {{ usdValue }} USD</span
@@ -41,9 +55,6 @@
                 <span class="font-w700">TRANSFER</span>
               </b-btn>
             </div>
-            <span @click="navConvert" class="cursor font-size-sm text-white-50">
-              <font-awesome-icon icon="exchange-alt" fixed-width />CONVERT
-            </span>
           </div>
         </b-col>
         <b-col md="4">
@@ -78,11 +89,12 @@
 </template>
 
 <script lang="ts">
-import { Watch, Component, Vue, Prop } from "vue-property-decorator";
-import { vxm } from "@/store";
+import {Component, Vue} from "vue-property-decorator";
+import {vxm} from "@/store";
 import numeral from "numeral";
 import HeroWrapper from "@/components/hero/HeroWrapper.vue";
 import TokenAmountInput from "@/components/convert/TokenAmountInput.vue";
+import {Chain} from "@/store/modules/wallet/tlosWallet";
 
 @Component({
   components: {
@@ -161,19 +173,26 @@ export default class HeroBridge extends Vue {
     return vxm.bancor.tokens.find((token: any) => token.symbol !== "TLOS")!.id;
   }
 
-  navConvert() {
-    this.$router.push({
-      name: "Token",
-      params: {
-        symbolName: this.selectedIdOrDefault
-      }
-    });
+  switchChain() {
+    console.log("switch between Telos and EOS");
+    vxm.tlosWallet.setAccessContext((vxm.tlosWallet.chain == Chain.telos) ? Chain.eos : Chain.telos);
+    console.log((vxm.tlosWallet.chain == Chain.telos) ? "Switched from EOS to Telos" : "Switched from Telos to EOS");
   }
+
+//  navConvert() {
+//    this.$router.push({
+//      name: "Token",
+//      params: {
+//        symbolName: this.selectedIdOrDefault
+//      }
+//    });
+//  }
 
   async created() {
     this.loadHistory();
   }
 }
+
 </script>
 
 <style scoped lang="scss">
