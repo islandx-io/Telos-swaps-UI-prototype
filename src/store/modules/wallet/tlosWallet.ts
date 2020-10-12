@@ -14,7 +14,7 @@ import ledger from "eos-transit-ledger-provider";
 //import whalevault from "eos-transit-whalevault-provider";
 //import keycat from "eos-transit-keycat-provider";
 import anchor from "eos-transit-anchorlink-provider";
-import {vxm} from "@/store";
+import { vxm } from "@/store";
 
 interface tlosWalletAction {
   name: string;
@@ -26,30 +26,30 @@ interface tlosWalletAction {
   account: string;
 }
 
-const appName = "TLOSD";
+//const appName = "TLOSD";
 
 export enum Chain {telos, eos}
 
 const telos_chain_options = {
-  appName,
+  appName: "TLOSD.Telos",
   network: {
     host: "api.telos.africa",
     port: 443,
     protocol: "https",
     chainId: "4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11"
   },
-  walletProviders: [scatter(), ledger(), anchor(appName)]
+  walletProviders: [scatter(), ledger(), anchor("TLOSD.Telos")]
 };
 
 const eos_chain_options = {
-  appName,
+  appName: "TLOSD.EOS",
   network: {
     host: "eos.greymass.com",
     port: 443,
     protocol: "https",
     chainId: "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
   },
-  walletProviders: [scatter(), ledger(), anchor(appName)]
+  walletProviders: [scatter(), ledger(), anchor("TLOSD.EOS")]
 };
 
 const VuexModule = createModule({
@@ -197,7 +197,8 @@ export class EosTransitModule extends VuexModule.With({
     // TODO figure out how to re-login
     console.log("setAccessContext.chain", chain);
     vxm.tlosWallet.logout();
-    switch(chain) {
+//    vxm.tlosWallet.setProvider();
+    switch (chain) {
       case 0:
         // Telos
         this.accessContext = initAccessContext(telos_chain_options);
