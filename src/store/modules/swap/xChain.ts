@@ -313,7 +313,9 @@ export class xChainModule
 
     this.checkPrices(contracts);
     this.setContracts(contracts);
-    const allLegacyTokens = await Promise.all(contracts.map(this.fetchLegacyContract));
+    const allLegacyTokens = await Promise.all(
+      contracts.map(this.fetchLegacyContract)
+    );
     this.setStats(allLegacyTokens);
 
     retryPromise(() => this.updateStats(), 4, 1000);
@@ -328,7 +330,9 @@ export class xChainModule
       )
     );
 
-    const allXchainTokens = await Promise.all(this.contracts.map(this.fetchXchainContract));
+    const allXchainTokens = await Promise.all(
+      this.contracts.map(this.fetchXchainContract)
+    );
 
     setInterval(() => this.checkRefresh(), 20000);
 
@@ -671,7 +675,9 @@ export class xChainModule
   @action async updateStats() {
     this.resetTimer();
     const contracts = this.legacyContracts;
-    const allLegacyTokens = await Promise.all(contracts.map(this.fetchLegacyContract));
+    const allLegacyTokens = await Promise.all(
+      contracts.map(this.fetchLegacyContract)
+    );
 
     this.setStats(allLegacyTokens);
   }

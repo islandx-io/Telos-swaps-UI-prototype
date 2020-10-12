@@ -191,7 +191,7 @@ export async function get_legacy_settings(
       "contract is unavailable or currently disabled for maintenance"
     );
 
-//  console.log(results.rows[0]);
+  //  console.log(results.rows[0]);
 
   return {
     fee: results.rows[0].fee,
@@ -222,7 +222,7 @@ export async function get_settings(
       "contract is unavailable or currently disabled for maintenance"
     );
 
-//  console.log(results.rows[0]);
+  //  console.log(results.rows[0]);
 
   return {
     chain: results.rows[0].current_chain_name,
@@ -250,7 +250,10 @@ export function get_slippage(
   return spot_price_per_unit / price - 1;
 }
 
-export function get_pool_balance(tokens: LegacyTokens, settings: LegacySettings) {
+export function get_pool_balance(
+  tokens: LegacyTokens,
+  settings: LegacySettings
+) {
   const proxy_token = settings.proxy_token.code();
   let a = 0.0;
   for (const token in tokens) {
@@ -263,13 +266,19 @@ export function get_pool_balance(tokens: LegacyTokens, settings: LegacySettings)
   return a;
 }
 
-export function get_maker_balance(tokens: LegacyTokens, settings: LegacySettings) {
+export function get_maker_balance(
+  tokens: LegacyTokens,
+  settings: LegacySettings
+) {
   return asset_to_number(
     tokens[settings.maker_token.code().to_string()].balance
   );
 }
 
-export function is_maker_token(quote: SymbolCode, tokens: LegacyTokens): boolean {
+export function is_maker_token(
+  quote: SymbolCode,
+  tokens: LegacyTokens
+): boolean {
   return tokens[quote.to_string()].token_type.to_string() == "liquidity";
 }
 
@@ -373,7 +382,13 @@ export async function get_tokens(
       sym: new Sym(symcode, precision),
       min_quantity: new Asset(row.min_quantity)
     };
-    console.log("get_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
+    console.log(
+      "get_tokens.tokens[",
+      symcode,
+      "]",
+      tokens[symcode].contract.to_string(),
+      tokens[symcode].sym.toString()
+    );
   }
 
   return tokens;
@@ -408,7 +423,13 @@ export async function get_remote_tokens(
       sym: new Sym(symcode, precision),
       min_quantity: new Asset(row.min_quantity)
     };
-    console.log("get_remote_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
+    console.log(
+      "get_remote_tokens.tokens[",
+      symcode,
+      "]",
+      tokens[symcode].contract.to_string(),
+      tokens[symcode].sym.toString()
+    );
   }
 
   return tokens;

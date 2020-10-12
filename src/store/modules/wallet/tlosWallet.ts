@@ -38,8 +38,8 @@ export class EosTransitModule extends VuexModule.With({
     appName,
     network: {
       host: "telos.caleos.io",
-//      host: "telos.eosphere.io",
-//      host: "api.telos.africa",
+      //      host: "telos.eosphere.io",
+      //      host: "api.telos.africa",
       port: 443,
       protocol: "https",
       chainId:
@@ -47,12 +47,12 @@ export class EosTransitModule extends VuexModule.With({
     },
     walletProviders: [
       scatter(),
-//      lynx(),
+      //      lynx(),
       ledger(),
-//      tp(),
-//      meetone(),
-//      whalevault(),
-//      keycat(),
+      //      tp(),
+      //      meetone(),
+      //      whalevault(),
+      //      keycat(),
       anchor(appName)
     ]
   });

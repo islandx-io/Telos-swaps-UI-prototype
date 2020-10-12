@@ -91,7 +91,8 @@ export class TlosNetworkModule
         if (!newBalanceArray) return [];
         const allBalancesDifferent = originalBalances.every(
           balance =>
-            newBalanceArray.find(b => compareString(b.symbol, balance.symbol))?.balance !== balance.balance
+            newBalanceArray.find(b => compareString(b.symbol, balance.symbol))
+              ?.balance !== balance.balance
         );
         if (allBalancesDifferent) {
           this.updateTokenBalances(newBalanceArray);

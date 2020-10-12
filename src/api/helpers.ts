@@ -325,7 +325,16 @@ export const getBalance = async (
     }
   }
 
-  console.log("getBalance : (", account, ", ", contract, ", ", symbolName, ") = ", balance.balance);
+  console.log(
+    "getBalance : (",
+    account,
+    ", ",
+    contract,
+    ", ",
+    symbolName,
+    ") = ",
+    balance.balance
+  );
   return balance.balance;
 };
 
@@ -609,7 +618,9 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
     newObj.liquidityDepth =
       itemObject.liquidity_depth
         .find((token: any) => compareString(token.key, "TLOS"))
-        .value.split(" ")[0] * usdPriceOfTlos * 2.0;
+        .value.split(" ")[0] *
+      usdPriceOfTlos *
+      2.0;
     newObj.price =
       itemObject.price.find((token: any) => compareString(token.key, "TLOS"))
         .value * usdPriceOfTlos;
@@ -620,8 +631,18 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
         compareString(token.key, "TLOS")
       ).value * usdPriceOfTlos;
     let a = 1.0 / (1.0 + usdTlos24hPriceMove);
-    newObj.change24h = 100.0*((newObj.price) / (a * (newObj.price - raw24hChange)) - 1.0);
-    console.log("change24h(", newObj.code, ") : usdTlos24hPriceMove : ", usdTlos24hPriceMove, ", a : ", a, ", % change : ", newObj.change24h);
+    newObj.change24h =
+      100.0 * (newObj.price / (a * (newObj.price - raw24hChange)) - 1.0);
+    console.log(
+      "change24h(",
+      newObj.code,
+      ") : usdTlos24hPriceMove : ",
+      usdTlos24hPriceMove,
+      ", a : ",
+      a,
+      ", % change : ",
+      newObj.change24h
+    );
 
     let volume24h: any = {};
     volume24h.USD =
@@ -642,7 +663,14 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
       .find((token: any) => compareString(token.key, "TLOS"))
       .value.split(" ")[0];
     smartPriceApr = (smartPriceApr / (smartPrice - smartPriceApr)) * 100.0 * 12;
-    console.log("fetchTradeData.smart_price(", newObj.code, "), price", smartPrice, ", APR", smartPriceApr);
+    console.log(
+      "fetchTradeData.smart_price(",
+      newObj.code,
+      "), price",
+      smartPrice,
+      ", APR",
+      smartPriceApr
+    );
 
     // TODO need to add USD price changes into trade data from Delphi Oracle
     // prices will then be where symbol = USD, not TLOS

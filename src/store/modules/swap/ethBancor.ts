@@ -418,7 +418,9 @@ export class EthBancorModule
 
   get newNetworkTokenChoices(): ModalChoice[] {
     const bntTokenMeta = this.tokenMeta.find(token => token.symbol == "TLOS")!;
-    const usdBTokenMeta = this.tokenMeta.find(token => token.symbol == "TLOSD")!;
+    const usdBTokenMeta = this.tokenMeta.find(
+      token => token.symbol == "TLOSD"
+    )!;
 
     const bntBalance = this.tokenBalance(bntTokenMeta.contract);
     const usdBalance = this.tokenBalance(usdBTokenMeta.contract);
