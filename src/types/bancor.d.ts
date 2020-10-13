@@ -261,7 +261,7 @@ export interface XchainStat {
   contract: string;
 }
 
-export interface xChainModule {
+export interface crossChainModule {
   setNewTokens: (tokens: any[]) => void;
   readonly fetchXchainContract: (contract: string) => Promise<XchainStat>;
 }

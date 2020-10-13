@@ -1,7 +1,7 @@
 import { createModule, mutation, action } from "vuex-class-component";
 import {
   ProposedConvertTransaction,
-  TradingModule,
+  crossChainModule,
   ViewToken,
   BaseToken,
   ProposedFromTransaction,
@@ -168,7 +168,7 @@ const VuexModule = createModule({
 
 export class xChainModule
   extends VuexModule.With({ namespaced: "xchainBancor/" })
-  implements TradingModule {
+  implements crossChainModule {
   newTokens: SxToken[] = [];
   initiated: boolean = false;
   contracts: string[] = [];

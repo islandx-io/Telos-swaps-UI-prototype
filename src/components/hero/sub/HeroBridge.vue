@@ -96,7 +96,7 @@ import numeral from "numeral";
 import HeroWrapper from "@/components/hero/HeroWrapper.vue";
 import TokenAmountInput from "@/components/convert/TokenAmountInput.vue";
 import {Chain} from "@/store/modules/wallet/tlosWallet";
-import { xChainModule, XchainStat } from "../../../types/bancor";
+import { crossChainModule, XchainStat } from "../../../types/bancor";
 
 const bancor = namespace("xchainBancor");
 
@@ -113,8 +113,8 @@ const bancor = namespace("xchainBancor");
   }
 })
 export default class HeroBridge extends Vue {
-  @bancor.Mutation setNewTokens!: xChainModule["setNewTokens"];
-  @bancor.Getter fetchXchainContract!: xChainModule["fetchXchainContract"];
+  @bancor.Mutation setNewTokens!: crossChainModule["setNewTokens"];
+  @bancor.Getter fetchXchainContract!: crossChainModule["fetchXchainContract"];
   xChainContracts: string[] = ["telosd.io"];
 
   loadingBalance = false;
