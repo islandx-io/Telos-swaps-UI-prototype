@@ -1,24 +1,24 @@
-import axios, { AxiosResponse } from "axios";
-import { vxm } from "@/store";
-import { JsonRpc } from "eosjs";
+import axios, {AxiosResponse} from "axios";
+import {vxm} from "@/store";
+import {JsonRpc} from "eosjs";
 import Onboard from "bnc-onboard";
-import { Asset, Sym, number_to_asset } from "eos-common";
-import { rpc } from "./rpc";
+import {Asset, number_to_asset, Sym} from "eos-common";
+import {rpc, xrpc} from "./rpc";
 import {
-  TokenBalances,
-  EosMultiRelay,
-  TokenMeta,
   BaseToken,
-  TokenBalanceReturn,
-  TokenBalanceParam,
-  TokenPrice,
+  EosMultiRelay,
+  OnUpdate,
   Step,
-  OnUpdate
+  TokenBalanceParam,
+  TokenBalanceReturn,
+  TokenBalances,
+  TokenMeta,
+  TokenPrice
 } from "@/types/bancor";
 import Web3 from "web3";
-import { EosTransitModule } from "@/store/modules/wallet/tlosWallet";
+import {Chain, EosTransitModule} from "@/store/modules/wallet/tlosWallet";
 import wait from "waait";
-import { sortByNetworkTokens } from "./sortByNetworkTokens";
+import {sortByNetworkTokens} from "./sortByNetworkTokens";
 
 export const networkTokens = ["TLOS"];
 
@@ -58,7 +58,8 @@ export const multiSteps = async ({
   return state;
 };
 
-const eosRpc: JsonRpc = rpc;
+const telosRpc: JsonRpc = rpc;
+const eosRpc: JsonRpc = xrpc;
 
 interface TraditionalStat {
   supply: Asset;
@@ -301,11 +302,9 @@ export const fetchTokenSymbol = async (
 ): Promise<Sym> => {
   const statRes: {
     rows: { supply: string; max_supply: string; issuer: string }[];
-  } = await rpc.get_table_rows({
-    code: contractName,
-    scope: symbolName,
-    table: "stat"
-  });
+  } = (vxm.tlosWallet.chain == Chain.telos) ?
+      await rpc.get_table_rows({code: contractName, scope: symbolName, table: "stat"}) :
+      await xrpc.get_table_rows({code: contractName, scope: symbolName, table: "stat"});
   //  console.log("fetchTokenSymbol(",contractName,"",symbolName,")");
   if (statRes.rows.length == 0)
     throw new Error(
@@ -353,7 +352,7 @@ export const fetchTokenStats = async (
   contract: string,
   symbol: string
 ): Promise<TraditionalStat> => {
-  const tableResult = await eosRpc.get_table_rows({
+  const tableResult = await telosRpc.get_table_rows({
     code: contract,
     table: "stat",
     scope: symbol,
@@ -587,7 +586,7 @@ export interface TickerPrice {
 }
 //      //  getTokens(): Promise<TokenPrice[]>;
 export const fetchTradeData = async (): Promise<TokenPrice[]> => {
-  const rawTradeData = await eosRpc.get_table_rows({
+  const rawTradeData = await telosRpc.get_table_rows({
     code: "data.tbn",
     table: "tradedata",
     scope: "data.tbn",

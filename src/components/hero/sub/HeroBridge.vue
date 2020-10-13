@@ -176,6 +176,8 @@ export default class HeroBridge extends Vue {
   switchChain() {
     console.log("switch between Telos and EOS");
     vxm.tlosWallet.setAccessContext((vxm.tlosWallet.chain == Chain.telos) ? Chain.eos : Chain.telos);
+    vxm.xchainBancor.updateStats();
+//    vxm.xchainBancor.switchChain((vxm.tlosWallet.chain == Chain.telos) ? Chain.eos : Chain.telos);
     console.log((vxm.tlosWallet.chain == Chain.telos) ? "Switched from EOS to Telos" : "Switched from Telos to EOS");
   }
 
