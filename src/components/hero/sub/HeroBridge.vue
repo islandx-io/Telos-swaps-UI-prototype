@@ -91,10 +91,14 @@
 <script lang="ts">
 import {Component, Vue} from "vue-property-decorator";
 import {vxm} from "@/store";
+import { State, Getter, Action, Mutation, namespace } from "vuex-class";
 import numeral from "numeral";
 import HeroWrapper from "@/components/hero/HeroWrapper.vue";
 import TokenAmountInput from "@/components/convert/TokenAmountInput.vue";
 import {Chain} from "@/store/modules/wallet/tlosWallet";
+import { xChainModule, XchainStat } from "../../../types/bancor";
+
+const bancor = namespace("xchainBancor");
 
 @Component({
   components: {
@@ -109,6 +113,10 @@ import {Chain} from "@/store/modules/wallet/tlosWallet";
   }
 })
 export default class HeroBridge extends Vue {
+  @bancor.Mutation setNewTokens!: xChainModule["setNewTokens"];
+  @bancor.Getter fetchXchainContract!: xChainModule["fetchXchainContract"];
+  xChainContracts: string[] = ["telosd.io"];
+
   loadingBalance = false;
   numeral = numeral;
   contactHistory: string[] = [];
@@ -173,10 +181,14 @@ export default class HeroBridge extends Vue {
     return vxm.bancor.tokens.find((token: any) => token.symbol !== "TLOS")!.id;
   }
 
-  switchChain() {
+  async switchChain() {
     console.log("switch between Telos and EOS");
     vxm.tlosWallet.setAccessContext((vxm.tlosWallet.chain == Chain.telos) ? Chain.eos : Chain.telos);
     console.log((vxm.tlosWallet.chain == Chain.telos) ? "Switched from EOS to Telos" : "Switched from Telos to EOS");
+    const allXchainTokens = await this.fetchXchainContract("telosd.io");
+    console.log("xxx", allXchainTokens);
+    //const tokens: any[] = allXchainTokens.remote_tokens;
+    //this.setNewTokens(tokens);
   }
 
 //  navConvert() {

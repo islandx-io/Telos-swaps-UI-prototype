@@ -206,6 +206,7 @@ export class xChainModule
         const { contract, symbol } = token;
 
         try {
+          debugger;
           const eosModuleBorrowed = vxm.tlosBancor.tokenMeta.find(
             tokenMeta => tokenMeta.symbol == token.symbol
           )!;
@@ -335,8 +336,7 @@ export class xChainModule
       )
     );
 
-    const allXchainTokens = await Promise.all(this.xChainContracts.map(this.fetchXchainContract));
-
+  
     setInterval(() => this.checkRefresh(), 20000);
 
     const allWithId: SxToken[] = all.flatMap(x =>
