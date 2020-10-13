@@ -1055,7 +1055,7 @@ export class TlosBancorModule
   }
 
   @action async refresh() {
-    console.log("refresh called, nothing");
+    console.log("refresh called, doing some stuff");
 
     const v1Relays = getHardCodedRelays();
     console.log("v1Relays : ", v1Relays);

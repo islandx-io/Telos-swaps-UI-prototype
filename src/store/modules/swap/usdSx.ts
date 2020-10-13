@@ -303,7 +303,81 @@ export class UsdBancorModule
   }
 
   @action async refresh() {
-    console.log("refresh called on sx, doing nothing");
+    console.log("refresh called on sx, trying new stuff");
+    const registryData = await getSxContracts();
+    if (this.isAuthenticated) {
+      vxm.tlosNetwork.getBalances({
+        tokens: registryData.flatMap(data => data.tokens),
+        slow: false
+      });
+    }
+
+    const contracts = registryData.map(x => x.contract);
+
+    this.checkPrices(contracts);
+    this.setContracts(contracts);
+    const allTokens = await Promise.all(contracts.map(this.fetchContract));
+    this.setStats(allTokens);
+
+    retryPromise(() => this.updateStats(), 4, 1000);
+
+    const all = await Promise.all(
+      allTokens.flatMap(token =>
+        this.buildTokens({
+          tokens: token.tokens,
+          volume: token.volume[0],
+          settings: token.settings
+        })
+      )
+    );
+
+    const allWithId: SxToken[] = all.flatMap(x =>
+      x.map(token => ({
+        ...token,
+        id: buildTokenId(token)
+      }))
+    );
+
+    const uniqTokens = _.uniqBy(allWithId, "id").map(x => x.id);
+
+    const newTokens = uniqTokens.map(
+      (id): SxToken => {
+        const allTokensOfId = allWithId.filter(token =>
+          compareString(id, token.id)
+        );
+
+        const { precision, contract, symbol } = allTokensOfId[0];
+
+        const [highestLiquidityToken] = allTokensOfId.sort(
+          (a, b) => b.liqDepth - a.liqDepth
+        );
+
+        const { price } = highestLiquidityToken;
+
+        const totalVolumeInToken = allTokensOfId
+          .map(token => token.volume24h)
+          .reduce(addNumbers, 0);
+
+        const liqDepth = allTokensOfId
+          .map(token => token.liqDepth)
+          .reduce(addNumbers, 0);
+
+        const volumeInPrice = price * totalVolumeInToken;
+
+        return {
+          precision,
+          price,
+          contract,
+          id,
+          liqDepth,
+          symbol,
+          volume24h: volumeInPrice
+        };
+      }
+    );
+
+    this.setNewTokens(newTokens);
+    await wait(10);
   }
 
   @action async init(params?: ModuleParam) {

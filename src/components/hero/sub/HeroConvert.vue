@@ -125,7 +125,6 @@ import { LiquidityModule, TradingModule, Step } from "../../../types/bancor";
 import numeral from "numeral";
 import { vxm } from "@/store";
 import { buildTokenId, compareString } from "../../../api/helpers";
-import { ethReserveAddress } from "../../../api/ethConfig";
 
 const appendBaseQuoteQuery = (base: string, quote: string, route: Route) => {
   return {
@@ -160,8 +159,8 @@ const addDefaultQueryParams = (to: Route): any => {
       );
     case "xchain":
       return appendBaseQuoteQuery(
-        buildTokenId({ contract: "tokens.swaps", symbol: "BTC" }),
         buildTokenId({ contract: "tokens.swaps", symbol: "EOS" }),
+        buildTokenId({ contract: "tokens.swaps", symbol: "USDT" }),
         to
       );
     default:

@@ -1,55 +1,57 @@
-import { createModule, mutation, action } from "vuex-class-component";
+import { action, createModule, mutation } from "vuex-class-component";
 import {
   ProposedConvertTransaction,
   crossChainModule,
   ViewToken,
   BaseToken,
+  ModuleParam,
   ProposedFromTransaction,
   ProposedToTransaction,
-  ViewAmount,
-  ModuleParam
+  TradingModule,
+  ViewAmount
 } from "@/types/bancor";
 import { vxm } from "@/store";
 import {
-  get_settings,
-  get_volume,
-  get_rate,
-  get_inverse_rate,
-  Tokens,
-  Settings,
-  get_tokens,
-  Token,
-  Volume,
-  get_slippage,
   get_fee,
+  get_inverse_rate,
+  get_rate,
+  get_settings,
+  get_slippage,
   get_spot_price,
+  get_tokens,
+  get_romote_tokens,
+  get_volume,
+  get_xchain_remote_tokens,
   get_xchain_settings,
   get_xchain_tokens,
-  get_xchain_remote_tokens,
-  XchainTokens,
-  XchainToken,
-  XchainSettings
+  Settings,
+  Token,
+  Tokens,
+  Volume,
+  XchainSettings,
+  XchainTokens
 } from "@/api/xChain";
 import { rpc } from "@/api/rpc";
 import {
-  asset_to_number,
-  number_to_asset,
-  symbol,
-  Sym,
   Asset,
-  extended_asset,
   asset,
-  name
+  asset_to_number,
+  extended_asset,
+  name,
+  number_to_asset,
+  Sym,
+  symbol
 } from "eos-common";
 import {
+  buildTokenId,
   compareString,
-  retryPromise,
   findOrThrow,
   getSxContracts,
-  buildTokenId
+  retryPromise
 } from "@/api/helpers";
 import _ from "lodash";
 import wait from "waait";
+import { Chain } from "@/store/modules/wallet/tlosWallet";
 
 interface RateDetail {
   rate: Asset;
@@ -109,12 +111,13 @@ const environmentCanBeTrusted = () => {
 const trusted = environmentCanBeTrusted();
 
 const contractDb: BaseToken[] = [
-  { contract: "tokens.swaps", symbol: "BTC" },
-  { contract: "tokens.swaps", symbol: "EOS" },
-  { contract: "tokens.swaps", symbol: "BNT" },
-  { contract: "tokens.swaps", symbol: "USDT" },
-  { contract: "tokens.swaps", symbol: "VIGOR" },
-  { contract: "tokens.swaps", symbol: "EOSDT" }
+  { contract: "btc.ptokens", symbol: "PBTC" }
+  //  { contract: "tokens.swaps", symbol: "BTC" },
+  //  { contract: "tokens.swaps", symbol: "EOS" },
+  //  { contract: "tokens.swaps", symbol: "BNT" },
+  //  { contract: "tokens.swaps", symbol: "USDT" },
+  //  { contract: "tokens.swaps", symbol: "VIGOR" },
+  //  { contract: "tokens.swaps", symbol: "EOSDT" }
 ];
 
 const symbolNameToContract = (symbolName: string) =>
@@ -206,7 +209,6 @@ export class xChainModule
         const { contract, symbol } = token;
 
         try {
-          debugger;
           const eosModuleBorrowed = vxm.tlosBancor.tokenMeta.find(
             tokenMeta => tokenMeta.symbol == token.symbol
           )!;
@@ -258,11 +260,19 @@ export class xChainModule
 
   @action async fetchContract(contract: string): Promise<Stat> {
     const [tokens, volume, settings] = await Promise.all([
-      retryPromise(() => get_tokens(rpc, contract), 4, 500),
+      retryPromise(
+        () =>
+          vxm.tlosWallet.chain == Chain.telos
+            ? get_tokens(rpc, contract)
+            : get_romote_tokens(rpc, contract),
+        4,
+        500
+      ),
       retryPromise(() => get_volume(rpc, contract, 1), 4, 500),
       retryPromise(() => get_settings(rpc, contract), 4, 500)
     ]);
 
+    console.log("xChain.fetchContract", tokens);
     return { tokens, volume, settings, contract };
   }
 
@@ -300,15 +310,6 @@ export class xChainModule
 
   @action async refresh() {
     console.log("refresh called on xchain, doing nothing");
-  }
-
-  @action async init(params?: ModuleParam) {
-    if (this.initiated) {
-      return this.refresh();
-    }
-    console.time("xchain");
-    vxm.tlosBancor.init();
-
     const registryData = await getSxContracts();
     if (this.isAuthenticated) {
       vxm.tlosNetwork.getBalances({
@@ -322,7 +323,7 @@ export class xChainModule
     this.checkPrices(contracts);
     this.setContracts(contracts);
     const allTokens = await Promise.all(contracts.map(this.fetchContract));
-    this.setStats(allTokens);
+    //    this.setStats(allTokens);
 
     retryPromise(() => this.updateStats(), 4, 1000);
 
@@ -336,8 +337,7 @@ export class xChainModule
       )
     );
 
-  
-    setInterval(() => this.checkRefresh(), 20000);
+    //    setInterval(() => this.checkRefresh(), 20000);
 
     const allWithId: SxToken[] = all.flatMap(x =>
       x.map(token => ({
@@ -347,6 +347,7 @@ export class xChainModule
     );
 
     const uniqTokens = _.uniqBy(allWithId, "id").map(x => x.id);
+    console.log("xChain.init.uniqTokens", uniqTokens);
 
     const newTokens = uniqTokens.map(
       (id): SxToken => {
@@ -384,6 +385,98 @@ export class xChainModule
       }
     );
 
+    console.log("xChain.init.newTokens", newTokens);
+    this.setNewTokens(newTokens);
+    await wait(10);
+    console.timeEnd("xchain");
+  }
+
+  @action async init(params?: ModuleParam) {
+    if (this.initiated) {
+      return this.refresh();
+    }
+    console.time("xchain");
+    vxm.tlosBancor.init();
+
+    const registryData = await getSxContracts();
+    if (this.isAuthenticated) {
+      vxm.tlosNetwork.getBalances({
+        tokens: registryData.flatMap(data => data.tokens),
+        slow: false
+      });
+    }
+
+    const contracts = registryData.map(x => x.contract);
+
+    this.checkPrices(contracts);
+    this.setContracts(contracts);
+    const allTokens = await Promise.all(contracts.map(this.fetchContract));
+    this.setStats(allTokens);
+
+    retryPromise(() => this.updateStats(), 4, 1000);
+
+    const all = await Promise.all(
+      allTokens.flatMap(token =>
+        this.buildTokens({
+          tokens: token.tokens,
+          volume: token.volume[0],
+          settings: token.settings
+        })
+      )
+    );
+
+    //    const allXchainTokens = await Promise.all(this.xChainContracts.map(this.fetchXchainContract));
+    //    console.log("xChain.init.allXchainTokens", allXchainTokens);
+
+    setInterval(() => this.checkRefresh(), 20000);
+
+    const allWithId: SxToken[] = all.flatMap(x =>
+      x.map(token => ({
+        ...token,
+        id: buildTokenId(token)
+      }))
+    );
+
+    const uniqTokens = _.uniqBy(allWithId, "id").map(x => x.id);
+    console.log("xChain.init.uniqTokens", uniqTokens);
+
+    const newTokens = uniqTokens.map(
+      (id): SxToken => {
+        const allTokensOfId = allWithId.filter(token =>
+          compareString(id, token.id)
+        );
+
+        const { precision, contract, symbol } = allTokensOfId[0];
+
+        const [highestLiquidityToken] = allTokensOfId.sort(
+          (a, b) => b.liqDepth - a.liqDepth
+        );
+
+        const { price } = highestLiquidityToken;
+
+        const totalVolumeInToken = allTokensOfId
+          .map(token => token.volume24h)
+          .reduce(addNumbers, 0);
+
+        const liqDepth = allTokensOfId
+          .map(token => token.liqDepth)
+          .reduce(addNumbers, 0);
+
+        const volumeInPrice = price * totalVolumeInToken;
+
+        return {
+          precision,
+          price,
+          contract,
+          id,
+          liqDepth,
+          symbol,
+          volume24h: volumeInPrice
+        };
+      }
+    );
+
+    console.log("xChain.init.newTokens", newTokens);
     this.setNewTokens(newTokens);
     this.moduleInitiated();
     await wait(10);
@@ -687,4 +780,9 @@ export class xChainModule
     this.stats = stats;
     this.lastLoaded = new Date().getTime();
   }
+
+  //  @action async switchChain(chain: Chain) {
+  //    console.log("xChain.switchChain", chain);
+  //    this.updateStats();
+  //  }
 }

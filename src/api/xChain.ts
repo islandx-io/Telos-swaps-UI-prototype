@@ -379,6 +379,42 @@ token_type: "token"
   return tokens;
 }
 
+export async function get_romote_tokens(
+    rpc: JsonRpc,
+    code: string,
+    limit = 50
+): Promise<Tokens> {
+  const tokens: Tokens = {};
+  const results = {
+    more: false,
+    rows: [
+      {sym: "8,PBTC", contract: "btc.ptokens", balance: "0.00000000 PBTC", depth: "1.00000000 PBTC", reserve: "1.00000000 PBTC", maker_pool: "1.00000000 PBTC", token_type: "token", enabled: 1},
+      {sym: "4,EOS", contract: "eosio.token", balance: "0.0000 EOS", depth: "1.0000 EOS", reserve: "1.0000 EOS", maker_pool: "1.0000 EOS", token_type: "token", enabled: 1},
+      {sym: "10,BNT", contract: "bntbntbntbnt", balance: "0.0000000000 BNT", depth: "1.0000000000 BNT", reserve: "1.0000000000 BNT", maker_pool: "1.0000000000 BNT", token_type: "token", enabled: 1},
+      {sym: "4,USDT", contract: "tethertether", balance: "0.0000 USDT", depth: "1.0000 USDT", reserve: "1.0000 USDT", maker_pool: "1.0000 USDT", token_type: "token", enabled: 1},
+      {sym: "4,VIGOR", contract: "vigortoken11", balance: "0.0000 VIGOR", depth: "1.0000 VIGOR", reserve: "1.0000 VIGOR", maker_pool: "1.0000 VIGOR", token_type: "token", enabled: 1},
+      {sym: "9,EOSDT", contract: "eosdtsttoken", balance: "0.000000000 EOSDT", depth: "1.000000000 EOSDT", reserve: "1.000000000 EOSDT", maker_pool: "1.000000000 EOSDT", token_type: "token", enabled: 1},
+    ]
+  };
+
+  console.log("Result structure", results);
+  for (const row of results.rows) {
+    console.log("Result structure - row", row);
+    const [precision, symcode] = row.sym.split(",");
+//    const precision = +precision_str;
+    tokens[symcode] = {
+      sym: new Sym(symcode, +precision),
+      contract: new Name(row.contract),
+      balance: new Asset(row.balance),
+      depth: new Asset(row.depth),
+      reserve: new Asset(row.reserve)
+//      maker_pool: new Asset(row.maker_pool),
+//      token_type: new Name(row.token_type)
+    };
+  }
+  return tokens;
+}
+
 export async function get_xchain_tokens(
   rpc: JsonRpc,
   code: string,
@@ -407,7 +443,10 @@ export async function get_xchain_tokens(
       chain: "telos",
       contract: new Name(row.token_info.contract),
       sym: new Sym(symcode, precision),
-      min_quantity: new Asset(row.min_quantity)
+      min_quantity: new Asset(row.min_quantity),
+      balance: new Asset(row.min_quantity),
+      depth: new Asset(row.min_quantity),
+      reserve: new Asset(row.min_quantity)
     };
     console.log("get_xchain_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
   }
@@ -439,10 +478,13 @@ export async function get_xchain_remote_tokens(
     console.log("get_xchain_remote_tokens.row", row);
     const [precision, symcode] = row.remote_token.sym.split(",");
     tokens[symcode] = {
-      chain: row.token_info.remote_chain,
+      chain: row.remote_chain,
       contract: new Name(row.remote_token.contract),
       sym: new Sym(symcode, precision),
-      min_quantity: new Asset(row.min_quantity)
+      min_quantity: new Asset(row.min_quantity),
+      balance: new Asset(row.min_quantity),
+      depth: new Asset(row.min_quantity),
+      reserve: new Asset(row.min_quantity)
     };
     console.log("get_xchain_remote_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
   }
@@ -568,6 +610,9 @@ export interface XchainToken {
   contract: Name;
   sym: Sym;
   min_quantity: Asset;
+  balance: Asset;
+  depth: Asset;
+  reserve: Asset;
 }
 
 export interface Volume {
