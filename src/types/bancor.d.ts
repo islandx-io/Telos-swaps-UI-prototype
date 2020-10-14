@@ -1,9 +1,4 @@
 import { Tokens, Token } from "@/api/telosd";
-import {
-  XchainTokens,
-  XchainToken,
-  XchainSettings
-} from "@/api/xChain";
 import { Contract, ContractSendMethod } from "web3-eth-contract";
 
 export interface TokenPrice {
@@ -252,18 +247,6 @@ export interface ViewModalToken {
   symbol: string;
   img: string;
   balance?: number;
-}
-
-export interface XchainStat {
-  tokens: XchainTokens;
-  remote_tokens: XchainTokens;
-  settings: XchainSettings;
-  contract: string;
-}
-
-export interface crossChainModule {
-  setNewTokens: (tokens: any[]) => void;
-  readonly fetchXchainContract: (contract: string) => Promise<XchainStat>;
 }
 
 export interface TradingModule {
