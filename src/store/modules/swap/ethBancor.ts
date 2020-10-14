@@ -63,11 +63,11 @@ import {
 } from "@/api/ethBancorCalc";
 import { ethBancorApiDictionary } from "@/api/bancorApiRelayDictionary";
 import BigNumber from "bignumber.js";
-import {
-  getSmartTokenHistory,
-  fetchSmartTokens,
-  HistoryItem
-} from "@/api/zumZoom";
+//import {
+//  getSmartTokenHistory,
+//  fetchSmartTokens,
+//  HistoryItem
+//} from "@/api/zumZoom";
 import { sortByNetworkTokens } from "@/api/sortByNetworkTokens";
 import { findNewPath } from "@/api/eosBancorCalc";
 import { priorityEthPools, getHardCodedRelays } from "./staticRelays";
@@ -549,7 +549,8 @@ export class EthBancorModule
   }
 
   @action async fetchHistoryData(smartTokenSymbol: string) {
-    return getSmartTokenHistory(smartTokenSymbol.toLowerCase());
+//    return getSmartTokenHistory(smartTokenSymbol.toLowerCase());
+    return [];
   }
 
   @action async createPool(poolParams: CreatePoolParams) {
@@ -1854,61 +1855,61 @@ export class EthBancorModule
     try {
       const [
         tokenMeta,
-        contractAddresses,
+//        contractAddresses,
         availableSmartTokenHistories,
         bancorApiTokens
       ] = await Promise.all([
         getTokenMeta(),
         this.fetchContractAddresses(),
-        fetchSmartTokens().catch(e => [] as HistoryItem[]),
+//        fetchSmartTokens().catch(e => [] as HistoryItem[]),
         this.warmEthApi().catch(e => [] as TokenPrice[]),
         this.fetchUsdPriceOfTlos()
       ]);
 
-      console.log({ contractAddresses });
+//      console.log({ contractAddresses });
 
-      this.setAvailableHistories(
-        availableSmartTokenHistories.map(history => history.id)
-      );
+//      this.setAvailableHistories(
+//        availableSmartTokenHistories.map(history => history.id)
+//      );
       this.setTokenMeta(tokenMeta);
 
-      const [
-        registeredSmartTokenAddresses,
-        convertibleTokens
-      ] = await Promise.all([
-        this.fetchSmartTokenAddresses(
-          contractAddresses.BancorConverterRegistry
-        ),
-        this.fetchConvertibleTokens(contractAddresses.BancorConverterRegistry)
-      ]);
+//      const [
+//        registeredSmartTokenAddresses,
+//        convertibleTokens
+//      ] = await Promise.all([
+//        this.fetchSmartTokenAddresses(
+//          contractAddresses.BancorConverterRegistry
+//        ),
+//        this.fetchConvertibleTokens(contractAddresses.BancorConverterRegistry)
+//      ]);
 
-      this.setRegisteredSmartTokenAddresses(registeredSmartTokenAddresses);
-      this.setConvertibleTokenAddresses(convertibleTokens);
+//      this.setRegisteredSmartTokenAddresses(registeredSmartTokenAddresses);
+//      this.setConvertibleTokenAddresses(convertibleTokens);
 
-      const bareMinimumSmartTokenAddresses = await this.bareMinimumPools({
-        params,
-        networkContractAddress: contractAddresses.BancorNetwork,
-        smartTokenAddresses: registeredSmartTokenAddresses,
-        ...(bancorApiTokens && { tokenPrices: bancorApiTokens })
-      });
+//      const bareMinimumSmartTokenAddresses = await this.bareMinimumPools({
+//        params,
+//        networkContractAddress: contractAddresses.BancorNetwork,
+//        smartTokenAddresses: registeredSmartTokenAddresses,
+//        ...(bancorApiTokens && { tokenPrices: bancorApiTokens })
+//      });
 
-      const isDev = process.env.NODE_ENV == "development";
+//      const isDev = process.env.NODE_ENV == "development";
 
-      const approvedPriority = await this.poolsByPriority({
-        smartTokenAddresses: registeredSmartTokenAddresses,
-        ...(bancorApiTokens && { tokenPrices: bancorApiTokens as TokenPrice[] })
-      });
+//      const approvedPriority = await this.poolsByPriority({
+//        smartTokenAddresses: registeredSmartTokenAddresses,
+//        ...(bancorApiTokens && { tokenPrices: bancorApiTokens as TokenPrice[] })
+//      });
 
-      const remainingLoad = _.differenceWith(
-        approvedPriority,
-        bareMinimumSmartTokenAddresses,
-        compareString
-      ).slice(0, isDev ? 5 : 20);
+//      const remainingLoad = _.differenceWith(
+//        approvedPriority,
+//        bareMinimumSmartTokenAddresses,
+//        compareString
+//      ).slice(0, isDev ? 5 : 20);
 
-      await this.addPools(bareMinimumSmartTokenAddresses);
-      await wait(1);
-      this.addPools(remainingLoad);
-      this.moduleInitiated();
+//      await this.addPools(bareMinimumSmartTokenAddresses);
+//      await wait(1);
+//      this.addPools(remainingLoad);
+//      this.moduleInitiated();
 
       if (this.relaysList.length < 1 || this.relayFeed.length < 2) {
         console.error("Init resolved with less than 2 relay feeds or 1 relay.");

@@ -380,9 +380,9 @@ token_type: "token"
 }
 
 export async function get_romote_tokens(
-    rpc: JsonRpc,
-    code: string,
-    limit = 50
+  rpc: JsonRpc,
+  code: string,
+  limit = 50
 ): Promise<Tokens> {
   const tokens: Tokens = {};
   const results = {
