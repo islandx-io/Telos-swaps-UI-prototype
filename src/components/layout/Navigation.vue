@@ -56,16 +56,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { vxm } from "@/store/";
-import {
-  services,
-  buildTokenId,
-  compareString,
-  findOrThrow
-} from "@/api/helpers";
-import { ModuleParam } from "../../types/bancor";
-import { Route } from "vue-router";
+import {Component, Vue, Watch} from "vue-property-decorator";
+import {vxm} from "@/store/";
+import {buildTokenId, compareString, Feature, findOrThrow, services} from "@/api/helpers";
+import {ModuleParam} from "../../types/bancor";
+import {Route} from "vue-router";
+
 const defaultPaths = [
   {
     moduleId: "tlos",
@@ -145,7 +141,7 @@ export default class Navigation extends Vue {
       {
         label: "Convert",
         destination: createDirectRoute("Tokens"),
-        render: this.selectedService!.features.includes(0),
+        render: this.selectedService!.features.includes(Feature.Trade),
         disabled: false,
         icon: "exchange-alt",
         active: this.$route.name == "Tokens"
@@ -153,13 +149,13 @@ export default class Navigation extends Vue {
       {
         label: "Pools",
         destination: createDirectRoute("Relays"),
-        render: this.selectedService!.features.includes(2),
+        render: this.selectedService!.features.includes(Feature.Liquidity),
         disabled: false,
         icon: "swimming-pool",
         active: this.$route.name == "Relay" || this.$route.name == "Relays"
       },
       ...[
-        this.selectedService!.features.includes(1)
+        this.selectedService!.features.includes(Feature.Wallet)
           ? {
               label: "Wallet",
               destination: createDirectRoute("WalletAccount", {
@@ -173,7 +169,7 @@ export default class Navigation extends Vue {
           : []
       ],
       ...[
-        this.selectedService!.features.includes(3)
+        this.selectedService!.features.includes(Feature.Bridge)
           ? {
               label: "Telos->EOS",
               destination: createDirectRoute("BridgeAccount", {
