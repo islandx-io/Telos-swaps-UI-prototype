@@ -9,7 +9,6 @@ import { ABISmartToken, ethReserveAddress } from "@/api/ethConfig";
 import { EthAddress } from "@/types/bancor";
 import { fromWei, isAddress, toHex, toWei } from "web3-utils";
 import { shrinkToken } from "@/api/ethBancorCalc";
-import { vxm } from "@/store";
 
 const tx = (data: any) =>
   new Promise((resolve, reject) => {
@@ -74,19 +73,9 @@ export class EthereumModule extends VuexModule.With({
     }
   }
 
-  @action async accountChange(loggedInAccount: string) {
-    if (loggedInAccount !== this.isAuthenticated) {
-      this.setLoggedInAccount(loggedInAccount);
-      vxm.ethBancor.accountChange(loggedInAccount);
-    }
-  }
+  @action async accountChange(loggedInAccount: string) {}
 
-  @action async nativeBalanceChange(nativeBalance: string) {
-    vxm.ethBancor.updateBalance([
-      ethReserveAddress,
-      Number(fromWei(nativeBalance))
-    ]);
-  }
+  @action async nativeBalanceChange(nativeBalance: string) {}
 
   @action async checkAlreadySignedIn() {
     const previouslySelectedWallet = localStorage.getItem(selectedWeb3Wallet);

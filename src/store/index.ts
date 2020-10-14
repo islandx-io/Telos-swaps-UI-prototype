@@ -5,7 +5,6 @@ import { GeneralModule } from "./modules/general";
 import { EosTransitModule } from "./modules/wallet/tlosWallet";
 import { EthereumModule } from "./modules/wallet/ethWallet";
 import { TlosBancorModule } from "./modules/swap/tlosBancor";
-import { EthBancorModule } from "./modules/swap/ethBancor";
 import { UsdBancorModule } from "./modules/swap/usdSx";
 import { xChainModule } from "./modules/swap/xChain";
 import { BancorModule } from "./modules/swap/index";
@@ -21,7 +20,6 @@ export const store = new Vuex.Store({
     ...extractVuexModule(UsdBancorModule),
     ...extractVuexModule(xChainModule),
     ...extractVuexModule(TlosBancorModule),
-    ...extractVuexModule(EthBancorModule),
     ...extractVuexModule(GeneralModule),
     ...extractVuexModule(EosTransitModule),
     ...extractVuexModule(EthereumModule),
@@ -39,7 +37,6 @@ export const vxm = {
   tlosWallet: createProxy(store, EosTransitModule),
   ethWallet: createProxy(store, EthereumModule),
   tlosBancor: createProxy(store, TlosBancorModule),
-  ethBancor: createProxy(store, EthBancorModule),
   usdsBancor: createProxy(store, UsdBancorModule),
   xchainBancor: createProxy(store, xChainModule),
   bancor: createProxy(store, BancorModule),
