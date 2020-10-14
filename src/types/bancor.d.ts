@@ -1,5 +1,4 @@
 import { Tokens, Token } from "@/api/telosd";
-import { Contract, ContractSendMethod } from "web3-eth-contract";
 
 export interface TokenPrice {
   id: string;
@@ -212,10 +211,6 @@ export interface ViewRelay {
   addLiquiditySupported: boolean;
   removeLiquiditySupported: boolean;
   focusAvailable?: boolean;
-}
-
-export interface ContractMethods<T> extends Contract {
-  methods: T;
 }
 
 export interface CallReturn<T = any> {

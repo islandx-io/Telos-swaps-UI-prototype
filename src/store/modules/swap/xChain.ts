@@ -386,7 +386,6 @@ export class xChainModule
     console.log("xChain.init.newTokens", newTokens);
     this.setNewTokens(newTokens);
     await wait(10);
-    console.timeEnd("xchain");
   }
 
   @action async init(params?: ModuleParam) {
