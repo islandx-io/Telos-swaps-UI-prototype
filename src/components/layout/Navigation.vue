@@ -64,7 +64,7 @@ import {
   compareString,
   findOrThrow
 } from "@/api/helpers";
-import { ModuleParam, Feature } from "@/types/bancor";
+import { ModuleParam } from "../../types/bancor";
 import { Route } from "vue-router";
 const defaultPaths = [
   {
@@ -145,7 +145,7 @@ export default class Navigation extends Vue {
       {
         label: "Convert",
         destination: createDirectRoute("Tokens"),
-        render: this.selectedService!.features.includes(Feature.Trade),
+        render: this.selectedService!.features.includes(0),
         disabled: false,
         icon: "exchange-alt",
         active: this.$route.name == "Tokens"
@@ -153,13 +153,13 @@ export default class Navigation extends Vue {
       {
         label: "Pools",
         destination: createDirectRoute("Relays"),
-        render: this.selectedService!.features.includes(Feature.Liquidity),
+        render: this.selectedService!.features.includes(2),
         disabled: false,
         icon: "swimming-pool",
         active: this.$route.name == "Relay" || this.$route.name == "Relays"
       },
       ...[
-        this.selectedService!.features.includes(Feature.Wallet)
+        this.selectedService!.features.includes(1)
           ? {
               label: "Wallet",
               destination: createDirectRoute("WalletAccount", {
@@ -173,7 +173,7 @@ export default class Navigation extends Vue {
           : []
       ],
       ...[
-        this.selectedService!.features.includes(Feature.Bridge)
+        this.selectedService!.features.includes(3)
           ? {
               label: "Telos->EOS",
               destination: createDirectRoute("BridgeAccount", {

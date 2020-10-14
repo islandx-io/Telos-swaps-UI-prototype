@@ -1168,7 +1168,7 @@ export class TlosBancorModule
       ]);
       this.setTokenMeta(tokenMeta);
       this.setTlosPrice(usdPriceOfTlos);
-      this.setTlos24hPriceMove(0.00);
+      this.setTlos24hPriceMove(-4.44);
 
       console.log("tokenMeta : ", tokenMeta);
       console.log("usdPriceOfTlos : ", usdPriceOfTlos);
