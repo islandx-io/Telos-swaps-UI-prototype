@@ -1,7 +1,6 @@
 import axios, {AxiosResponse} from "axios";
 import {vxm} from "@/store";
 import {JsonRpc} from "eosjs";
-import Onboard from "bnc-onboard";
 import {Asset, number_to_asset, Sym} from "eos-common";
 import {rpc, xrpc} from "./rpc";
 import {
@@ -15,7 +14,6 @@ import {
   TokenMeta,
   TokenPrice
 } from "@/types/bancor";
-import Web3 from "web3";
 import {Chain, EosTransitModule} from "@/store/modules/wallet/tlosWallet";
 import wait from "waait";
 import {sortByNetworkTokens} from "./sortByNetworkTokens";
@@ -244,33 +242,6 @@ export const updateArray = <T>(
   conditioner: (element: T) => boolean,
   updater: (element: T) => T
 ) => arr.map(element => (conditioner(element) ? updater(element) : element));
-
-export type Wei = string | number;
-export type Ether = string | number;
-
-export let web3 = new Web3(
-  "https://mainnet.infura.io/v3/da059c364a2f4e6eb89bfd89600bce07"
-);
-
-export const selectedWeb3Wallet = "SELECTED_WEB3_WALLET";
-
-export const onboard = Onboard({
-  dappId: process.env.VUE_APP_BLOCKNATIVE,
-  networkId: 1,
-  hideBranding: true,
-  subscriptions: {
-    address: address => {
-      vxm.ethWallet.accountChange(address);
-    },
-    balance: balance => vxm.ethWallet.nativeBalanceChange(balance),
-    wallet: wallet => {
-      if (wallet.name) {
-        localStorage.setItem(selectedWeb3Wallet, wallet.name);
-      }
-      web3 = new Web3(wallet.provider);
-    }
-  }
-});
 
 export const fetchReserveBalance = async (
   converterContract: any,
