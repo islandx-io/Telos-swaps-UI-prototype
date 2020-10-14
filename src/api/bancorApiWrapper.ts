@@ -5,7 +5,6 @@ import {
   TokenDetail,
   BancorAPIResponseToken
 } from "@/types/bancor";
-//import RequestApi from "@/api/RequestApi";
 
 function chunk(array: any, size: number) {
   const chunked = [];
@@ -44,7 +43,7 @@ export interface ConvertPayload {
 }
 
 enum Blockchain {
-  EOS,
+  TLOS,
   ETH
 }
 
@@ -86,8 +85,8 @@ export class BancorApi implements BancorWrapper {
   public async convert(payload: ConvertPayload) {
     const final = {
       ...payload,
-      blockchainType: this.blockchain == Blockchain.EOS ? "tlos" : "ethereum",
-      ...(this.blockchain == Blockchain.EOS && { format: "json" })
+      blockchainType: this.blockchain == Blockchain.TLOS ? "tlos" : "ethereum",
+      ...(this.blockchain == Blockchain.TLOS && { format: "json" })
     };
     const res = await this.post("currencies/convert", final);
 
@@ -115,7 +114,7 @@ export class BancorApi implements BancorWrapper {
 
   public async getTokens(): Promise<TokenPrice[]> {
     const res = await this.request("currencies/tokens", {
-      blockchainType: this.blockchain == Blockchain.EOS ? "tlos" : "ethereum",
+      blockchainType: this.blockchain == Blockchain.TLOS ? "tlos" : "ethereum",
       fromCurrencyCode: "USD",
       includeTotal: true,
       limit: 150,
@@ -206,5 +205,4 @@ export class BancorApi implements BancorWrapper {
   }
 }
 
-export const bancorApi = new BancorApi(Blockchain.EOS);
-export const ethBancorApi = new BancorApi(Blockchain.ETH);
+export const bancorApi = new BancorApi(Blockchain.TLOS);

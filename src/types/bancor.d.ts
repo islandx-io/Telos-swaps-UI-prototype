@@ -512,7 +512,8 @@ export interface Settings {
 export enum Feature {
   Trade,
   Wallet,
-  Liquidity
+  Liquidity,
+  Bridge
 }
 
 export interface Service {

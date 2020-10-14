@@ -14,8 +14,9 @@ import HeroRelay from "@/components/hero/sub/HeroRelay.vue";
 import HeroCreate from "@/components/hero/sub/HeroCreate.vue";
 import Navigation from "@/components/layout/Navigation.vue";
 import Privacy from "@/components/common/Privacy.vue";
-import { services } from "@/api/helpers";
+import {services} from "@/api/helpers";
 import Bridge from "@/views/Bridge.vue";
+import {Feature} from "@/types/bancor";
 
 Vue.use(Router);
 
@@ -203,11 +204,11 @@ router.beforeEach((to, from, next) => {
     setPreferredService(service.namespace);
     switch (to.meta.feature) {
       case "Trade":
-        if (service.features.includes(0)) next();
+        if (service.features.includes(Feature.Trade)) next();
         else next("/404");
         break;
       case "Liquidity":
-        if (service.features.includes(2)) next();
+        if (service.features.includes(Feature.Liquidity)) next();
         else next("/404");
         break;
       default:
