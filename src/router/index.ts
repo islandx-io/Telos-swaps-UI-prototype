@@ -14,7 +14,7 @@ import HeroRelay from "@/components/hero/sub/HeroRelay.vue";
 import HeroCreate from "@/components/hero/sub/HeroCreate.vue";
 import Navigation from "@/components/layout/Navigation.vue";
 import Privacy from "@/components/common/Privacy.vue";
-import {Feature, services} from "@/api/helpers";
+import { Feature, services } from "@/api/helpers";
 import Bridge from "@/views/Bridge.vue";
 
 Vue.use(Router);
@@ -91,33 +91,39 @@ export const router = new Router({
       props: true
     },
     {
-      path: "/:service/xtransfer/:id",
+      path: "/:service/xtransfer",
       name: "Xtransfer",
       components: {
         Nav: Navigation,
         default: BridgeAccount,
         Hero: HeroBridge
       },
-      props: true
-    },
+      props: true,
+      meta: {
+        feature: "Bridge"
+      }
+    } /*,
     {
-      path: "/:service/bridge",
-      name: "Bridge",
+      path: "/:service/xtransfer",
+      name: "Xtransfer",
       components: {
         Nav: Navigation,
         default: Bridge
       }
-    },
+    }*/ /*,
     {
       path: "/:service/bridge/:account",
-      name: "BridgeAccount",
+      name: "Bridge",
       components: {
         Nav: Navigation,
         Hero: HeroBridge,
         default: BridgeAccount
       },
-      props: true
-    },
+      props: true,
+      meta: {
+        feature: "Bridge"
+      }
+    }*/,
     {
       path: "/:service/pools",
       name: "Relays",
@@ -201,6 +207,7 @@ router.beforeEach((to, from, next) => {
       return;
     }
     setPreferredService(service.namespace);
+    debugger;
     switch (to.meta.feature) {
       case "Trade":
         if (service.features.includes(Feature.Trade)) next();
@@ -208,6 +215,10 @@ router.beforeEach((to, from, next) => {
         break;
       case "Liquidity":
         if (service.features.includes(Feature.Liquidity)) next();
+        else next("/404");
+        break;
+      case "Bridge":
+        if (service.features.includes(Feature.Bridge)) next();
         else next("/404");
         break;
       default:

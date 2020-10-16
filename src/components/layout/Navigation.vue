@@ -56,11 +56,17 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Watch} from "vue-property-decorator";
-import {vxm} from "@/store/";
-import {buildTokenId, compareString, Feature, findOrThrow, services} from "@/api/helpers";
-import {ModuleParam} from "../../types/bancor";
-import {Route} from "vue-router";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { vxm } from "@/store/";
+import {
+  buildTokenId,
+  compareString,
+  Feature,
+  findOrThrow,
+  services
+} from "@/api/helpers";
+import { ModuleParam } from "../../types/bancor";
+import { Route } from "vue-router";
 
 const defaultPaths = [
   {
@@ -71,11 +77,6 @@ const defaultPaths = [
   {
     moduleId: "usds",
     base: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" }),
-    quote: buildTokenId({ contract: "tokens.swaps", symbol: "USDT" })
-  },
-  {
-    moduleId: "xchain",
-    base: buildTokenId({ contract: "tokens.swaps", symbol: "BTC" }),
     quote: buildTokenId({ contract: "tokens.swaps", symbol: "USDT" })
   }
 ];
@@ -88,13 +89,21 @@ const extendRouter = (moduleId: string) => {
   const path = findOrThrow(
     defaultPaths,
     path => compareString(moduleId, path.moduleId),
-    `failed to find default path for unknown service`
+    `failed to find default path for unknown service1: ${moduleId}`
   );
   return {
     query: {
       base: path.base,
       quote: path.quote
     },
+    params: {
+      service: moduleId
+    }
+  };
+};
+
+const extendXtransferRouter = (moduleId: string) => {
+  return {
     params: {
       service: moduleId
     }
@@ -112,7 +121,7 @@ const defaultModuleParams = (moduleId: string): ModuleParam => {
   const path = findOrThrow(
     defaultPaths,
     path => compareString(moduleId, path.moduleId),
-    `failed to find default path for unknown service`
+    `failed to find default path for unknown service3: ${moduleId}`
   );
   return {
     tradeQuery: {
@@ -121,6 +130,7 @@ const defaultModuleParams = (moduleId: string): ModuleParam => {
     }
   };
 };
+
 const createDirectRoute = (name: string, params?: any) => ({
   name,
   ...(params && { params })
@@ -154,6 +164,16 @@ export default class Navigation extends Vue {
         icon: "swimming-pool",
         active: this.$route.name == "Relay" || this.$route.name == "Relays"
       },
+      {
+        label: "Telos->EOS",
+        destination: createDirectRoute("Xtransfer", {
+          account: this.isAuthenticated
+        }),
+        render: this.selectedService!.features.includes(Feature.Bridge),
+        icon: "wallet",
+        active: this.$route.name == "Xtransfer",
+        disabled: false
+      },
       ...[
         this.selectedService!.features.includes(Feature.Wallet)
           ? {
@@ -167,25 +187,12 @@ export default class Navigation extends Vue {
               render: true
             }
           : []
-      ],
-      ...[
-        this.selectedService!.features.includes(Feature.Bridge)
-          ? {
-              label: "Telos->EOS",
-              destination: createDirectRoute("BridgeAccount", {
-                account: this.isAuthenticated
-              }),
-              icon: "wallet",
-              active: this.$route.name == "Bridge",
-              disabled: false,
-              render: true
-            }
-          : []
       ]
       // @ts-ignore
     ].filter(route => route.render);
   }
   set selected(newSelection: string) {
+    console.log("set called");
     this.loadNewModule(newSelection);
   }
   async loadNewModule(moduleId: string) {
@@ -196,9 +203,19 @@ export default class Navigation extends Vue {
     await vxm.bancor.initialiseModule({
       moduleId,
       resolveWhenFinished: !moduleAlreadyLoaded,
-      params: defaultModuleParams(moduleId)
+      //params: defaultModuleParams(moduleId)
+      params: moduleId === "xchain" ? {} : defaultModuleParams(moduleId)
     });
-    this.$router.push({ name: "Tokens", ...extendRouter(moduleId) });
+
+    if (moduleId === "xchain") {
+      this.$router.push({
+        name: "Xtransfer",
+        ...extendXtransferRouter(moduleId)
+      });
+    } else {
+      this.$router.push({ name: "Tokens", ...extendRouter(moduleId) });
+    }
+    //this.$router.push({ name: "Tokens", ...extendRouter(moduleId) });
   }
   get options() {
     return vxm.bancor.modules.map(module => ({
@@ -211,11 +228,12 @@ export default class Navigation extends Vue {
     return services.find(service => service.namespace == this.selectedNetwork);
   }
   created() {
-    false
-//    vxm.ethWallet.checkAlreadySignedIn();
+    false;
+    //    vxm.ethWallet.checkAlreadySignedIn();
   }
   @Watch("isAuthenticated")
   onAuthentication(account: string) {
+    debugger;
     if (account) {
       vxm.bancor.refreshBalances();
     }
@@ -236,14 +254,14 @@ export default class Navigation extends Vue {
     return false;
   }
   get loginButtonLabel() {
-//    if (this.selectedWallet == "tlos") {
-      return this.loginStatus[0];
-//    }
+    //    if (this.selectedWallet == "tlos") {
+    return this.loginStatus[0];
+    //    }
   }
   get icon() {
-//    if (this.selectedWallet == "tlos") {
-      return this.loginStatus[1];
-//    }
+    //    if (this.selectedWallet == "tlos") {
+    return this.loginStatus[1];
+    //    }
   }
   get spin() {
     return this.loginStatus[2];

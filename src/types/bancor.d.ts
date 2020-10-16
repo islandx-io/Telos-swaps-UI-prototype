@@ -231,10 +231,12 @@ export interface TradeQuery {
 }
 
 export type PoolQuery = string;
+export type BridgeQuery = string;
 
 export interface ModuleParam {
   tradeQuery?: TradeQuery;
   poolQuery?: PoolQuery;
+  bridgeQuery?: BridgeQuery;
 }
 
 export interface ViewModalToken {

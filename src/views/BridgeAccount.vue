@@ -147,6 +147,7 @@ export default class BridgeAccount extends Vue {
   }
 
   initTransfer(id: string) {
+    debugger;
     this.scrollToTop();
 
     this.$router.push({
@@ -158,6 +159,10 @@ export default class BridgeAccount extends Vue {
   initConvert(id: string) {
     this.scrollToTop();
     // add convert code
+  }
+  
+  async created() {
+   
   }
 }
 </script>

@@ -191,7 +191,7 @@ export async function get_settings(
       "contract is unavailable or currently disabled for maintenance"
     );
 
-//  console.log(results.rows[0]);
+  //  console.log(results.rows[0]);
 
   return {
     fee: results.rows[0].fee,

@@ -1,7 +1,7 @@
-import axios from 'axios'
+import axios from "axios";
 
 const baseURL = axios.create({
-  baseURL: 'https://us-central1-coolx-242811.cloudfunctions.net/'
+  baseURL: "https://us-central1-coolx-242811.cloudfunctions.net/"
   //method: 'post'
 });
 

@@ -131,7 +131,7 @@ export default class WalletAccount extends Vue {
     return vxm.bancor.tokens.filter(
       (token: any) => Number(token.balance) > 0.0000001
     );
-//    return vxm.bancor.tokens;
+    //    return vxm.bancor.tokens;
   }
 
   get allTokensLength() {

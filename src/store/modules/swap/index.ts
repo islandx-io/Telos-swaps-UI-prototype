@@ -14,12 +14,9 @@ import {
 } from "@/types/bancor";
 import { vxm } from "@/store";
 import { store } from "../../../store";
+import { compareString, updateArray } from "@/api/helpers";
 import {
-  compareString,
-  updateArray
-} from "@/api/helpers";
-import {
-//  fetchCmcUsdPriceOfTlos,
+  //  fetchCmcUsdPriceOfTlos,
   fetchCoinGechoUsdPriceOfTlos
 } from "@/api/helpers";
 import wait from "waait";
@@ -273,13 +270,11 @@ export class BancorModule extends VuexModule.With({
           Promise.resolve(promise).then(reject, resolve)
         );
       const any = (arr: any[]) => reverse(Promise.all(arr.map(reverse)));
-//      const res1 = await any([
-//        fetchCmcUsdPriceOfTlos()
-//      ]);
-//      console.log("getUsdPrice.fetchCoinCmcUsdPriceOfTlos", res1);
-      const res = await any([
-        fetchCoinGechoUsdPriceOfTlos()
-      ]);
+      //      const res1 = await any([
+      //        fetchCmcUsdPriceOfTlos()
+      //      ]);
+      //      console.log("getUsdPrice.fetchCoinCmcUsdPriceOfTlos", res1);
+      const res = await any([fetchCoinGechoUsdPriceOfTlos()]);
       const usdPrice = res as number;
       this.setUsdPriceOfTlos({
         price: usdPrice,

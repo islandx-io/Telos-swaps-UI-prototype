@@ -28,12 +28,15 @@ interface tlosWalletAction {
 
 //const appName = "TLOSD";
 
-export enum Chain {telos, eos}
+export enum Chain {
+  telos,
+  eos
+}
 
 const telos_chain_options = {
   appName: "TLOSD.Telos",
   network: {
-//    host: "api.telos.africa",
+    //    host: "api.telos.africa",
     host: "telos.caleos.io",
     port: 443,
     protocol: "https",
@@ -198,7 +201,7 @@ export class EosTransitModule extends VuexModule.With({
     // TODO figure out how to re-login
     console.log("setAccessContext.chain", chain);
     vxm.tlosWallet.logout();
-//    vxm.tlosWallet.setProvider();
+    //    vxm.tlosWallet.setProvider();
     switch (chain) {
       case 0:
         // Telos

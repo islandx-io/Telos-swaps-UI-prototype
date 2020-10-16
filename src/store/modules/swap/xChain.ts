@@ -168,8 +168,9 @@ const VuexModule = createModule({
   strict: false
 });
 
-export class xChainModule
- extends VuexModule.With({ namespaced: "xchainBancor/" }) {
+export class xChainModule extends VuexModule.With({
+  namespaced: "xchainBancor/"
+}) {
   newTokens: SxToken[] = [];
   initiated: boolean = false;
   contracts: string[] = [];

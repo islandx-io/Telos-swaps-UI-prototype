@@ -143,7 +143,7 @@ const addDefaultQueryParams = (to: Route): any => {
         buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" }),
         to
       );
-/*
+    /*
     case "eth":
       return appendBaseQuoteQuery(
         ethReserveAddress,
@@ -285,8 +285,8 @@ export default class HeroConvert extends Vue {
       case "tlos":
       case "usds":
         return `https://telos.bloks.io/transaction/${this.success}`;
-//      case "eth":
-//        return `https://etherscan.io/tx/${this.success}`;
+      //      case "eth":
+      //        return `https://etherscan.io/tx/${this.success}`;
       default:
         return `https://telos.bloks.io/transaction/${this.success}`;
     }
@@ -297,8 +297,8 @@ export default class HeroConvert extends Vue {
       case "tlos":
       case "usds":
         return `Bloks.io`;
-//      case "eth":
-//        return `Etherscan`;
+      //      case "eth":
+      //        return `Etherscan`;
       default:
         return `Bloks.io`;
     }

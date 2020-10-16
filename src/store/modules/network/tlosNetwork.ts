@@ -25,7 +25,7 @@ import {
   Sym,
   symbol
 } from "eos-common";
-import {Chain} from "@/store/modules/wallet/tlosWallet";
+import { Chain } from "@/store/modules/wallet/tlosWallet";
 
 const requiredProps = ["balance", "contract", "symbol"];
 
@@ -152,7 +152,10 @@ export class TlosNetworkModule
     const precision = token.precision;
 
     const asset = number_to_asset(amount, new Sym(symbol, precision));
-    const new_memo = to.toString() + ((vxm.tlosWallet.chain == Chain.telos) ? "@eos" : "@telos") + (memo === "" ? "" : "|" + memo);
+    const new_memo =
+      to.toString() +
+      (vxm.tlosWallet.chain == Chain.telos ? "@eos" : "@telos") +
+      (memo === "" ? "" : "|" + memo);
     //    console.log("telosNetwork.xtransfer", new_memo);
     const bridge_account = "telosd.io";
 

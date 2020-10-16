@@ -511,7 +511,7 @@ export class TlosBancorModule
   loadingPools: boolean = true;
   usdPrice = 0;
   usdPriceOfTlos = 0;
-  usdTlos24hPriceMove = 0.00;
+  usdTlos24hPriceMove = 0.0;
   tokenMeta: TokenMeta[] = [];
   moreTokensAvailable = false;
   loadingTokens = false;
@@ -532,7 +532,10 @@ export class TlosBancorModule
       const relay = this.relaysList.find(relay => compareString(relay.id, id))!;
       const features: Feature[] = [
         ["addLiquidity", () => true],
-        ["removeLiquidity", relay => relay.reserves.some(reserve => reserve.amount > 0)]
+        [
+          "removeLiquidity",
+          relay => relay.reserves.some(reserve => reserve.amount > 0)
+        ]
       ];
       return features
         .filter(([name, test]) => test(relay, isAuthenticated))

@@ -22,7 +22,10 @@
                 class="fa-2x text-white"
               />
             </div>
-            <span @click="switchChain" class="cursor font-size-sm text-white-50">
+            <span
+              @click="switchChain"
+              class="cursor font-size-sm text-white-50"
+            >
               <font-awesome-icon icon="exchange-alt" fixed-width />SWITCH
             </span>
 
@@ -89,12 +92,12 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator";
-import {vxm} from "@/store";
+import { Component, Vue } from "vue-property-decorator";
+import { vxm } from "@/store";
 import numeral from "numeral";
 import HeroWrapper from "@/components/hero/HeroWrapper.vue";
 import TokenAmountInput from "@/components/convert/TokenAmountInput.vue";
-import {Chain} from "@/store/modules/wallet/tlosWallet";
+import { Chain } from "@/store/modules/wallet/tlosWallet";
 
 @Component({
   components: {
@@ -175,26 +178,31 @@ export default class HeroBridge extends Vue {
 
   switchChain() {
     console.log("switch between Telos and EOS");
-    vxm.tlosWallet.setAccessContext((vxm.tlosWallet.chain == Chain.telos) ? Chain.eos : Chain.telos);
+    vxm.tlosWallet.setAccessContext(
+      vxm.tlosWallet.chain == Chain.telos ? Chain.eos : Chain.telos
+    );
     vxm.xchainBancor.updateStats();
-//    vxm.xchainBancor.switchChain((vxm.tlosWallet.chain == Chain.telos) ? Chain.eos : Chain.telos);
-    console.log((vxm.tlosWallet.chain == Chain.telos) ? "Switched from EOS to Telos" : "Switched from Telos to EOS");
+    //    vxm.xchainBancor.switchChain((vxm.tlosWallet.chain == Chain.telos) ? Chain.eos : Chain.telos);
+    console.log(
+      vxm.tlosWallet.chain == Chain.telos
+        ? "Switched from EOS to Telos"
+        : "Switched from Telos to EOS"
+    );
   }
 
-//  navConvert() {
-//    this.$router.push({
-//      name: "Token",
-//      params: {
-//        symbolName: this.selectedIdOrDefault
-//      }
-//    });
-//  }
+  //  navConvert() {
+  //    this.$router.push({
+  //      name: "Token",
+  //      params: {
+  //        symbolName: this.selectedIdOrDefault
+  //      }
+  //    });
+  //  }
 
   async created() {
     this.loadHistory();
   }
 }
-
 </script>
 
 <style scoped lang="scss">
