@@ -455,7 +455,7 @@ export const services: Service[] = [
     features: [Feature.Trade, Feature.Liquidity, Feature.Wallet]
   },
   { namespace: "usds", features: [Feature.Trade, Feature.Wallet] },
-  { namespace: "xchain", features: [Feature.Trade, Feature.Bridge] }
+  { namespace: "xchain", features: [Feature.Bridge] }
 ];
 
 export interface ReserveTableRow {
@@ -573,7 +573,8 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   // TODO read usdTlos24hPriceMove from CMC, use as follows
   // let usdTlos24hPriceMove = fetchTlos24hUsdPriceOfTlos(usdTlos24hPriceMove) / 100.0;
   // hardcoded for now
-  let usdTlos24hPriceMove = -4.44 / 100.0;
+//  let usdTlos24hPriceMove = -4.44 / 100.0;
+  let usdTlos24hPriceMove = 0.00 / 100.0;
 
   let newTlosObj: any = {};
   newTlosObj.id = 1;

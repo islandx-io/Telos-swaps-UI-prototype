@@ -72,11 +72,6 @@ const defaultPaths = [
     moduleId: "usds",
     base: buildTokenId({ contract: "tokens.swaps", symbol: "TLOSD" }),
     quote: buildTokenId({ contract: "tokens.swaps", symbol: "USDT" })
-  },
-  {
-    moduleId: "xchain",
-    base: buildTokenId({ contract: "tokens.swaps", symbol: "BTC" }),
-    quote: buildTokenId({ contract: "tokens.swaps", symbol: "USDT" })
   }
 ];
 const appendBaseQuoteQuery = (base: string, quote: string, route: Route) => ({
@@ -88,13 +83,21 @@ const extendRouter = (moduleId: string) => {
   const path = findOrThrow(
     defaultPaths,
     path => compareString(moduleId, path.moduleId),
-    `failed to find default path for unknown service`
+    `failed to find default path for unknown service: ${moduleId}`
   );
   return {
     query: {
       base: path.base,
       quote: path.quote
     },
+    params: {
+      service: moduleId
+    }
+  };
+};
+
+const extendXtransferRouter = (moduleId: string) => {
+  return {
     params: {
       service: moduleId
     }
@@ -112,7 +115,7 @@ const defaultModuleParams = (moduleId: string): ModuleParam => {
   const path = findOrThrow(
     defaultPaths,
     path => compareString(moduleId, path.moduleId),
-    `failed to find default path for unknown service`
+    `failed to find default path for unknown service: ${moduleId}`
   );
   return {
     tradeQuery: {
@@ -121,6 +124,7 @@ const defaultModuleParams = (moduleId: string): ModuleParam => {
     }
   };
 };
+
 const createDirectRoute = (name: string, params?: any) => ({
   name,
   ...(params && { params })
@@ -154,6 +158,16 @@ export default class Navigation extends Vue {
         icon: "swimming-pool",
         active: this.$route.name == "Relay" || this.$route.name == "Relays"
       },
+      {
+        label: "Telos->EOS",
+        destination: createDirectRoute("Xtransfer", {
+          account: this.isAuthenticated
+        }),
+        render: this.selectedService!.features.includes(Feature.Bridge),
+        icon: "wallet",
+        active: this.$route.name == "Xtransfer",
+        disabled: false
+      },
       ...[
         this.selectedService!.features.includes(Feature.Wallet)
           ? {
@@ -163,20 +177,6 @@ export default class Navigation extends Vue {
               }),
               icon: "wallet",
               active: this.$route.name == "Wallet",
-              disabled: false,
-              render: true
-            }
-          : []
-      ],
-      ...[
-        this.selectedService!.features.includes(Feature.Bridge)
-          ? {
-              label: "Telos->EOS",
-              destination: createDirectRoute("BridgeAccount", {
-                account: this.isAuthenticated
-              }),
-              icon: "wallet",
-              active: this.$route.name == "Bridge",
               disabled: false,
               render: true
             }
@@ -196,9 +196,16 @@ export default class Navigation extends Vue {
     await vxm.bancor.initialiseModule({
       moduleId,
       resolveWhenFinished: !moduleAlreadyLoaded,
-      params: defaultModuleParams(moduleId)
+//      params: defaultModuleParams(moduleId)
+      params: moduleId === "xchain" ? {} : defaultModuleParams(moduleId)
     });
-    this.$router.push({ name: "Tokens", ...extendRouter(moduleId) });
+
+    if (moduleId === "xchain") {
+      this.$router.push({ name: "Xtransfer", ...extendXtransferRouter(moduleId) });
+    } else {
+      this.$router.push({ name: "Tokens", ...extendRouter(moduleId) });
+    }
+    //this.$router.push({ name: "Tokens", ...extendRouter(moduleId) });
   }
   get options() {
     return vxm.bancor.modules.map(module => ({
@@ -211,7 +218,7 @@ export default class Navigation extends Vue {
     return services.find(service => service.namespace == this.selectedNetwork);
   }
   created() {
-    false
+    false;
 //    vxm.ethWallet.checkAlreadySignedIn();
   }
   @Watch("isAuthenticated")

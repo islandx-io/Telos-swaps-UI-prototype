@@ -46,19 +46,10 @@
           </template>
           <template v-slot:cell(change24h)="data">
             <span
-              :class="
-                data.item.change24h == null
-                  ? ''
-                  : data.item.change24h > 0
-                  ? `text-success font-w700`
-                  : 'text-danger font-w700'
-              "
+              :class="data.item.change24h == null ? '' : data.item.change24h >= 0 ? `text-success font-w700` : 'text-danger font-w700'"
               >{{
-                data.item.change24h == null
-                  ? "N/A"
-                  : numeral(data.item.change24h).format("0.00") + "%"
-              }}</span
-            >
+                data.item.change24h == null ? "N/A" : numeral(data.item.change24h).format("0.00") + "%"
+              }}</span>
           </template>
           <template v-slot:cell(price)="data">
             <span class="text-center font-w700">

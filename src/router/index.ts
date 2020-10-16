@@ -98,11 +98,14 @@ export const router = new Router({
         default: BridgeAccount,
         Hero: HeroBridge
       },
-      props: true
-    },
+      props: true,
+      meta: {
+        feature: "Bridge"
+      }
+    } /*,
     {
-      path: "/:service/bridge",
-      name: "Bridge",
+      path: "/:service/xtransfer",
+      name: "Xtransfer",
       components: {
         Nav: Navigation,
         default: Bridge
@@ -110,14 +113,17 @@ export const router = new Router({
     },
     {
       path: "/:service/bridge/:account",
-      name: "BridgeAccount",
+      name: "Bridge",
       components: {
         Nav: Navigation,
         Hero: HeroBridge,
         default: BridgeAccount
       },
-      props: true
-    },
+      props: true,
+      meta: {
+        feature: "Bridge"
+      }
+    }*/,
     {
       path: "/:service/pools",
       name: "Relays",
@@ -208,6 +214,10 @@ router.beforeEach((to, from, next) => {
         break;
       case "Liquidity":
         if (service.features.includes(Feature.Liquidity)) next();
+        else next("/404");
+        break;
+      case "Bridge":
+        if (service.features.includes(Feature.Bridge)) next();
         else next("/404");
         break;
       default:

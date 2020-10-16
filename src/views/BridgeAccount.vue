@@ -159,6 +159,8 @@ export default class BridgeAccount extends Vue {
     this.scrollToTop();
     // add convert code
   }
+
+  async created() {}
 }
 </script>
 

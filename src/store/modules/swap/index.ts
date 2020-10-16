@@ -14,10 +14,7 @@ import {
 } from "@/types/bancor";
 import { vxm } from "@/store";
 import { store } from "../../../store";
-import {
-  compareString,
-  updateArray
-} from "@/api/helpers";
+import { compareString, updateArray } from "@/api/helpers";
 import {
 //  fetchCmcUsdPriceOfTlos,
   fetchCoinGechoUsdPriceOfTlos
@@ -277,9 +274,7 @@ export class BancorModule extends VuexModule.With({
 //        fetchCmcUsdPriceOfTlos()
 //      ]);
 //      console.log("getUsdPrice.fetchCoinCmcUsdPriceOfTlos", res1);
-      const res = await any([
-        fetchCoinGechoUsdPriceOfTlos()
-      ]);
+      const res = await any([fetchCoinGechoUsdPriceOfTlos()]);
       const usdPrice = res as number;
       this.setUsdPriceOfTlos({
         price: usdPrice,
