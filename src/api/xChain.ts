@@ -331,7 +331,7 @@ export async function get_tokens(
   const results = {
     more: false,
     rows: [
-      {sym: "8,BTC", contract: "tokens.swaps", balance: "0.00000000 BTC", depth: "1.00000000 BTC", reserve: "1.00000000 BTC", maker_pool: "1.00000000 BTC", token_type: "token", enabled: 1},
+//      {sym: "8,BTC", contract: "tokens.swaps", balance: "0.00000000 BTC", depth: "1.00000000 BTC", reserve: "1.00000000 BTC", maker_pool: "1.00000000 BTC", token_type: "token", enabled: 1},
       {sym: "4,EOS", contract: "tokens.swaps", balance: "0.0000 EOS", depth: "1.0000 EOS", reserve: "1.0000 EOS", maker_pool: "1.0000 EOS", token_type: "token", enabled: 1},
       {sym: "10,BNT", contract: "tokens.swaps", balance: "0.0000000000 BNT", depth: "1.0000000000 BNT", reserve: "1.0000000000 BNT", maker_pool: "1.0000000000 BNT", token_type: "token", enabled: 1},
       {sym: "4,USDT", contract: "tokens.swaps", balance: "0.0000 USDT", depth: "1.0000 USDT", reserve: "1.0000 USDT", maker_pool: "1.0000 USDT", token_type: "token", enabled: 1},
@@ -388,7 +388,7 @@ export async function get_romote_tokens(
   const results = {
     more: false,
     rows: [
-      {sym: "8,PBTC", contract: "btc.ptokens", balance: "0.00000000 PBTC", depth: "1.00000000 PBTC", reserve: "1.00000000 PBTC", maker_pool: "1.00000000 PBTC", token_type: "token", enabled: 1},
+//      {sym: "8,PBTC", contract: "btc.ptokens", balance: "0.00000000 PBTC", depth: "1.00000000 PBTC", reserve: "1.00000000 PBTC", maker_pool: "1.00000000 PBTC", token_type: "token", enabled: 1},
       {sym: "4,EOS", contract: "eosio.token", balance: "0.0000 EOS", depth: "1.0000 EOS", reserve: "1.0000 EOS", maker_pool: "1.0000 EOS", token_type: "token", enabled: 1},
       {sym: "10,BNT", contract: "bntbntbntbnt", balance: "0.0000000000 BNT", depth: "1.0000000000 BNT", reserve: "1.0000000000 BNT", maker_pool: "1.0000000000 BNT", token_type: "token", enabled: 1},
       {sym: "4,USDT", contract: "tethertether", balance: "0.0000 USDT", depth: "1.0000 USDT", reserve: "1.0000 USDT", maker_pool: "1.0000 USDT", token_type: "token", enabled: 1},

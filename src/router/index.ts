@@ -91,8 +91,8 @@ export const router = new Router({
       props: true
     },
     {
-      path: "/:service/xtransfer/:id",
-      name: "Xtransfer",
+      path: "/:service/bridge/:id",
+      name: "Bridge",
       components: {
         Nav: Navigation,
         default: BridgeAccount,
@@ -102,18 +102,10 @@ export const router = new Router({
       meta: {
         feature: "Bridge"
       }
-    } /*,
-    {
-      path: "/:service/xtransfer",
-      name: "Xtransfer",
-      components: {
-        Nav: Navigation,
-        default: Bridge
-      }
     },
     {
       path: "/:service/bridge/:account",
-      name: "Bridge",
+      name: "BridgeAccount",
       components: {
         Nav: Navigation,
         Hero: HeroBridge,
@@ -123,7 +115,7 @@ export const router = new Router({
       meta: {
         feature: "Bridge"
       }
-    }*/,
+    },
     {
       path: "/:service/pools",
       name: "Relays",

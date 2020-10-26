@@ -110,7 +110,7 @@ const environmentCanBeTrusted = () => {
 const trusted = environmentCanBeTrusted();
 
 const contractDb: BaseToken[] = [
-  { contract: "btc.ptokens", symbol: "PBTC" }
+  //  { contract: "btc.ptokens", symbol: "PBTC" }
   //  { contract: "tokens.swaps", symbol: "BTC" },
   //  { contract: "tokens.swaps", symbol: "EOS" },
   //  { contract: "tokens.swaps", symbol: "BNT" },

@@ -150,7 +150,7 @@ export default class BridgeAccount extends Vue {
     this.scrollToTop();
 
     this.$router.push({
-      name: "Xtransfer",
+      name: "Bridge",
       params: { id }
     });
   }
