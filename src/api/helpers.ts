@@ -528,7 +528,7 @@ export const fetchMultiRelay = async (
 };
 
 const tokenMetaDataEndpoint =
-  "https://raw.githubusercontent.com/EOSZAio/TLOSD/master/tokens.json";
+  "https://raw.githubusercontent.com/Telos-Swaps/TLOSD/master/tokens.json";
 
 export const getTokenMeta = async (): Promise<TokenMeta[]> => {
   const res: AxiosResponse<TokenMeta[]> = await axios.get(
