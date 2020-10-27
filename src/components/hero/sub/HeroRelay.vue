@@ -114,7 +114,6 @@ import RelayFeeAdjuster from "@/components/common/RelayFeeAdjuster.vue";
 import TxModalFooter from "@/components/common/TxModalFooter.vue";
 import Stepper from "@/components/modals/Stepper.vue";
 import wait from "waait";
-import { compareString } from "../../../api/helpers";
 import { sortByNetworkTokens } from "../../../api/sortByNetworkTokens";
 
 const bancor = namespace("bancor");
@@ -185,10 +184,10 @@ export default class HeroRelay extends Vue {
   get menus() {
     const baseMenus = [
       ["addLiquidity", "Add Liquidity", "arrow-up"],
-      ["removeLiquidity", "Remove Liquidity", "arrow-down", "danger"],
-      ["setFee", "Set Fee", "dollar-sign"],
-      ["changeOwner", "Change Owner", "handshake", "info"],
-      ["deleteRelay", "Delete Pool", "trash-alt", "warning"]
+      ["removeLiquidity", "Remove Liquidity", "arrow-down", "danger"]
+//      ["setFee", "Set Fee", "dollar-sign"],
+//      ["changeOwner", "Change Owner", "handshake", "info"],
+//      ["deleteRelay", "Delete Pool", "trash-alt", "warning"]
     ];
 
     if (!this.supportedFeatures) return [baseMenus[1]];

@@ -10,7 +10,8 @@ export interface TokenPrice {
   price: number;
   change24h: number;
   volume24h: Volume24h;
-  priceHistory: PriceHistory[];
+  smartPriceApr: number;
+//  priceHistory: PriceHistory[];
 }
 
 export interface Volume24h {
@@ -19,9 +20,9 @@ export interface Volume24h {
   EUR: number;
 }
 
-export interface PriceHistory {
-  [index: number]: number;
-}
+//export interface PriceHistory {
+//  [index: number]: number;
+//}
 
 export type FloatAmount = number;
 
@@ -208,6 +209,7 @@ export interface ViewRelay {
   reserves: ViewReserve[];
   fee: number;
   owner: string;
+  apr: number;     // TODO populate APR
   addLiquiditySupported: boolean;
   removeLiquiditySupported: boolean;
   focusAvailable?: boolean;
@@ -316,6 +318,7 @@ export interface EosMultiRelay {
   isMultiContract: boolean;
   smartToken: AgnosticToken;
   fee: number;
+  apr: number;
 }
 
 export interface ModalChoice {

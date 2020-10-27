@@ -523,9 +523,7 @@ export const fetchMultiRelay = async (
   );
   return {
     ...relay,
-    reserves: sortByNetworkTokens(relay.reserves, reserve => reserve.symbol, [
-      "TLOS"
-    ])
+    reserves: sortByNetworkTokens(relay.reserves, reserve => reserve.symbol, ["TLOS"])
   };
 };
 
@@ -587,6 +585,8 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   let volume24h: any = {};
   volume24h.USD = 0.0;
   newTlosObj.volume24h = volume24h;
+  newTlosObj.smartPrice = 0.0;
+  newTlosObj.smartPriceApr = 0.0;
 
   let newArr: any = [];
   let i = 2;
@@ -622,9 +622,6 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
         .value.split(" ")[0] * usdPriceOfTlos;
     newObj.volume24h = volume24h;
 
-    newTlosObj.liquidityDepth += newObj.liquidityDepth;
-    newTlosObj.volume24h.USD += newObj.volume24h.USD;
-
     // TODO smart token APR needs to be incuded in "pools" tab, calculations follow, APR in TLOS
     console.log("fetchTradeData.itemObject : ", itemObject);
     let smartPrice = itemObject.smart_price
@@ -633,11 +630,18 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
     let smartPriceApr = itemObject.smart_price_change_30d
       .find((token: any) => compareString(token.key, "TLOS"))
       .value.split(" ")[0];
-    smartPriceApr = (smartPriceApr / (smartPrice - smartPriceApr)) * 100.0 * 12;
+    smartPriceApr = (smartPriceApr / (smartPrice - smartPriceApr)) * 100;// * 12;
     console.log("fetchTradeData.smart_price(", newObj.code, "), price", smartPrice, ", APR", smartPriceApr);
+
+    newObj.smartPrice = smartPrice;
+    newObj.smartPriceApr = smartPriceApr;
+    console.log("fetchTradeData.newObj", newObj);
 
     // TODO need to add USD price changes into trade data from Delphi Oracle
     // prices will then be where symbol = USD, not TLOS
+
+    newTlosObj.liquidityDepth += newObj.liquidityDepth;
+    newTlosObj.volume24h.USD += newObj.volume24h.USD;
 
     i++;
     newArr.push(newObj);

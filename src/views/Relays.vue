@@ -77,8 +77,10 @@
               <template v-slot:cell(smartTokenSymbol)="data">
                 <span> {{ data.item.smartTokenSymbol }}</span>
               </template>
-              <template v-slot:cell(apr)>
-                --
+              <template v-slot:cell(apr)="data">
+                <span
+                  :class="data.item.apr == null ? '' : data.item.apr >= 0 ? `text-success font-w700` : 'text-danger font-w700'"
+                  >{{data.item.apr == null ? "N/A" : numeral(data.item.apr).format("0.00") + "%" }}</span>
               </template>
               <template v-slot:cell(actions)="data">
                 <div class="actionButtons">
@@ -159,7 +161,8 @@ export default class Relays extends Vue {
     },
     {
       key: "smartTokenSymbol",
-      sortable: false
+      sortable: false,
+      label: "smart token"
     },
     {
       key: "owner",
@@ -170,13 +173,15 @@ export default class Relays extends Vue {
     {
       key: "apr",
       sortable: true,
-      label: "APR",
-      class: ["text-right", "font-w700"]
+      label: "30d change",
+      class: "text-right"
+//      class: ["text-right", "font-w700"],
+//      formatter: (value: string) => numeral(value).format("0.0%")
     },
     {
       key: "liqDepth",
       sortable: true,
-      label: "Liquidity Depth",
+      label: "Liquidity",
       class: ["text-right", "font-w700"],
       formatter: (value: any) =>
         value ? numeral(value).format("$0,0.00") : "Not Available"
