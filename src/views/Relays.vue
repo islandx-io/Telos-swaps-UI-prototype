@@ -173,7 +173,7 @@ export default class Relays extends Vue {
     {
       key: "apr",
       sortable: true,
-      label: "30d change",
+      label: "30d yield",
       class: "text-right"
 //      class: ["text-right", "font-w700"],
 //      formatter: (value: string) => numeral(value).format("0.0%")

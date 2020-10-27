@@ -15,14 +15,9 @@ export interface TokenPrice {
 }
 
 export interface Volume24h {
-  ETH: number;
   USD: number;
   EUR: number;
 }
-
-//export interface PriceHistory {
-//  [index: number]: number;
-//}
 
 export type FloatAmount = number;
 
@@ -431,7 +426,6 @@ export interface BancorAPIResponseToken {
 }
 
 export interface Volume24H {
-  ETH: number;
   USD: number;
   EUR: number;
 }
@@ -465,18 +459,6 @@ export interface Price {
   availableSupply: number;
   volume24h: number;
   diff30d: number;
-}
-
-export interface ETH {
-  balance: number;
-  price: Price;
-}
-
-export interface EthplorerBalance {
-  address: string;
-  ETH: ETH;
-  countTxs: number;
-  tokens: Token[];
 }
 
 export interface kv {

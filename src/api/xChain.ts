@@ -361,9 +361,9 @@ sym: "4,USDT"
 token_type: "token"
  */
 
-  console.log("Result structure", results);
+//  console.log("Result structure", results);
   for (const row of results.rows) {
-    console.log("Result structure - row", row);
+//    console.log("Result structure - row", row);
     const [precision, symcode] = row.sym.split(",");
 //    const precision = +precision_str;
     tokens[symcode] = {
@@ -397,9 +397,9 @@ export async function get_romote_tokens(
     ]
   };
 
-  console.log("Result structure", results);
+//  console.log("Result structure", results);
   for (const row of results.rows) {
-    console.log("Result structure - row", row);
+//    console.log("Result structure - row", row);
     const [precision, symcode] = row.sym.split(",");
 //    const precision = +precision_str;
     tokens[symcode] = {

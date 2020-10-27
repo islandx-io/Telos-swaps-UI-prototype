@@ -427,7 +427,7 @@ export default class HeroRelay extends Vue {
   }
 
   get defaultFocusedId() {
-    console.log("defaultFocusedId : ", this.relays);
+//    console.log("defaultFocusedId : ", this.relays);
     return this.relays.find(
       relay => relay.addLiquiditySupported && relay.removeLiquiditySupported
     )!.id;
