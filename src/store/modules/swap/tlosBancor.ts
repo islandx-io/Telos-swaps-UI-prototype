@@ -1059,7 +1059,6 @@ export class TlosBancorModule
     console.log("refresh called, doing some stuff");
 
     const v1Relays = getHardCodedRelays();
-    console.log("v1Relays : ", v1Relays);
     //    const allDry = [...v1Relays].filter(
     //        noBlackListedReservesDry(blackListedTokens)
     //    );
@@ -1172,16 +1171,14 @@ export class TlosBancorModule
 //      this.setTlos24hPriceMove(-4.44);
       this.setTlos24hPriceMove(0.00);
 
-      console.log("tokenMeta : ", tokenMeta);
-      console.log("usdPriceOfTlos : ", usdPriceOfTlos);
-      console.log("usdTlos24hPriceMove : ", this.usdTlos24hPriceMove);
+//      console.log("tokenMeta : ", tokenMeta);
+//      console.log("usdPriceOfTlos : ", usdPriceOfTlos);
+//      console.log("usdTlos24hPriceMove : ", this.usdTlos24hPriceMove);
 
       const v1Relays = getHardCodedRelays();
-      console.log("v1Relays : ", v1Relays);
       const allDry = [...v1Relays, ...v2Relays.map(multiToDry)].filter(
         noBlackListedReservesDry(blackListedTokens)
       );
-      console.log("allDry : ", allDry);
 
       this.fetchTokenBalancesIfPossible(
         _.uniqWith(
@@ -1231,7 +1228,6 @@ export class TlosBancorModule
         compareString(a.smartTokenId, b.smartTokenId) &&
         compareString(a.tokenId, b.tokenId)
     );
-    console.log("updateRelayFeed.relayFeed", this.relayFeed);
   }
 
   @action async buildPossibleRelayFeedsFromHydrated(relays: EosMultiRelay[]) {
@@ -1291,7 +1287,6 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
 
       // Pull token prices from chain
       const [tokenPrices] = await Promise.all([fetchTradeData()]);
-      console.log("tokenPrices : ", tokenPrices);
 
       const tlosToken = findOrThrow(tokenPrices, token =>
         compareString(token.code, "TLOS")
@@ -1420,12 +1415,9 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
             symbol: smartTokenSymbol
           });
 
-          console.log("hydrateOldRelays.smartTokenId", smartTokenId,"relays",this.relays);
           const feed = this.relayFeed.find(feed =>
             compareString(feed.smartTokenId, smartTokenId)
-          )!;
-          console.log("hydrateOldRelays.smartTokenId", smartTokenId,"relayFeed",this.relayFeed,"feed",feed);
-
+          );
           const apr: number = (feed && feed.smartPriceApr) ? feed.smartPriceApr : 0.0;
 
           return {
@@ -2305,7 +2297,6 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   }
 
   @mutation setTokenMeta(tokens: TokenMeta[]) {
-    console.log("setTokenMeta : ", tokens);
     this.tokenMeta = tokens.filter(token => compareString(token.chain, "eos"));
   }
 }

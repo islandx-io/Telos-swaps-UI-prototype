@@ -309,13 +309,13 @@ export const getBalance = async (
     if (typeof precision == "number") {
       return number_to_asset(0, new Sym(symbolName, precision)).to_string();
     } else {
-      console.log("no balance - getBalance(", contract, ",", symbolName, ")");
+//      console.log("no balance - getBalance(", contract, ",", symbolName, ")");
       const symbol = await fetchTokenSymbol(contract, symbolName);
       return number_to_asset(0, symbol).to_string();
     }
   }
 
-  console.log("getBalance : (", account, ", ", contract, ", ", symbolName, ") = ", balance.balance);
+//  console.log("getBalance : (", account, ", ", contract, ", ", symbolName, ") = ", balance.balance);
   return balance.balance;
 };
 
@@ -613,7 +613,6 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
       ).value * usdPriceOfTlos;
     let a = 1.0 / (1.0 + usdTlos24hPriceMove);
     newObj.change24h = 100.0*((newObj.price) / (a * (newObj.price - raw24hChange)) - 1.0);
-    console.log("change24h(", newObj.code, ") : usdTlos24hPriceMove : ", usdTlos24hPriceMove, ", a : ", a, ", % change : ", newObj.change24h);
 
     let volume24h: any = {};
     volume24h.USD =
@@ -623,7 +622,6 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
     newObj.volume24h = volume24h;
 
     // TODO smart token APR needs to be incuded in "pools" tab, calculations follow, APR in TLOS
-    console.log("fetchTradeData.itemObject : ", itemObject);
     let smartPrice = itemObject.smart_price
       .find((token: any) => compareString(token.key, "TLOS"))
       .value.split(" ")[0];
@@ -631,11 +629,9 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
       .find((token: any) => compareString(token.key, "TLOS"))
       .value.split(" ")[0];
     smartPriceApr = (smartPriceApr / (smartPrice - smartPriceApr)) * 100;// * 12;
-    console.log("fetchTradeData.smart_price(", newObj.code, "), price", smartPrice, ", APR", smartPriceApr);
 
     newObj.smartPrice = smartPrice;
     newObj.smartPriceApr = smartPriceApr;
-    console.log("fetchTradeData.newObj", newObj);
 
     // TODO need to add USD price changes into trade data from Delphi Oracle
     // prices will then be where symbol = USD, not TLOS

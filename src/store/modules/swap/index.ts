@@ -43,12 +43,12 @@ interface RootParam {
 
 const moduleIds: { label: string; id: string }[] = [
   {
-    label: "Telos $",
-    id: "usds"
-  },
-  {
     label: "Telos Swaps",
     id: "tlos"
+  },
+  {
+    label: "Telos $",
+    id: "usds"
   },
   {
     label: "X-Chain Transfer",
