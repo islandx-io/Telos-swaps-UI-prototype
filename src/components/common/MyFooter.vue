@@ -38,6 +38,14 @@
                   :icon="['fab', 'github']"
                   fixed-width
               /></a>
+
+              <a href="https://medium.com/@tswaps" target="_blank"
+              ><font-awesome-icon
+                  :style="{ color: 'white' }"
+                  :icon="['fab', 'medium']"
+                  fixed-width
+              /></a>
+
             </span>
           </li>
         </ul>

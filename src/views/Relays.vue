@@ -190,7 +190,7 @@ export default class Relays extends Vue {
       key: "fee",
       sortable: true,
       class: ["text-right", "font-w700"],
-      formatter: (value: string) => numeral(value).format("0.00%")
+      formatter: (value: string) => numeral(this.relayFee(parseFloat(value))).format("0.00%")
     },
     {
       key: "actions",
@@ -228,6 +228,10 @@ export default class Relays extends Vue {
           "..." +
           ethAddress.substring(ethAddress.length - 6, ethAddress.length)
       : ethAddress;
+  }
+
+  relayFee(x: number){
+    return 1 - Math.pow(1 - x, 2);
   }
 
   get focusDoesExist() {
