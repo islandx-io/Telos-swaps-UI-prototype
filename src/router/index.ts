@@ -19,7 +19,7 @@ import Bridge from "@/views/Bridge.vue";
 
 Vue.use(Router);
 
-export const defaultModule = "usds";
+export const defaultModule = "tlos";
 const PREFERRED_SERVICE = "preferredService";
 
 export const router = new Router({

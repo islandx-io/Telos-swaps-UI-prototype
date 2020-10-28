@@ -25,7 +25,7 @@
                   fixed-width
               /></a>
 
-              <a href="https://twitter.com/TelosNetwork" target="_blank"
+              <a href="https://twitter.com/tswaps_com" target="_blank"
                 ><font-awesome-icon
                   :style="{ color: 'white' }"
                   :icon="['fab', 'twitter']"
