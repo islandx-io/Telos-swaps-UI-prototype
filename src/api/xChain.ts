@@ -434,10 +434,10 @@ export async function get_xchain_tokens(
     table,
     limit
   });
-  console.log("get_xchain_tokens:", results);
+//  console.log("get_xchain_tokens:", results);
 
   for (const row of results.rows) {
-    console.log("get_xchain_tokens.row", row);
+//    console.log("get_xchain_tokens.row", row);
     const [precision, symcode] = row.token_info.sym.split(",");
     tokens[symcode] = {
       chain: "telos",
@@ -448,7 +448,7 @@ export async function get_xchain_tokens(
       depth: new Asset(row.min_quantity),
       reserve: new Asset(row.min_quantity)
     };
-    console.log("get_xchain_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
+//    console.log("get_xchain_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
   }
 
   return tokens;

@@ -1,8 +1,8 @@
-import axios, {AxiosResponse} from "axios";
-import {vxm} from "@/store";
-import {JsonRpc} from "eosjs";
-import {Asset, number_to_asset, Sym} from "eos-common";
-import {rpc, xrpc} from "./rpc";
+import axios, { AxiosResponse } from "axios";
+import { vxm } from "@/store";
+import { JsonRpc } from "eosjs";
+import { Asset, number_to_asset, Sym } from "eos-common";
+import { rpc, xrpc } from "./rpc";
 import {
   BaseToken,
   EosMultiRelay,
@@ -14,9 +14,9 @@ import {
   TokenMeta,
   TokenPrice
 } from "@/types/bancor";
-import {Chain, EosTransitModule} from "@/store/modules/wallet/tlosWallet";
+import { Chain, EosTransitModule } from "@/store/modules/wallet/tlosWallet";
 import wait from "waait";
-import {sortByNetworkTokens} from "./sortByNetworkTokens";
+import { sortByNetworkTokens } from "./sortByNetworkTokens";
 
 export const networkTokens = ["TLOS"];
 
@@ -236,6 +236,40 @@ curl -H "X-CMC_PRO_API_KEY: 902e192a-d57a-49ac-986d-01b5f3a1b922" -H "Accept: ap
 
 //  return Number(1.0);
 //};
+/*
+export const fetchCoinGechoUsdPriceOfTlos = async (): Promise<number> => {
+  const res = await axios.get<{ telos: { usd: string } }>(
+    "https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd"
+  );
+  return Number(res.data.telos.usd);
+};
+
+Tlos24hPriceMove
+ */
+export interface TlosCmcPriceData {
+  price: null | number;
+  percent_change_24h: null | number;
+}
+
+export const fetchCmcUsdPriceOfTlos = async (): Promise<TlosCmcPriceData> => {
+  const res = await axios
+    .get<any>(
+      //"http://localhost:8080/v1/cryptocurrency/quotes/latest?id=4660&convert=USD&CMC_PRO_API_KEY=902e192a-d57a-49ac-986d-01b5f3a1b922"
+      "https://cors-anywhere.herokuapp.com/https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=4660&convert=USD&CMC_PRO_API_KEY=902e192a-d57a-49ac-986d-01b5f3a1b922"
+    )
+//    .then(resp => {
+//      console.log("fetchCoinCmcUsdPriceOfTlos", resp);
+//    })
+//    .catch(err => {
+//      console.log("fetchCoinCmcUsdPriceOfTlos", err);
+//    });
+
+//  console.log("fetchCoinCmcUsdPriceOfTlos", res.data.data[4660].quote.USD);
+  const price = Number(res.data.data[4660].quote.USD.price);
+  const percent_change_24h = Number(res.data.data[4660].quote.USD.percent_change_24h);
+
+  return {price:price,percent_change_24h:percent_change_24h};
+};
 
 export const updateArray = <T>(
   arr: T[],
@@ -276,6 +310,7 @@ export const fetchTokenSymbol = async (
   } = (vxm.tlosWallet.chain == Chain.telos) ?
       await rpc.get_table_rows({code: contractName, scope: symbolName, table: "stat"}) :
       await xrpc.get_table_rows({code: contractName, scope: symbolName, table: "stat"});
+
   //  console.log("fetchTokenSymbol(",contractName,"",symbolName,")");
   if (statRes.rows.length == 0)
     throw new Error(
@@ -309,13 +344,13 @@ export const getBalance = async (
     if (typeof precision == "number") {
       return number_to_asset(0, new Sym(symbolName, precision)).to_string();
     } else {
-//      console.log("no balance - getBalance(", contract, ",", symbolName, ")");
+      //      console.log("no balance - getBalance(", contract, ",", symbolName, ")");
       const symbol = await fetchTokenSymbol(contract, symbolName);
       return number_to_asset(0, symbol).to_string();
     }
   }
 
-//  console.log("getBalance : (", account, ", ", contract, ", ", symbolName, ") = ", balance.balance);
+  //  console.log("getBalance : (", account, ", ", contract, ", ", symbolName, ") = ", balance.balance);
   return balance.balance;
 };
 
@@ -569,10 +604,11 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
 
   let usdPriceOfTlos = await vxm.bancor.fetchUsdPriceOfTlos();
   // TODO read usdTlos24hPriceMove from CMC, use as follows
-  // let usdTlos24hPriceMove = fetchTlos24hUsdPriceOfTlos(usdTlos24hPriceMove) / 100.0;
   // hardcoded for now
-//  let usdTlos24hPriceMove = -4.44 / 100.0;
-  let usdTlos24hPriceMove = 0.00 / 100.0;
+  //  let usdTlos24hPriceMove = -4.44 / 100.0;
+  let usdTlos24hPriceMove = 0.0 / 100.0;
+  // let usdTlos24hPriceMove = await vxm.bancor.fetchUsd24hPriceMove()/100.0;
+  // console.log("usdTlos24hPriceMove",usdTlos24hPriceMove);
 
   let newTlosObj: any = {};
   newTlosObj.id = 1;
@@ -612,7 +648,7 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
         compareString(token.key, "TLOS")
       ).value * usdPriceOfTlos;
     let a = 1.0 / (1.0 + usdTlos24hPriceMove);
-    newObj.change24h = 100.0*((newObj.price) / (a * (newObj.price - raw24hChange)) - 1.0);
+    newObj.change24h = 100.0 * (newObj.price / (a * (newObj.price - raw24hChange)) - 1.0);
 
     let volume24h: any = {};
     volume24h.USD =
@@ -628,7 +664,7 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
     let smartPriceApr = itemObject.smart_price_change_30d
       .find((token: any) => compareString(token.key, "TLOS"))
       .value.split(" ")[0];
-    smartPriceApr = (smartPriceApr / (smartPrice - smartPriceApr)) * 100;// * 12;
+    smartPriceApr = (smartPriceApr / (smartPrice - smartPriceApr)) * 100; // * 12;
 
     newObj.smartPrice = smartPrice;
     newObj.smartPriceApr = smartPriceApr;

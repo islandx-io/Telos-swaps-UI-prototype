@@ -109,6 +109,7 @@ import Velocity from "velocity-animate";
     SortIcons
   }
 })
+
 export default class TokensTable extends Vue {
   @Prop(Boolean) loading?: boolean;
   @Prop(Boolean) scrollToTop?: boolean;
@@ -127,6 +128,7 @@ export default class TokensTable extends Vue {
   transProps = {
     name: "flip-list"
   };
+
   transHandler = {
     beforeEnter: function(el: any) {
       el.style.opacity = 0;
@@ -165,13 +167,13 @@ export default class TokensTable extends Vue {
       key: "change24h",
       sortable: true,
       label: "24H Change",
-      class: "text-center"
+      class: "text-right"
     },
     {
       key: "price",
       sortable: true,
       label: "Price USD",
-      class: ["text-center"],
+      class: ["text-right"],
       formatter: (value: any, key: any, item: any) =>
         numeral(value).format("$0,0.000000")
     },
@@ -179,7 +181,7 @@ export default class TokensTable extends Vue {
       key: "volume24h",
       sortable: true,
       label: "24H Volume",
-      class: ["text-center"],
+      class: ["text-right"],
       formatter: (value: any, key: any, item: any) =>
         value == null || value == undefined
           ? "N/A"
