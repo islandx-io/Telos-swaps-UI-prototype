@@ -333,6 +333,7 @@ export const getBalance = async (
     table: "accounts",
     limit: 99
   });
+//  console.log("getBalance(", contract, symbolName, ") - ", res);
   const balance = res.rows.find(balance =>
     compareString(
       new Asset(balance.balance).symbol.code().to_string(),
