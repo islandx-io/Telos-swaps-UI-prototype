@@ -272,15 +272,17 @@ export class BancorModule extends VuexModule.With({
         );
       const any = (arr: any[]) => reverse(Promise.all(arr.map(reverse)));
       // TODO : this syntax is really bad, not sure how to do it properly
-      const res = await any([fetchCmcUsdPriceOfTlos()]);
-      console.log("getUsdPrice.fetchCoinCmcUsdPriceOfTlos", res);
-      // @ts-ignore
-      const usdPrice = res.price != null ? res.price as number : 0.0;
-      // @ts-ignore
-      const usd24hPriceMove = res.percent_change_24h != null ? res.percent_change_24h as number : 0.0;
+//      const res = await any([fetchCmcUsdPriceOfTlos()]);
+//      console.log("getUsdPrice.fetchCoinCmcUsdPriceOfTlos", res);
+//      // @ts-ignore
+//      const usdPrice = res.price != null ? res.price as number : 0.0;
+//      // @ts-ignore
+//      const usd24hPriceMove = res.percent_change_24h != null ? res.percent_change_24h as number : 0.0;
 //      console.log("getUsdPrice.fetchCoinCmcUsdPriceOfTlos", usdPrice, usd24hPriceMove);
-//      const res = await any([fetchCoinGechoUsdPriceOfTlos()]);
-//      const usdPrice = res as number;
+      // TODO rolled back CMC price because of slow respones
+      const res = await any([fetchCoinGechoUsdPriceOfTlos()]);
+      const usdPrice = res as number;
+      const usd24hPriceMove = 0.0;
       this.setUsdPriceOfTlos({
         price: usdPrice,
         lastChecked: new Date().getTime()

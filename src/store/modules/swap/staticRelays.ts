@@ -106,6 +106,20 @@ const oldRelays = [
     ]
   },
   {
+    contract: "kanda.swaps",
+    smartToken: {
+      contract: "relays.swaps",
+      symbol: "8,TLOSKAN"
+    },
+    reserves: [
+      {
+        contract: "telokandaone",
+        symbol: "8,KANDA"
+      },
+      tlosToken
+    ]
+  },
+  {
     contract: "seeds.tbn",
     smartToken: {
       contract: "seedsrly.tbn",

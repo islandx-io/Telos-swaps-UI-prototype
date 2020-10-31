@@ -138,6 +138,7 @@ const compareEosTokenSymbol = (
 const reservesIncludeTokenMetaDry = (tokenMeta: TokenMeta[]) => (
   relay: DryRelay
 ) => {
+  console.log("reservesIncludeTokenMetaDry", relay);
   const status = relay.reserves.every(reserve =>
     tokenMeta.some(
       meta =>
@@ -151,6 +152,7 @@ const reservesIncludeTokenMetaDry = (tokenMeta: TokenMeta[]) => (
       relay.reserves.map(x => x.symbol),
       "because they are not included in reserves"
     );
+  console.log("reservesIncludeTokenMetaDry", relay, status, relay.reserves[0].symbol.toString(), relay.reserves[1].symbol.toString(), tokenMeta);
   return status;
 };
 
@@ -1063,6 +1065,8 @@ export class TlosBancorModule
     //        noBlackListedReservesDry(blackListedTokens)
     //    );
 
+    console.log("refresh.v1Relays",v1Relays);
+
     this.fetchTokenBalancesIfPossible(
       _.uniqWith(
         v1Relays.flatMap(x =>
@@ -1176,6 +1180,7 @@ export class TlosBancorModule
 //      console.log("usdTlos24hPriceMove : ", this.usdTlos24hPriceMove);
 
       const v1Relays = getHardCodedRelays();
+      console.log("init.v1Relays",v1Relays);
       const allDry = [...v1Relays, ...v2Relays.map(multiToDry)].filter(
         noBlackListedReservesDry(blackListedTokens)
       );
