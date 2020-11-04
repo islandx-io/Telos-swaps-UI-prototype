@@ -48,7 +48,7 @@ const moduleIds: { label: string; id: string }[] = [
     id: "tlos"
   },
   {
-    label: "Telos $",
+    label: "USD Swaps",
     id: "usds"
   },
   {

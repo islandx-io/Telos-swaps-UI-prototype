@@ -30,7 +30,7 @@
             {{
               `1 ${fromToken.symbol} = $${(
                 this.toToken.price * this.reward
-              ).toFixed(2)} USD`
+              ).toFixed(4)} USD`
             }}
           </div>
           <div v-if="fee !== null" :class="['text-white', `font-size-sm`]">
@@ -345,7 +345,7 @@ export default class HeroConvert extends Vue {
     } else {
       await this.loadMoreTokens([id]);
       await wait(1);
-      console.log("should be changing the token at", new Date().getTime());
+//      console.log("should be changing the token at", new Date().getTime());
       this.changeFromToken(id);
     }
   }
@@ -357,7 +357,7 @@ export default class HeroConvert extends Vue {
     } else {
       await this.loadMoreTokens([id]);
       await wait(1);
-      console.log("should be changing the token at", new Date().getTime());
+//      console.log("should be changing the token at", new Date().getTime());
       this.changeToToken(id);
     }
   }

@@ -113,13 +113,14 @@ export default class ModalLogin extends Vue {
       this.$bvModal.hide("modal-login");
     } catch (e) {
       this.error = e;
-      console.log(e);
+//      console.log(e);
     } finally {
       this.loading = false;
     }
   }
 
   providerLogoUrl(p: WalletProvider) {
+//    console.log("providerLogoUrl",p.id);
     switch (p.id) {
       case "scatter":
         return "scatter.svg";
@@ -137,6 +138,8 @@ export default class ModalLogin extends Vue {
 //        return "lynx.jpg";
 //      case "whalevault":
 //        return "whalevault.png";
+      case "anchor-link":
+        return "anchor-logo-blue.svg";
       default:
         return "eos.png";
     }
