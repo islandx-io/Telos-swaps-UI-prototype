@@ -299,7 +299,7 @@ export async function get_tokens(
   });
 
   for (const row of results.rows) {
-    //    console.log(row);
+    console.log("get_tokens",row);
     const [precision, symcode] = row.sym.split(",");
     tokens[symcode] = {
       sym: new Sym(symcode, precision),
@@ -311,6 +311,19 @@ export async function get_tokens(
       token_type: new Name(row.token_type)
     };
   }
+
+  // TODO force add TLOS here
+  tokens["TLOS"] = {
+    sym: new Sym("TLOS", 4),
+    contract: new Name("eosio.token"),
+    balance: new Asset("200000.0000 TLOS"),
+    depth: new Asset("25000.0000 TLOS"),
+    reserve: new Asset("200000.0000 TLOS"),
+    maker_pool: new Asset("0.0000 TLOS"),
+    token_type: new Name("connector")
+  };
+
+  //  console.log("get_tokens",tokens);
   return tokens;
 }
 
@@ -388,6 +401,32 @@ export async function get_volume(
   }
   return volume;
 }
+
+/*
+const tlosToken = {
+  contract: "eosio.token",
+  symbol: "4,TLOS"
+};
+
+const connector = [
+  {
+    contract: "tlosdx.swaps",
+    smartToken: {
+      contract: "relays.swaps",
+      symbol: "8,TLOSDX"
+    },
+    reserves: [
+      {
+        contract: "tokens.swaps",
+        symbol: "4,TLOSD"
+      },
+      {
+        contract: "eosio.token",
+        symbol: "4,TLOS"
+      }
+    ]
+  },
+ */
 
 export const VERSION = 2.0;
 

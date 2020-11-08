@@ -14,7 +14,6 @@ import {
   get_settings,
   get_volume,
   get_rate,
-  get_price,
   get_inverse_rate,
   Tokens,
   Settings,
@@ -137,6 +136,24 @@ const tokenToId = (token: Token) => {
       : symbolNameToContract(symbolName),
     symbol: symbolName
   });
+};
+
+const connector = {
+  contract: "tlosdx.swaps",
+  smartToken: {
+    contract: "relays.swaps",
+    symbol: "8,TLOSDX"
+  },
+  reserves: [
+    {
+      contract: "tokens.swaps",
+      symbol: "4,TLOSD"
+    },
+    {
+      contract: "eosio.token",
+      symbol: "4,TLOS"
+    }
+  ]
 };
 
 interface AddedVolume extends Token {
@@ -566,6 +583,7 @@ export class UsdBancorModule
 
     const fromToken = await this.tokenById(propose.from.id);
     const toToken = await this.tokenById(propose.to.id);
+
     const tokens = [fromToken, toToken];
 
     const amountAsset = await this.viewAmountToAsset(propose.from);
@@ -577,6 +595,60 @@ export class UsdBancorModule
       toId: propose.to.id
     });
 
+    let connectors = ["TLOS", "TLOSD"];
+    let converter = "";
+    let memo = "";
+
+    if (
+      connectors.indexOf(fromToken.symbol) >= 0 &&
+      connectors.indexOf(toToken.symbol) >= 0
+    ) {
+      // Case TLOS<->TLOSD, use V1 converter
+      converter = "bancor.tbn";
+      memo = "1,tlosdx.swaps " + toToken.symbol + ",0.0," + accountName;
+    } else if (fromToken.symbol == "TLOS") {
+      // Case from=TLOS, to<>TLOSD
+      // 1,tlosdx.swaps TLOSD telosd.swaps USDT,0.0,qwertyqwerty
+      converter = "bancor.tbn";
+      memo =
+        "1,tlosdx.swaps TLOSD telosd.swaps " +
+        toToken.symbol +
+        ",0.0," +
+        accountName;
+    } else if (toToken.symbol == "TLOS") {
+      // Case from<>TLOSD, to=TLOS
+      // 1,telosd.swaps TLOSD tlosdx.swaps TLOS,0.0,qwertyqwerty
+      converter = "bancor.tbn";
+      memo = "1,telosd.swaps TLOSD tlosdx.swaps TLOS,0.0," + accountName;
+    } else {
+      // Case not involving TLOS
+      converter = poolReward.id;
+      memo = toToken.symbol;
+    }
+
+    //    console.log("data :",'["', accountName, '", "', converter, '", "', amountAsset.to_string(), '", "', memo, '"]');
+    //    console.log("memo :", memo);
+
+    // 1,tlosdx.swaps TLOSD,0.9890,qwertyqwerty
+    // 1,tlosdx.swaps TLOSD,0.0,   qwertyqwerty
+    // USDT
+    // TLOSD@bancor.tbn|1,tlosdx.swaps TLOS,0.0,admin.swaps;USDT->TLOSD->TLOS
+    // 1,tlosdx.swaps TLOSD,0.0,telosd.swaps;USDT@qwertyqwerty
+    // TLOS@bancor.tbn|1,tlosdx.swaps TLOSD,0.0,qwertyqwerty
+
+    // TLOSD@bancor.tbn|1,tlosdx.swaps TLOS,0.0,qwertyqwerty;USDT->TLOSD->TLOS
+    // TLOSD@qwertyqwerty|1,tlosdx.swaps TLOS,0.0,qwertyqwerty;USDT->TLOSD->TLOS
+    // TLOSD@qwertyqwerty|1,tlosdx.swaps TLOS,0.0,qwertyqwerty;USDT->TLOSD->TLOS
+    // 1,tlosdx.swaps TLOS,0.0,qwertyqwerty;USDT->TLOSD->TLOS
+    // TLOSD@bancor.tbn|1,tlosdx.swaps TLOS,0.0,qwertyqwerty;USDT->TLOSD->TLOS
+    // Try switch off mine.reward
+
+    // TLOSD@bancor.tbn|1,tlosdx.swaps TLOS,0.0,qwertyqwerty;USDT->TLOSD->TLOS
+    // TLOSD@bancor.tbn|1,tlosdx.swaps TLOS,0.0,qwertyqwerty;USDT->TLOSD->TLOS
+    // 1,tlosdx.swaps TLOSD,0.0,telosd.swaps;USDT@qwertyqwerty
+    // 1,tlosdx.swaps TLOSD telosd.swaps USDT,0.0,qwertyqwerty
+    // 1,telosd.swaps TLOSD tlosdx.swaps TLOS,0.0,qwertyqwerty
+
     const [txRes, originalBalances] = await Promise.all([
       this.triggerTx([
         {
@@ -584,8 +656,8 @@ export class UsdBancorModule
           name: "transfer",
           data: {
             from: accountName,
-            to: poolReward.id,
-            memo: toToken.symbol,
+            to: converter,
+            memo: memo,
             quantity: amountAsset.to_string()
           }
         }
