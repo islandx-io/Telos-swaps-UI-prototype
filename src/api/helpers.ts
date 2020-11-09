@@ -82,8 +82,8 @@ telosd.io
 4	{ "sym": "4,USDT", "contract": "tokens.swaps" }	1	1.0000 USDT	eos	{ "sym": "4,USDT", "contract": "tethertether" }	1
 5	{ "sym": "4,VIGOR", "contract": "tokens.swaps" }	1	1.0000 VIGOR	eos	{ "sym": "4,VIGOR", "contract": "vigortoken11" }	1
 6	{ "sym": "9,EOSDT", "contract": "tokens.swaps" }	1	1.000000000 EOSDT	eos	{ "sym": "9,EOSDT", "contract": "eosdtsttoken" }	1
-
  */
+
 export const getSxContracts = async () => {
   const res = (await rpc.get_table_rows({
     code: "config.swaps",
@@ -590,6 +590,27 @@ export interface TickerPrice {
   symbol: string;
 }
 //      //  getTokens(): Promise<TokenPrice[]>;
+
+// cleos --url https://api.telos.africa get table data.tbn data.tbn tradedata -L tlosdx.swaps -l 1
+/*
+{
+  "rows": [{
+      "converter": "tlosdx.swaps",
+      "timestamp": "2020-11-08T10:04:49",
+      "volume_24h": [{"key": "TLOS","value": "564.1180 TLOS"},{"key": "TLOSD","value": "7.7665 TLOSD"}],
+      "volume_cumulative": [{"key": "TLOS","value": "20779.7151 TLOS"},{"key": "TLOSD","value": "387.0396 TLOSD"}],
+      "price": [{"key": "TLOS","value": "72.00000000000000000"},{"key": "TLOSD","value": "0.01388888888888889"}],
+      "price_change_24h": [{"key": "TLOS","value": "-0.07128514056225299"},{"key": "TLOSD","value": "0.00001373739062329"}],
+      "liquidity_depth": [{"key": "TLOS","value": "69098.8886 TLOS"},{"key": "TLOSD","value": "950.1844 TLOSD"}],
+      "smart_price": [{"key": "TLOS","value": "0.68491061533971465"},{"key": "TLOSD","value": "0.00941826120905507"}],
+      "smart_price_change_30d": [{"key": "TLOS","value": "0.13301394155961210"},{"key": "TLOSD","value": "-0.00216214369359566"}]
+    }]
+}
+
+TLOSDpriceOfTLOS = 0.01388888888888889
+USDTpriceOfTLOS = 0.01388888888888889 * USDTpriceOfTLOSD
+Liquidity depth = 2 * 950.1844 TLOSD
+ */
 export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   const rawTradeData = await telosRpc.get_table_rows({
     code: "data.tbn",

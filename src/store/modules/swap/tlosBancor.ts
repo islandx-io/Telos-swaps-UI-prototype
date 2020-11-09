@@ -2255,6 +2255,9 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     console.log("getReturn.path:",path);
 
     const hydratedRelays = await this.hydrateRelays(path);
+
+    console.log("getReturn.hydratedRelays:",hydratedRelays);
+
     const calculatedReturn = findReturn(assetAmount, hydratedRelays);
 
     return {

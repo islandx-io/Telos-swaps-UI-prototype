@@ -24,6 +24,7 @@ import {
   Name
 } from "eos-common";
 import { JsonRpc } from "eosjs";
+import {compareString} from "@/api/helpers";
 
 export function get_bancor_output(
   base_reserve: number,
@@ -171,6 +172,43 @@ export function get_inverse_rate(
   return rate;
 }
 
+export async function get_connector(
+    rpc: JsonRpc
+): Promise<any> {
+  const code = "data.tbn";
+  const scope = "data.tbn";
+  const table = "tradedata";
+  const lower_bound = "tlosdx.swaps";
+
+  const result = await rpc.get_table_rows({
+    json: true,
+    code,
+    scope,
+    table,
+    lower_bound,
+    limit: 1
+  });
+
+  const dataExists = result.rows.length > 0;
+  if (!dataExists) throw new Error("Connector not found");
+
+  const tlosd_liquidity_depth = result.rows[0].liquidity_depth
+      .find((token: any) => compareString(token.key, "TLOSD"))
+      .value.split(" ")[0] * 2.0;
+  const tlos_liquidity_depth = result.rows[0].liquidity_depth
+      .find((token: any) => compareString(token.key, "TLOS"))
+      .value.split(" ")[0] * 2.0;
+  // mid market price = TLOSD liquidity / TLOS liquidity
+  const price = tlosd_liquidity_depth / tlos_liquidity_depth;
+  const volume_24h = result.rows[0].volume_24h
+    .find((token: any) => compareString(token.key, "TLOSD"))
+    .value.split(" ")[0];
+
+  console.log("get_connector.liquidity_depth, price, volume_24h", tlosd_liquidity_depth, price, volume_24h);
+
+  return [tlos_liquidity_depth, tlosd_liquidity_depth, price, volume_24h];
+}
+
 export async function get_settings(
   rpc: JsonRpc,
   code: string
@@ -244,6 +282,10 @@ export function is_maker_token(quote: SymbolCode, tokens: Tokens): boolean {
   return tokens[quote.to_string()].token_type.to_string() == "liquidity";
 }
 
+export function is_connector_token(quote: SymbolCode, tokens: Tokens): boolean {
+  return tokens[quote.to_string()].token_type.to_string() == "connector";
+}
+
 export function get_maker_spot_price(
   base: SymbolCode,
   tokens: Tokens,
@@ -257,8 +299,8 @@ export function get_maker_spot_price(
   );
   const pool_balance = get_pool_balance(tokens, settings);
   const maker_balance = get_maker_balance(tokens, settings);
-  const maker_spot_price =
-    maker_balance > 0 ? (proxy_spot_price * pool_balance) / maker_balance : 1.0;
+//  const maker_spot_price =
+//    maker_balance > 0 ? (proxy_spot_price * pool_balance) / maker_balance : 1.0;
   return (proxy_spot_price * pool_balance) / maker_balance;
 }
 
@@ -270,6 +312,8 @@ export function get_spot_price(
 ): number {
   if (is_maker_token(new SymbolCode(quote), tokens))
     return get_maker_spot_price(new SymbolCode(base), tokens, settings);
+  if (is_connector_token(new SymbolCode(quote), tokens))
+    return 0.25;
   const [base_upper, quote_upper] = get_uppers(
     new SymbolCode(base),
     new SymbolCode(quote),
@@ -311,6 +355,10 @@ export async function get_tokens(
       token_type: new Name(row.token_type)
     };
   }
+
+//  const [liquidity_depth, price, volume_24h] = await retryPromise(() => get_connector(rpc), 4, 500);
+//  console.log("get_connector.liquidity_depth, price, volume_24h", liquidity_depth, price, volume_24h);
+
 
   // TODO force add TLOS here
   tokens["TLOS"] = {
@@ -460,4 +508,11 @@ export interface Volume {
   timestamp: string;
   volume: kv;
   fees: kv;
+}
+
+export interface Connector {
+  tlos_liquidity_depth: number;
+  tlosd_liquidity_depth: number;
+  price: number;
+  volume_24h: number;
 }
