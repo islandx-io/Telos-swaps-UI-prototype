@@ -285,7 +285,7 @@ export class xChainModule
   }
 
   @action async checkPrices(contracts: string[]) {
-    console.log(contracts);
+//    console.log(contracts);
 
     const prices = await Promise.all(
       contracts.map(async contract => {

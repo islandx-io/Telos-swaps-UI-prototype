@@ -301,7 +301,7 @@ export class UsdBancorModule
   }
 
   @action async checkPrices(contracts: string[]) {
-    console.log(contracts);
+//    console.log(contracts);
 
     const prices = await Promise.all(
       contracts.map(async contract => {
@@ -319,7 +319,7 @@ export class UsdBancorModule
       })
     );
 
-    console.log("usdsPrices", prices);
+//    console.log("usdsPrices", prices);
   }
 
   @action async refresh() {
@@ -521,13 +521,13 @@ export class UsdBancorModule
         const precision = token.sym.precision();
         const contract = trusted ? token.contract.to_string() : symbolNameToContract(symbolName);
 
-        console.log("buildTokens", token.token_type.to_string());
+//        console.log("buildTokens", token.token_type.to_string());
         if (token.token_type.to_string() == "connector") {
-          const volume24h = 2120.5094;//connector.volume_24h;
-          const price = 0.013745157577495663;//connector.price;
-          const liqDepth = 2120.5094;//connector.tlosd_liquidity_depth;
+          const volume24h = connector.volume_24h;
+          const price = connector.price;
+          const liqDepth = connector.tlosd_liquidity_depth;
 
-          console.log("buildTokens", symbol, connector, volume24h, price, liqDepth);
+//          console.log("buildTokens.connector", symbol, volume24h, price, liqDepth);
 
           return {
             id: buildTokenId({ contract, symbol: symbolName }),
@@ -548,7 +548,7 @@ export class UsdBancorModule
           );
           const price = compareString(symbolName, "USDT") ? 1 : rate;
 
-          console.log("buildTokens", symbol, volume24h, price);
+//          console.log("buildTokens", symbol, volume24h, price);
 
           return {
             id: buildTokenId({ contract, symbol: symbolName }),
@@ -728,10 +728,7 @@ export class UsdBancorModule
       const amountAsset = await this.viewAmountToAsset(data.from);
       const opposingSymbol = symbol(toToken.symbol, toToken.precision);
 
-      return {
-        opposingSymbol,
-        amountAsset
-      };
+      return { opposingSymbol, amountAsset };
     } else {
       const data = propose as ProposedToTransaction;
 
@@ -740,10 +737,7 @@ export class UsdBancorModule
       const amountAsset = await this.viewAmountToAsset(data.to);
       const opposingSymbol = symbol(fromToken.symbol, fromToken.precision);
 
-      return {
-        opposingSymbol,
-        amountAsset
-      };
+      return { opposingSymbol, amountAsset };
     }
   }
 
@@ -828,14 +822,8 @@ export class UsdBancorModule
       throw new Error("Cannot convert a token to itself.");
     await this.checkRefresh();
 
-    console.log("getReturn.connector", this.connector);
-    console.log(
-      "getReturn.propose",
-      propose,
-      propose.from.id,
-      propose.toId,
-      propose.from.amount
-    );
+//    console.log("getReturn.connector", this.connector);
+//    console.log("getReturn.propose", propose, propose.from.id, propose.toId, propose.from.amount);
 
     // Hack to handle TLOS<->TLOSD
     // From : "eosio.token-TLOS" -> "tokens.swaps-TLOSD"
@@ -844,17 +832,12 @@ export class UsdBancorModule
     if (propose.from.id == "eosio.token-TLOS") {
       propose.from.id = "tokens.swaps-TLOSD";
       //      propose.from.amount = (Number(propose.from.amount) * Number(this.connector[2])).toString();
-      // 0: 154200.619
-      // 1: 2121.502
-      // 2: 0.01375806409700599
-      // 3: "2.3043"
+      // 0: 154200.619, 1: 2121.502, 2: 0.01375806409700599, 3: "2.3043"
       const base_reserve = Number(this.connector.tlos_liquidity_depth);
       const quote_reserve = Number(this.connector.tlosd_liquidity_depth);
       const quantity = Number(propose.from.amount);
       // Hardcoded (1 - fee) * bancor return
-      propose.from.amount = (
-        0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)
-      ).toString();
+      propose.from.amount = (0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)).toString();
     }
     if (propose.toId == "eosio.token-TLOS") {
       propose.toId = "tokens.swaps-TLOSD";
@@ -863,23 +846,15 @@ export class UsdBancorModule
       const quote_reserve = Number(this.connector.tlos_liquidity_depth);
       const quantity = Number(propose.from.amount);
       // Hardcoded (1 - fee) * bancor return
-      propose.from.amount = (
-        0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)
-      ).toString();
+      propose.from.amount = (0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)).toString();
     }
 
-    console.log(
-      "getReturn.propose",
-      propose,
-      propose.from.id,
-      propose.toId,
-      propose.from.amount
-    );
+//    console.log("getReturn.propose", propose, propose.from.id, propose.toId, propose.from.amount);
 
     const bestReturn = await this.bestFromReturn(propose);
 
     // Need to update fee and slippage too
-    console.log("getReturn.bestReturn", bestReturn);
+//    console.log("getReturn.bestReturn", bestReturn);
 
     return {
       amount: String(asset_to_number(bestReturn.amount.rate)),

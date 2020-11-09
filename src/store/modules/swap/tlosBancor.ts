@@ -138,7 +138,7 @@ const compareEosTokenSymbol = (
 const reservesIncludeTokenMetaDry = (tokenMeta: TokenMeta[]) => (
   relay: DryRelay
 ) => {
-  console.log("reservesIncludeTokenMetaDry", relay);
+//  console.log("reservesIncludeTokenMetaDry", relay);
   const status = relay.reserves.every(reserve =>
     tokenMeta.some(
       meta =>
@@ -152,7 +152,7 @@ const reservesIncludeTokenMetaDry = (tokenMeta: TokenMeta[]) => (
       relay.reserves.map(x => x.symbol),
       "because they are not included in reserves"
     );
-  console.log("reservesIncludeTokenMetaDry", relay, status, relay.reserves[0].symbol.toString(), relay.reserves[1].symbol.toString(), tokenMeta);
+//  console.log("reservesIncludeTokenMetaDry", relay, status, relay.reserves[0].symbol.toString(), relay.reserves[1].symbol.toString(), tokenMeta);
   return status;
 };
 
@@ -1058,14 +1058,14 @@ export class TlosBancorModule
   }
 
   @action async refresh() {
-    console.log("refresh called, doing some stuff");
+//    console.log("refresh called, doing some stuff");
 
     const v1Relays = getHardCodedRelays();
     //    const allDry = [...v1Relays].filter(
     //        noBlackListedReservesDry(blackListedTokens)
     //    );
 
-    console.log("refresh.v1Relays",v1Relays);
+//    console.log("refresh.v1Relays",v1Relays);
 
     this.fetchTokenBalancesIfPossible(
       _.uniqWith(
@@ -1180,7 +1180,7 @@ export class TlosBancorModule
 //      console.log("usdTlos24hPriceMove : ", this.usdTlos24hPriceMove);
 
       const v1Relays = getHardCodedRelays();
-      console.log("init.v1Relays",v1Relays);
+//      console.log("init.v1Relays",v1Relays);
       const allDry = [...v1Relays, ...v2Relays.map(multiToDry)].filter(
         noBlackListedReservesDry(blackListedTokens)
       );
@@ -1200,7 +1200,7 @@ export class TlosBancorModule
         param.tradeQuery.base &&
         param.tradeQuery.quote;
 
-      console.log("quickTrade : ", quickTrade);
+//      console.log("quickTrade : ", quickTrade);
       if (quickTrade) {
         const { base: fromId, quote: toId } = param!.tradeQuery!;
         await this.bareMinimumForTrade({
@@ -1535,14 +1535,14 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     }
      */
 
-    console.log("convertActions : ", depositActions);
+//    console.log("convertActions : ", depositActions);
 
     //    if (depositActions.length > 0) {
     //      await this.triggerTx(depositActions);
     //    }
 
     const txRes = await this.triggerTx(depositActions);
-    console.log("txRes : ", txRes);
+//    console.log("txRes : ", txRes);
 
     return txRes.transaction_id as string;
   }
@@ -1738,7 +1738,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       )
     );
 
-    console.log("doubleLiquidateActions : ", actions);
+//    console.log("doubleLiquidateActions : ", actions);
     return actions;
   }
 
@@ -1748,7 +1748,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     onUpdate
   }: LiquidityParams): Promise<string> {
     const relay = await this.relayById(relayId);
-    console.log("removeLiquidity", relay);
+//    console.log("removeLiquidity", relay);
 
     const supply = await fetchTokenStats(
       relay.smartToken.contract,
@@ -1952,7 +1952,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   }
 
   @action async idToSymbol(id: string): Promise<Sym> {
-    console.log("idToSymbol : ", id);
+//    console.log("idToSymbol : ", id);
     const token = await this.tokenById(id);
     return new Sym(token.symbol, token.precision);
   }
@@ -2062,7 +2062,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
   }
 
   @action async tokenById(id: string) {
-    console.log("tokenById : ", id);
+//    console.log("tokenById : ", id);
     return findOrThrow(
       this.relaysList.flatMap(relay => relay.reserves),
       token => compareString(token.id, id),
@@ -2092,7 +2092,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       toId: toToken.id,
       relays: allRelays.map(multiToDry)
     });
-    console.log("convert.path:",path);
+//    console.log("convert.path:",path);
     const convertPath = relaysToConvertPaths(fromSymbolInit, path);
 
     const isAuthenticated = this.isAuthenticated;
@@ -2126,13 +2126,13 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       convertActions = [...openActions, ...convertActions];
     }
 
-    console.log("convert.convertActions : ", convertActions);
+//    console.log("convert.convertActions : ", convertActions);
     const txRes = await this.triggerTxAndWatchBalances({
       actions: convertActions,
       tokenIds: [from.id, to.id]
     });
 
-    console.log("convert.txRes : ", txRes);
+//    console.log("convert.txRes : ", txRes);
     this.refresh();
     return txRes.transaction_id;
   }
@@ -2234,7 +2234,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     relays: DryRelay[];
   }): Promise<DryRelay[]> {
     const path = await findNewPath(fromId, toId, relays, dryToTraditionalEdge);
-    console.log("findPath.path:",path);
+//    console.log("findPath.path:",path);
     return path.hops.flatMap(hop => hop[0]);
   }
 
@@ -2252,11 +2252,11 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       toId: toId,
       relays: allRelays
     });
-    console.log("getReturn.path:",path);
+//    console.log("getReturn.path:",path);
 
     const hydratedRelays = await this.hydrateRelays(path);
 
-    console.log("getReturn.hydratedRelays:",hydratedRelays);
+//    console.log("getReturn.hydratedRelays:",hydratedRelays);
 
     const calculatedReturn = findReturn(assetAmount, hydratedRelays);
 
@@ -2277,7 +2277,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       toId: to.id,
       relays: allRelays
     });
-    console.log("getCost.path:",path);
+//    console.log("getCost.path:",path);
     const hydratedRelays = await this.hydrateRelays(path);
     const calculatedCost = findCost(assetAmount, hydratedRelays);
 

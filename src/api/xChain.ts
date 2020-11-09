@@ -472,10 +472,10 @@ export async function get_xchain_remote_tokens(
     table,
     limit
   });
-  console.log("get_xchain_remote_tokens:", results);
+//  console.log("get_xchain_remote_tokens:", results);
 
   for (const row of results.rows) {
-    console.log("get_xchain_remote_tokens.row", row);
+//    console.log("get_xchain_remote_tokens.row", row);
     const [precision, symcode] = row.remote_token.sym.split(",");
     tokens[symcode] = {
       chain: row.remote_chain,
@@ -486,7 +486,7 @@ export async function get_xchain_remote_tokens(
       depth: new Asset(row.min_quantity),
       reserve: new Asset(row.min_quantity)
     };
-    console.log("get_xchain_remote_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
+//    console.log("get_xchain_remote_tokens.tokens[", symcode, "]", tokens[symcode].contract.to_string(), tokens[symcode].sym.toString());
   }
 
   return tokens;

@@ -333,7 +333,7 @@ export const getBalance = async (
     table: "accounts",
     limit: 99
   });
-  console.log("getBalance(", account, contract, symbolName, ") - ", res);
+//  console.log("getBalance(", account, contract, symbolName, ") - ", res);
   const balance = res.rows.find(balance =>
     compareString(
       new Asset(balance.balance).symbol.code().to_string(),
@@ -571,7 +571,7 @@ export const getTokenMeta = async (): Promise<TokenMeta[]> => {
     tokenMetaDataEndpoint
   );
 
-  console.log("getTokenMeta",[...res.data]);
+//  console.log("getTokenMeta",[...res.data]);
 
   //  return [...res.data, ...hardCoded()]
   return [...res.data]

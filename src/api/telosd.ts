@@ -174,7 +174,7 @@ export function get_inverse_rate(
 
 export async function get_connector(
     rpc: JsonRpc
-): Promise<any> {
+): Promise<Connector> {
   const code = "data.tbn";
   const scope = "data.tbn";
   const table = "tradedata";
@@ -201,12 +201,12 @@ export async function get_connector(
   // mid market price = TLOSD liquidity / TLOS liquidity
   const price = tlosd_liquidity_depth / tlos_liquidity_depth;
   const volume_24h = result.rows[0].volume_24h
-    .find((token: any) => compareString(token.key, "TLOSD"))
+    .find((token: any) => compareString(token.key, "TLOS"))
     .value.split(" ")[0];
 
-  console.log("get_connector.liquidity_depth, price, volume_24h", tlosd_liquidity_depth, price, volume_24h);
+//  console.log("get_connector.liquidity_depth, price, volume_24h", tlosd_liquidity_depth, price, volume_24h);
 
-  return [tlos_liquidity_depth, tlosd_liquidity_depth, price, volume_24h];
+  return {tlos_liquidity_depth, tlosd_liquidity_depth, price, volume_24h};
 }
 
 export async function get_settings(
@@ -344,7 +344,7 @@ export async function get_tokens(
   });
 
   for (const row of results.rows) {
-    console.log("get_tokens",row);
+//    console.log("get_tokens",row);
     const [precision, symcode] = row.sym.split(",");
     tokens[symcode] = {
       sym: new Sym(symcode, precision),
