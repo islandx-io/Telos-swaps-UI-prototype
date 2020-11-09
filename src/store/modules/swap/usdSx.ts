@@ -22,6 +22,7 @@ import {
   get_tokens,
   Token,
   Volume,
+  Connector,
   get_slippage,
   get_fee,
   get_spot_price
@@ -139,6 +140,7 @@ const tokenToId = (token: Token) => {
     symbol: symbolName
   });
 };
+
 /*
 const connector = {
   contract: "tlosdx.swaps",
@@ -158,24 +160,19 @@ const connector = {
   ]
 };
 */
+
 interface AddedVolume extends Token {
   volume24h?: number;
 }
 
 const contract = process.env.VUE_APP_USDSTABLE!;
 
-interface Connector {
-  tlos_liquidity_depth: number;
-  tlosd_liquidity_depth: number;
-  price: number;
-  volume_24h: number;
-}
-
 interface Stat {
   tokens: Tokens;
   volume: Volume[];
   settings: Settings;
   contract: string;
+//  connector: Connector;
 }
 
 interface MiniRelay {
@@ -208,7 +205,12 @@ export class UsdBancorModule
   stats: Stat[] = [];
   lastLoaded: number = 0;
 
-  connector: Connector[] = [];
+  connector: Connector = {
+    tlos_liquidity_depth: 50.0,
+    tlosd_liquidity_depth: 1.0,
+    price: 0.02,
+    volume_24h: 0.0
+  };
 
   get wallet() {
     return "tlos";
@@ -347,7 +349,8 @@ export class UsdBancorModule
         this.buildTokens({
           tokens: token.tokens,
           volume: token.volume[0],
-          settings: token.settings
+          settings: token.settings,
+          connector: this.connector
         })
       )
     );
@@ -433,7 +436,8 @@ export class UsdBancorModule
         this.buildTokens({
           tokens: token.tokens,
           volume: token.volume[0],
-          settings: token.settings
+          settings: token.settings,
+          connector: this.connector
         })
       )
     );
@@ -494,11 +498,13 @@ export class UsdBancorModule
   @action async buildTokens({
     tokens,
     volume,
-    settings
+    settings,
+    connector
   }: {
     tokens: Tokens;
     settings: Settings;
     volume: Volume;
+    connector: Connector;
   }) {
     const tokensArray: Token[] = tokensToArray(tokens);
     const addedPossibleVolumes: AddedVolume[] = tokensArray.map(token => {
@@ -513,32 +519,50 @@ export class UsdBancorModule
       addedPossibleVolumes.map(async token => {
         const symbolName = token.sym.code().to_string();
         const precision = token.sym.precision();
-        const contract = trusted
-          ? token.contract.to_string()
-          : symbolNameToContract(symbolName);
+        const contract = trusted ? token.contract.to_string() : symbolNameToContract(symbolName);
 
-        const volume24h = token.volume24h || 0;
+        console.log("buildTokens", token.token_type.to_string());
+        if (token.token_type.to_string() == "connector") {
+          const volume24h = 2120.5094;//connector.volume_24h;
+          const price = 0.013745157577495663;//connector.price;
+          const liqDepth = 2120.5094;//connector.tlosd_liquidity_depth;
 
-        const rate = await get_spot_price(
-          "USDT",
-          token.sym.code(),
-          tokens,
-          settings
-        );
+          console.log("buildTokens", symbol, connector, volume24h, price, liqDepth);
 
-        const price = compareString(symbolName, "USDT") ? 1 : rate;
+          return {
+            id: buildTokenId({ contract, symbol: symbolName }),
+            symbol: symbolName,
+            precision,
+            contract,
+            volume24h,
+            price,
+            liqDepth
+          };
+        } else {
+          const volume24h = token.volume24h || 0;
+          const rate = await get_spot_price(
+            "USDT",
+            token.sym.code(),
+            tokens,
+            settings
+          );
+          const price = compareString(symbolName, "USDT") ? 1 : rate;
 
-        return {
-          id: buildTokenId({ contract, symbol: symbolName }),
-          symbol: symbolName,
-          precision,
-          contract,
-          volume24h,
-          price,
-          liqDepth: asset_to_number(token.balance) * price
-        };
+          console.log("buildTokens", symbol, volume24h, price);
+
+          return {
+            id: buildTokenId({ contract, symbol: symbolName }),
+            symbol: symbolName,
+            precision,
+            contract,
+            volume24h,
+            price,
+            liqDepth: asset_to_number(token.balance) * price
+          };
+        }
       })
     );
+
     return newTokens;
   }
 
@@ -617,7 +641,11 @@ export class UsdBancorModule
       // Case from=TLOS, to<>TLOSD
       // 1,tlosdx.swaps TLOSD telosd.swaps USDT,0.0,qwertyqwerty
       converter = "bancor.tbn";
-      memo ="1,tlosdx.swaps TLOSD telosd.swaps " + toToken.symbol + ",0.0," + accountName;
+      memo =
+        "1,tlosdx.swaps TLOSD telosd.swaps " +
+        toToken.symbol +
+        ",0.0," +
+        accountName;
     } else if (toToken.symbol == "TLOS") {
       // Case from<>TLOSD, to=TLOS
       // 1,telosd.swaps TLOSD tlosdx.swaps TLOS,0.0,qwertyqwerty
@@ -669,7 +697,7 @@ export class UsdBancorModule
         tokens
       })
     ]);
-    await vxm.tlosNetwork.pingTillChange({originalBalances});
+    await vxm.tlosNetwork.pingTillChange({ originalBalances });
 
     return txRes.transaction_id;
   }
@@ -801,7 +829,13 @@ export class UsdBancorModule
     await this.checkRefresh();
 
     console.log("getReturn.connector", this.connector);
-    console.log("getReturn.propose", propose, propose.from.id, propose.toId, propose.from.amount);
+    console.log(
+      "getReturn.propose",
+      propose,
+      propose.from.id,
+      propose.toId,
+      propose.from.amount
+    );
 
     // Hack to handle TLOS<->TLOSD
     // From : "eosio.token-TLOS" -> "tokens.swaps-TLOSD"
@@ -809,33 +843,43 @@ export class UsdBancorModule
     // To   : "tokens.swaps-TLOSD" -> "eosio.token-TLOS"
     if (propose.from.id == "eosio.token-TLOS") {
       propose.from.id = "tokens.swaps-TLOSD";
-//      propose.from.amount = (Number(propose.from.amount) * Number(this.connector[2])).toString();
+      //      propose.from.amount = (Number(propose.from.amount) * Number(this.connector[2])).toString();
       // 0: 154200.619
       // 1: 2121.502
       // 2: 0.01375806409700599
       // 3: "2.3043"
-      const base_reserve = Number(this.connector[0]);
-      const quote_reserve = Number(this.connector[1]);
+      const base_reserve = Number(this.connector.tlos_liquidity_depth);
+      const quote_reserve = Number(this.connector.tlosd_liquidity_depth);
       const quantity = Number(propose.from.amount);
       // Hardcoded (1 - fee) * bancor return
-      propose.from.amount = (0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)).toString();
+      propose.from.amount = (
+        0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)
+      ).toString();
     }
     if (propose.toId == "eosio.token-TLOS") {
       propose.toId = "tokens.swaps-TLOSD";
-//      propose.from.amount = (Number(propose.from.amount) / Number(this.connector[2])).toString();
-      const base_reserve = Number(this.connector[1]);
-      const quote_reserve = Number(this.connector[0]);
+      //      propose.from.amount = (Number(propose.from.amount) / Number(this.connector[2])).toString();
+      const base_reserve = Number(this.connector.tlosd_liquidity_depth);
+      const quote_reserve = Number(this.connector.tlos_liquidity_depth);
       const quantity = Number(propose.from.amount);
       // Hardcoded (1 - fee) * bancor return
-      propose.from.amount = (0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)).toString();
+      propose.from.amount = (
+        0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)
+      ).toString();
     }
 
-    console.log("getReturn.propose", propose, propose.from.id, propose.toId, propose.from.amount);
+    console.log(
+      "getReturn.propose",
+      propose,
+      propose.from.id,
+      propose.toId,
+      propose.from.amount
+    );
 
     const bestReturn = await this.bestFromReturn(propose);
 
     // Need to update fee and slippage too
-    console.log("getReturn.bestReturn",bestReturn);
+    console.log("getReturn.bestReturn", bestReturn);
 
     return {
       amount: String(asset_to_number(bestReturn.amount.rate)),

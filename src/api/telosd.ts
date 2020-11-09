@@ -309,11 +309,12 @@ export function get_spot_price(
   quote: SymbolCode | string,
   tokens: Tokens,
   settings: Settings
+//  connector?: Connector | {tlos_liquidity_depth: number, tlosd_liquidity_depth: number}
 ): number {
   if (is_maker_token(new SymbolCode(quote), tokens))
     return get_maker_spot_price(new SymbolCode(base), tokens, settings);
-  if (is_connector_token(new SymbolCode(quote), tokens))
-    return 0.25;
+//  if (is_connector_token(new SymbolCode(quote), tokens))
+//    return (connector) ? connector.tlosd_liquidity_depth / connector.tlos_liquidity_depth : 0.25;
   const [base_upper, quote_upper] = get_uppers(
     new SymbolCode(base),
     new SymbolCode(quote),
