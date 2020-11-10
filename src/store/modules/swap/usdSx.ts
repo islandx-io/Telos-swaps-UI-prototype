@@ -340,7 +340,7 @@ export class UsdBancorModule
     this.setStats(allTokens);
 
     this.connector = await retryPromise(() => get_connector(rpc), 4, 500);
-    console.log("refresh.connector", this.connector);
+//    console.log("refresh.connector", this.connector);
 
     retryPromise(() => this.updateStats(), 4, 1000);
 
@@ -427,7 +427,7 @@ export class UsdBancorModule
     this.setStats(allTokens);
 
     this.connector = await retryPromise(() => get_connector(rpc), 4, 500);
-    console.log("init.connector", this.connector);
+//    console.log("init.connector", this.connector);
 
     await retryPromise(() => this.updateStats(), 4, 1000);
 
@@ -829,24 +829,29 @@ export class UsdBancorModule
     // From : "eosio.token-TLOS" -> "tokens.swaps-TLOSD"
     //        {id: "eosio.token-TLOS", amount: "1"}
     // To   : "tokens.swaps-TLOSD" -> "eosio.token-TLOS"
+    let additional_fee = 0.0;
+    let factor = 1.0;
     if (propose.from.id == "eosio.token-TLOS") {
       propose.from.id = "tokens.swaps-TLOSD";
-      //      propose.from.amount = (Number(propose.from.amount) * Number(this.connector[2])).toString();
+      // propose.from.amount = (Number(propose.from.amount) * Number(this.connector[2])).toString();
       // 0: 154200.619, 1: 2121.502, 2: 0.01375806409700599, 3: "2.3043"
       const base_reserve = Number(this.connector.tlos_liquidity_depth);
       const quote_reserve = Number(this.connector.tlosd_liquidity_depth);
       const quantity = Number(propose.from.amount);
       // Hardcoded (1 - fee) * bancor return
       propose.from.amount = (0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)).toString();
+      additional_fee = 0.0027 * Number(propose.from.amount) / 0.9925;
     }
     if (propose.toId == "eosio.token-TLOS") {
       propose.toId = "tokens.swaps-TLOSD";
-      //      propose.from.amount = (Number(propose.from.amount) / Number(this.connector[2])).toString();
+      // propose.from.amount = (Number(propose.from.amount) / Number(this.connector[2])).toString();
       const base_reserve = Number(this.connector.tlosd_liquidity_depth);
       const quote_reserve = Number(this.connector.tlos_liquidity_depth);
       const quantity = Number(propose.from.amount);
       // Hardcoded (1 - fee) * bancor return
       propose.from.amount = (0.9925 * get_bancor_output(base_reserve, quote_reserve, quantity)).toString();
+      additional_fee = 0.0027 * Number(propose.from.amount) / 0.9925;
+      factor = base_reserve / quote_reserve;
     }
 
 //    console.log("getReturn.propose", propose, propose.from.id, propose.toId, propose.from.amount);
@@ -854,12 +859,18 @@ export class UsdBancorModule
     const bestReturn = await this.bestFromReturn(propose);
 
     // Need to update fee and slippage too
-//    console.log("getReturn.bestReturn", bestReturn);
+    // TODO fee specified in "to" token units
+    let total_fee = number_to_asset((asset_to_number(bestReturn.amount.fee) + additional_fee) * factor, bestReturn.amount.fee.symbol);
+    let slippage = bestReturn.amount.slippage * factor;
+
+    console.log("getReturn.bestReturn", bestReturn.amount.fee.to_string(), additional_fee, slippage, factor);
 
     return {
       amount: String(asset_to_number(bestReturn.amount.rate)),
-      fee: shortAssetString(bestReturn.amount.fee),
-      slippage: bestReturn.amount.slippage
+//      fee: shortAssetString(bestReturn.amount.fee),
+      fee: total_fee,
+//      slippage: bestReturn.amount.slippage
+      slippage: slippage
     };
   }
 
