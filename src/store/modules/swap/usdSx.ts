@@ -860,10 +860,10 @@ export class UsdBancorModule
 
     // Need to update fee and slippage too
     // TODO fee specified in "to" token units
-    let total_fee = number_to_asset((asset_to_number(bestReturn.amount.fee) + additional_fee) * factor, bestReturn.amount.fee.symbol);
+    let total_fee = number_to_asset((asset_to_number(bestReturn.amount.fee) + additional_fee) * factor, bestReturn.amount.fee.symbol).to_string();
     let slippage = bestReturn.amount.slippage * factor;
 
-    console.log("getReturn.bestReturn", bestReturn.amount.fee.to_string(), additional_fee, slippage, factor);
+//    console.log("getReturn.bestReturn", bestReturn.amount.fee.to_string(), additional_fee, slippage, factor);
 
     return {
       amount: String(asset_to_number(bestReturn.amount.rate)),
