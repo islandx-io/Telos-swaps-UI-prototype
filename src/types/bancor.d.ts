@@ -311,6 +311,7 @@ export interface EosMultiRelay {
   contract: string;
   owner: string;
   isMultiContract: boolean;
+  smartEnabled: boolean;
   smartToken: AgnosticToken;
   fee: number;
   apr: number;

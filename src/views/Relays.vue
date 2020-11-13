@@ -239,7 +239,7 @@ export default class Relays extends Vue {
   }
 
   get tokens() {
-    return vxm.bancor.relays;
+    return vxm.bancor.relays.filter((relay: { smartEnabled: number; }) => relay.smartEnabled == 1);
   }
 
   focusRelay(symbolCode: string) {

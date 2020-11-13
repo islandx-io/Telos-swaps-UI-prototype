@@ -149,7 +149,7 @@ const reservesIncludeTokenMetaDry = (tokenMeta: TokenMeta[]) => (
   if (!status)
     console.warn(
       "Dropping relay containing reserves",
-      relay.reserves.map(x => x.symbol),
+      relay.reserves.map(x => x.symbol).toString(),
       "because they are not included in reserves"
     );
 //  console.log("reservesIncludeTokenMetaDry", relay, status, relay.reserves[0].symbol.toString(), relay.reserves[1].symbol.toString(), tokenMeta);
@@ -914,9 +914,6 @@ export class TlosBancorModule
           reserve => reserve.symbol
         );
 
-//        const apr: number = relay.apr;
-//            0.351; //TODO populate with data from smart contract
-
         return {
           ...relay,
           id: buildTokenId({
@@ -1157,8 +1154,6 @@ export class TlosBancorModule
     console.count("eosInit");
     console.time("eos");
     console.log("eosInit received", param);
-
-    console.log("init : ", param);
 
     if (this.initialised) {
       console.log("eos refreshing instead");
@@ -1431,6 +1426,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
             isMultiContract: false,
             fee: settings.rows[0].fee / 1000000,
             owner: relay.contract,
+            smartEnabled: settings.rows[0].smart_enabled,
             smartToken: {
               id: smartTokenId,
               amount: 0,
