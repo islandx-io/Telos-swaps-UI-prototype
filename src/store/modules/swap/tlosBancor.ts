@@ -138,7 +138,6 @@ const compareEosTokenSymbol = (
 const reservesIncludeTokenMetaDry = (tokenMeta: TokenMeta[]) => (
   relay: DryRelay
 ) => {
-//  console.log("reservesIncludeTokenMetaDry", relay);
   const status = relay.reserves.every(reserve =>
     tokenMeta.some(
       meta =>
@@ -152,7 +151,6 @@ const reservesIncludeTokenMetaDry = (tokenMeta: TokenMeta[]) => (
       relay.reserves.map(x => x.symbol).toString(),
       "because they are not included in reserves"
     );
-//  console.log("reservesIncludeTokenMetaDry", relay, status, relay.reserves[0].symbol.toString(), relay.reserves[1].symbol.toString(), tokenMeta);
   return status;
 };
 
@@ -849,7 +847,6 @@ export class TlosBancorModule
   }
 
   get token(): (arg0: string) => ViewToken {
-    //    console.log(this.tokens);
     return (id: string) => {
       const tradableToken = this.tokens.find(token =>
         compareString(token.id, id)
@@ -1055,14 +1052,12 @@ export class TlosBancorModule
   }
 
   @action async refresh() {
-//    console.log("refresh called, doing some stuff");
+    console.log("refresh called, doing some stuff");
 
     const v1Relays = getHardCodedRelays();
     //    const allDry = [...v1Relays].filter(
     //        noBlackListedReservesDry(blackListedTokens)
     //    );
-
-//    console.log("refresh.v1Relays",v1Relays);
 
     this.fetchTokenBalancesIfPossible(
       _.uniqWith(
@@ -2088,7 +2083,6 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       toId: toToken.id,
       relays: allRelays.map(multiToDry)
     });
-//    console.log("convert.path:",path);
     const convertPath = relaysToConvertPaths(fromSymbolInit, path);
 
     const isAuthenticated = this.isAuthenticated;
@@ -2122,13 +2116,11 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       convertActions = [...openActions, ...convertActions];
     }
 
-//    console.log("convert.convertActions : ", convertActions);
     const txRes = await this.triggerTxAndWatchBalances({
       actions: convertActions,
       tokenIds: [from.id, to.id]
     });
 
-//    console.log("convert.txRes : ", txRes);
     this.refresh();
     return txRes.transaction_id;
   }
@@ -2230,7 +2222,6 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
     relays: DryRelay[];
   }): Promise<DryRelay[]> {
     const path = await findNewPath(fromId, toId, relays, dryToTraditionalEdge);
-//    console.log("findPath.path:",path);
     return path.hops.flatMap(hop => hop[0]);
   }
 
@@ -2248,11 +2239,8 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       toId: toId,
       relays: allRelays
     });
-//    console.log("getReturn.path:",path);
 
     const hydratedRelays = await this.hydrateRelays(path);
-
-//    console.log("getReturn.hydratedRelays:",hydratedRelays);
 
     const calculatedReturn = findReturn(assetAmount, hydratedRelays);
 
@@ -2273,7 +2261,6 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
       toId: to.id,
       relays: allRelays
     });
-//    console.log("getCost.path:",path);
     const hydratedRelays = await this.hydrateRelays(path);
     const calculatedCost = findCost(assetAmount, hydratedRelays);
 

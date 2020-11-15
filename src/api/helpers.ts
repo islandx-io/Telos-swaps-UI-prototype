@@ -333,7 +333,6 @@ export const getBalance = async (
     table: "accounts",
     limit: 99
   });
-//  console.log("getBalance(", account, contract, symbolName, ") - ", res);
   const balance = res.rows.find(balance =>
     compareString(
       new Asset(balance.balance).symbol.code().to_string(),
@@ -345,13 +344,13 @@ export const getBalance = async (
     if (typeof precision == "number") {
       return number_to_asset(0, new Sym(symbolName, precision)).to_string();
     } else {
-      //      console.log("no balance - getBalance(", contract, ",", symbolName, ")");
       const symbol = await fetchTokenSymbol(contract, symbolName);
-      return number_to_asset(0, symbol).to_string();
+      // TODO this is a hack because number_to_asset cannot just receive a symbol, precision is essential
+      return number_to_asset(0, new Sym(symbolName, 4)).to_string();
+      // return number_to_asset(0, symbol).to_string();
     }
   }
 
-  //  console.log("getBalance : (", account, ", ", contract, ", ", symbolName, ") = ", balance.balance);
   return balance.balance;
 };
 

@@ -70,7 +70,8 @@ const mobileCompatibleWallets = [
 //  "meetone_provider",
 //  "whalevault",
 //  "Keycat",
-  "anchor-link"
+  "anchor-link",
+  "scatter"
 ];
 
 const isMobileCompatible = (mobileCompatibleIds: string[]) => (
@@ -122,6 +123,8 @@ export default class ModalLogin extends Vue {
   providerLogoUrl(p: WalletProvider) {
 //    console.log("providerLogoUrl",p.id);
     switch (p.id) {
+      case "anchor-link":
+        return "anchor-logo-blue.svg";
       case "scatter":
         return "scatter.svg";
 //      case "Sqrl":
@@ -138,8 +141,6 @@ export default class ModalLogin extends Vue {
 //        return "lynx.jpg";
 //      case "whalevault":
 //        return "whalevault.png";
-      case "anchor-link":
-        return "anchor-logo-blue.svg";
       default:
         return "eos.png";
     }
