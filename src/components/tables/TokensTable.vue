@@ -27,9 +27,6 @@
           :tbody-transition-props="transProps"
           :tbody-transition-handlers="transHandler"
         >
-          <template v-slot:head(change24h)="data">
-            <span class="cursor text-center" style="min-width: 1500px;">{{data.label}}</span>
-          </template>
           <template v-slot:cell(index)="data">
             {{ data.index + 1 }}
           </template>
@@ -49,8 +46,10 @@
           </template>
           <template v-slot:cell(price)="data">
             <span class="text-center font-w700">
-              <span v-if="data.item.price < 100">{{numeral(data.item.price).format("$0,0.000000")}}</span>
-              <span v-else>{{numeral(data.item.price).format("$0,0.00")}}</span>
+              <span v-if="data.item.price < 0.01">{{numeral(data.item.price).format("$0,0.000000")}}</span>
+              <span v-else-if="data.item.price < 10">{{numeral(data.item.price).format("$0,0.000")}}</span>
+              <span v-else-if="data.item.price < 10000">{{numeral(data.item.price).format("$0,0")}}</span>
+              <span v-else>{{numeral(data.item.price).format("$0,0")}}</span>
             </span>
           </template>
           <template v-slot:cell(actions)="data">
@@ -174,8 +173,6 @@ export default class TokensTable extends Vue {
       sortable: true,
       label: "Price USD",
       class: ["text-right"],
-      formatter: (value: any, key: any, item: any) =>
-        numeral(value).format("$0,0.000000")
     },
     {
       key: "volume24h",

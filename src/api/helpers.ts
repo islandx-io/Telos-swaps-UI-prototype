@@ -139,6 +139,14 @@ export const fetchCoinGechoUsdPriceOfTlos = async (): Promise<number> => {
   return Number(res.data.telos.usd);
 };
 
+export const fetchCoinGechoUsdPriceOfEos = async (): Promise<number> => {
+  const res = await axios.get<{ eos: { usd: string } }>(
+      "https://api.coingecko.com/api/v3/simple/price?ids=eos&vs_currencies=usd"
+  );
+  console.log("fetchCoinGechoUsdPriceOfEos",Number(res.data.eos.usd));
+  return Number(res.data.eos.usd);
+};
+
 // 902e192a-d57a-49ac-986d-01b5f3a1b922
 //
 // curl -H "X-CMC_PRO_API_KEY: 902e192a-d57a-49ac-986d-01b5f3a1b922" -H "Accept: application/json" -d "id=4660" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest
@@ -267,6 +275,31 @@ export const fetchCmcUsdPriceOfTlos = async (): Promise<TlosCmcPriceData> => {
 //  console.log("fetchCoinCmcUsdPriceOfTlos", res.data.data[4660].quote.USD);
   const price = Number(res.data.data[4660].quote.USD.price);
   const percent_change_24h = Number(res.data.data[4660].quote.USD.percent_change_24h);
+
+  return {price:price,percent_change_24h:percent_change_24h};
+};
+
+export interface TlosNewdexPriceData {
+  price: null | number;
+  percent_change_24h: null | number;
+}
+
+export const fetchNewdexEosPriceOfTlos = async (): Promise<TlosNewdexPriceData> => {
+  const res = await axios
+      .get<any>(
+          //"https://api.newdex.io/v1/ticker?symbol=eosio.token-tlos-eos"
+          "https://api.newdex.io/v1/ticker?symbol=eosio.token-tlos-eos"
+      )
+//    .then(resp => {
+//      console.log("fetchNewdexEosPriceOfTlos", resp);
+//    })
+//    .catch(err => {
+//      console.log("fetchNewdexEosPriceOfTlos", err);
+//    });
+
+//  console.log("fetchNewdexEosPriceOfTlos", res);
+  const price = Number(res.data.data.last);
+  const percent_change_24h = Number(res.data.data.change);
 
   return {price:price,percent_change_24h:percent_change_24h};
 };
@@ -627,9 +660,9 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   // TODO read usdTlos24hPriceMove from CMC, use as follows
   // hardcoded for now
   //  let usdTlos24hPriceMove = -4.44 / 100.0;
-  let usdTlos24hPriceMove = 0.0 / 100.0;
-  // let usdTlos24hPriceMove = await vxm.bancor.fetchUsd24hPriceMove()/100.0;
-  // console.log("usdTlos24hPriceMove",usdTlos24hPriceMove);
+  // let usdTlos24hPriceMove = 0.0 / 100.0;
+  let usdTlos24hPriceMove = await vxm.bancor.fetchUsd24hPriceMove();
+  console.log("usdTlos24hPriceMove",usdTlos24hPriceMove);
 
   let newTlosObj: any = {};
   newTlosObj.id = 1;
@@ -638,6 +671,7 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
   newTlosObj.primaryCommunityImageName = newTlosObj.code;
   newTlosObj.liquidityDepth = 0.0;
   newTlosObj.price = usdPriceOfTlos;
+//  newTlosObj.priceTlos = 1;
   newTlosObj.change24h = 100.0 * usdTlos24hPriceMove;
   let volume24h: any = {};
   volume24h.USD = 0.0;
@@ -662,6 +696,8 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
     newObj.price =
       itemObject.price.find((token: any) => compareString(token.key, "TLOS"))
         .value * usdPriceOfTlos;
+//    newObj.priceTlos =
+//      itemObject.price.find((token: any) => compareString(token.key, "TLOS")).value;
 
     // This is to convert from % change in TLOS to USD
     let raw24hChange =
