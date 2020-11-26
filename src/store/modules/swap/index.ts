@@ -16,11 +16,8 @@ import { vxm } from "@/store";
 import { store } from "../../../store";
 import { compareString, updateArray } from "@/api/helpers";
 import {
-  TlosCmcPriceData,
-  fetchCmcUsdPriceOfTlos,
   fetchNewdexEosPriceOfTlos,
   fetchCoinGechoUsdPriceOfEos,
-  fetchCoinGechoUsdPriceOfTlos
 } from "@/api/helpers";
 import wait from "waait";
 import { defaultModule } from "@/router";

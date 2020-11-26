@@ -132,16 +132,16 @@ export const compareString = (stringOne: string, stringTwo: string) => {
 
 // https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd
 // {"telos":{"usd":0.02797187}}
-export const fetchCoinGechoUsdPriceOfTlos = async (): Promise<number> => {
-  const res = await axios.get<{ telos: { usd: string } }>(
-    "https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd"
-  );
-  return Number(res.data.telos.usd);
-};
+//export const fetchCoinGechoUsdPriceOfTlos = async (): Promise<number> => {
+//  const res = await axios.get<{ telos: { usd: string } }>(
+//    "https://api.coingecko.com/api/v3/simple/price?ids=telos&vs_currencies=usd"
+//  );
+//  return Number(res.data.telos.usd);
+//};
 
 export const fetchCoinGechoUsdPriceOfEos = async (): Promise<number> => {
   const res = await axios.get<{ eos: { usd: string } }>(
-      "https://api.coingecko.com/api/v3/simple/price?ids=eos&vs_currencies=usd"
+    "https://api.coingecko.com/api/v3/simple/price?ids=eos&vs_currencies=usd"
   );
   console.log("fetchCoinGechoUsdPriceOfEos",Number(res.data.eos.usd));
   return Number(res.data.eos.usd);

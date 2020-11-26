@@ -68,7 +68,6 @@ import wait from "waait";
 import { getHardCodedRelays } from "./staticRelays";
 import { sortByNetworkTokens } from "@/api/sortByNetworkTokens";
 import { liquidateAction, hydrateAction } from "@/api/singleContractTx";
-import * as data from "./data.json";
 
 const compareAgnosticToBalanceParam = (
   agnostic: AgnosticToken,
@@ -261,6 +260,7 @@ export interface ViewTokenMinusLogo {
   symbol: string;
   name: string;
   price: number;
+//  priceTlos: number;
   liqDepth: number;
   change24h: number;
   volume24h: number;
@@ -382,6 +382,7 @@ const buildTwoFeedsFromRelay = (
     )!;
     return {
       costByNetworkUsd: price.unitPrice,
+//      costByNetworkTlos: price.unitPrice,
       liqDepth: calculateLiquidtyDepth(relay, knownPrices),
       smartTokenId: buildTokenId({
         contract: relay.smartToken.contract,
@@ -490,6 +491,7 @@ interface RelayFeed {
   tokenId: string;
   liqDepth: number;
   costByNetworkUsd?: number;
+//  costByNetworkTlos?: number;
   change24H?: number;
   volume24H?: number;
   smartPriceApr?: number;
@@ -796,6 +798,7 @@ export class TlosBancorModule
             id: reserveTokenId,
             symbol: reserve.symbol,
             price: feed.costByNetworkUsd,
+//            priceTlos: feed.costByNetworkTlos,
             change24h: feed.change24H,
             liqDepth: feed.liqDepth,
             volume24h: feed.volume24H,
@@ -1326,6 +1329,8 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           {
             change24H: token.change24h,
             costByNetworkUsd: token.price,
+//            costByNetworkTlos: token.priceTlos,
+//            liqDepth: token.liquidityDepth,
             liqDepth,
             tokenId: buildTokenId({
               contract: primaryReserve.contract,
@@ -1341,6 +1346,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
           includeTLOS
             ? {
                 ...secondary,
+//                liqDepth: tlosToken.liquidityDepth,
                 liqDepth,
                 costByNetworkUsd: tlosToken.price,
                 change24H: tlosToken.change24h,
@@ -1350,6 +1356,7 @@ volume24h: {ETH: 5082.435071735717, USD: 1754218.484042, EUR: 1484719.61129}
             : {
                 ...secondary,
                 liqDepth
+//                liqDepth: tlosToken.liquidityDepth
               }
         ];
       });

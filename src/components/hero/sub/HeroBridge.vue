@@ -150,7 +150,7 @@ export default class HeroBridge extends Vue {
   }
 
   async initXTransfer() {
-    console.log("HeroBridge.initXTransfer");
+//    console.log("HeroBridge.initXTransfer");
     await vxm.tlosNetwork.xtransfer({
       to: this.recipient,
       memo: this.memo,
@@ -172,11 +172,11 @@ export default class HeroBridge extends Vue {
   }
 
   switchChain() {
-    console.log("switch between Telos and EOS");
+//    console.log("switch between Telos and EOS");
     vxm.tlosWallet.setAccessContext((vxm.tlosWallet.chain == Chain.telos) ? Chain.eos : Chain.telos);
     vxm.xchainBancor.updateStats();
 //    vxm.xchainBancor.switchChain((vxm.tlosWallet.chain == Chain.telos) ? Chain.eos : Chain.telos);
-    console.log((vxm.tlosWallet.chain == Chain.telos) ? "Switched from EOS to Telos" : "Switched from Telos to EOS");
+//    console.log((vxm.tlosWallet.chain == Chain.telos) ? "Switched from EOS to Telos" : "Switched from Telos to EOS");
   }
 
 //  navConvert() {

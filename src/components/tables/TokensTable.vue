@@ -47,9 +47,15 @@
           <template v-slot:cell(price)="data">
             <span class="text-center font-w700">
               <span v-if="data.item.price < 0.01">{{numeral(data.item.price).format("$0,0.000000")}}</span>
-              <span v-else-if="data.item.price < 10">{{numeral(data.item.price).format("$0,0.000")}}</span>
-              <span v-else-if="data.item.price < 10000">{{numeral(data.item.price).format("$0,0")}}</span>
+              <span v-else-if="data.item.price < 1">{{numeral(data.item.price).format("$0,0.0000")}}</span>
+              <span v-else-if="data.item.price < 100">{{numeral(data.item.price).format("$0,0.00")}}</span>
               <span v-else>{{numeral(data.item.price).format("$0,0")}}</span>
+            </span>
+          </template>
+          <template v-slot:cell(liqDepth)="data">
+            <span class="text-right">
+              <span v-if="data.item.liqDepth < 100">{{numeral(data.item.liqDepth).format("$0,0.00")}}</span>
+              <span v-else>{{numeral(data.item.liqDepth).format("$0,0")}}</span>
             </span>
           </template>
           <template v-slot:cell(actions)="data">
@@ -82,7 +88,6 @@ import { Watch, Component, Vue, Prop } from "vue-property-decorator";
 import numeral from "numeral";
 import SortIcons from "@/components/common/SortIcons.vue";
 import {
-  TokenPrice,
   SimpleToken,
   SimpleTokenWithMarketData
 } from "@/types/bancor";
@@ -134,13 +139,13 @@ export default class TokensTable extends Vue {
       el.style.height = 0;
     },
     enter: function(el: any, done: any) {
-      var delay = el.dataset.index * 150;
+      let delay = el.dataset.index * 150;
       setTimeout(function() {
         Velocity(el, { opacity: 1, height: "1.6em" }, { complete: done });
       }, delay);
     },
     leave: function(el: any, done: any) {
-      var delay = el.dataset.index * 150;
+      let delay = el.dataset.index * 150;
       setTimeout(function() {
         Velocity(el, { opacity: 0, height: 0 }, { complete: done });
       }, delay);

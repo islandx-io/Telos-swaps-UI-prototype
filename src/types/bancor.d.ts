@@ -8,6 +8,7 @@ export interface TokenPrice {
   primaryCommunityImageName: string;
   liquidityDepth: number;
   price: number;
+//  priceTlos: number;
   change24h: number;
   volume24h: Volume24h;
   smartPriceApr: number;
@@ -135,7 +136,7 @@ export interface CoTrade {
   connectorBancorReserve: string;
   connectorOriginalReserve: string;
   smartTokenInETH: null;
-  smartTokeninUSD: null;
+  smartTokenInUSD: null;
   tokenDecimals: number;
   conversionFee: string;
   converterVersion: string;
@@ -174,6 +175,7 @@ export interface ViewToken {
   symbol: string;
   name: string;
   price?: number;
+//  priceTlos?: number;
   liqDepth?: number;
   logo: string;
   change24h?: number;
@@ -421,6 +423,7 @@ export interface BancorAPIResponseToken {
   liquidityDepth: number;
   decimals: number;
   price: number;
+//  priceTlos: number;
   change24h: number;
   volume24h: Volume24H;
   priceHistory: Array<number[]>;
