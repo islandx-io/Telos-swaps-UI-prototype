@@ -1,66 +1,68 @@
 <template>
   <div>
-    <div class="content content-boxed">
+    <div class="container-lg">
       <div class="block">
         <div class="block-header">
           <h3 class="block-title">Telos <small>Token Balances</small></h3>
         </div>
-        <div class="block-content">
-          <b-table
-            id="tokens-tablee"
-            striped
-            :fields="fields"
-            :items="tokens"
-            primary-key="symbol"
-          >
-            <template v-slot:cell(index)="data">
-              {{ data.index + 1 }}
-            </template>
-            <template v-slot:cell(symbol)="data">
-              <img
-                v-b-tooltip.hover
-                class="img-avatar img-avatar-thumb img-avatar32"
-                :src="data.item.logo"
-                alt="Token Logo"
-              />
-              {{ data.item.symbol }}
-            </template>
-            <template v-slot:cell(price)="data">
-              <span class="text-center font-w700">
-                {{
-                  isNaN(data.item.price)
-                    ? "-"
-                    : data.item.price >= 1
-                    ? numeral(data.item.price).format("$0,0.00")
-                    : numeral(data.item.price).format("$0,0.0000")
-                }}
-              </span>
-            </template>
-            <template v-slot:cell(balance)="data">
-              <span class="text-center font-w700">
-                {{ isNaN(data.item.balance) ? "-" : data.item.balance }}
-              </span>
-            </template>
-            <template v-slot:cell(actions)="data">
-              <span>
-                <!-- <b-btn
-                  @click="initAction('convert', data.item.id)"
-                  size="sm"
-                  variant="success"
-                  class="mr-1"
-                >
-                  <font-awesome-icon icon="exchange-alt" />
-                </b-btn> -->
-                <b-btn
-                  @click="initTransfer(data.item.id)"
-                  size="sm"
-                  variant="info"
-                >
-                  <font-awesome-icon icon="arrow-right" />
-                </b-btn>
-              </span>
-            </template>
-          </b-table>
+        <div class="block-content px-0 px-md-3 ">
+          <div class="table-responsive">
+            <b-table
+              id="tokens-tablee"
+              striped
+              :fields="fields"
+              :items="tokens"
+              primary-key="symbol"
+            >
+              <template v-slot:cell(index)="data">
+                {{ data.index + 1 }}
+              </template>
+              <template v-slot:cell(symbol)="data">
+                <img
+                  v-b-tooltip.hover
+                  class="img-avatar img-avatar-thumb img-avatar32"
+                  :src="data.item.logo"
+                  alt="Token Logo"
+                />
+                {{ data.item.symbol }}
+              </template>
+              <template v-slot:cell(price)="data">
+                <span class="text-center font-w700">
+                  {{
+                    isNaN(data.item.price)
+                      ? "-"
+                      : data.item.price >= 1
+                      ? numeral(data.item.price).format("$0,0.00")
+                      : numeral(data.item.price).format("$0,0.0000")
+                  }}
+                </span>
+              </template>
+              <template v-slot:cell(balance)="data">
+                <span class="text-center font-w700">
+                  {{ isNaN(data.item.balance) ? "-" : data.item.balance }}
+                </span>
+              </template>
+              <template v-slot:cell(actions)="data">
+                <span>
+                  <!-- <b-btn
+                    @click="initAction('convert', data.item.id)"
+                    size="sm"
+                    variant="success"
+                    class="mr-1"
+                  >
+                    <font-awesome-icon icon="exchange-alt" />
+                  </b-btn> -->
+                  <b-btn
+                    @click="initTransfer(data.item.id)"
+                    size="sm"
+                    variant="info"
+                  >
+                    <font-awesome-icon icon="arrow-right" />
+                  </b-btn>
+                </span>
+              </template>
+            </b-table>
+          </div>
         </div>
       </div>
     </div>
