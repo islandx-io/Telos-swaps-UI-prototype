@@ -131,3 +131,21 @@ label.active:hover {
 a:hover {
   color: #ff422a;
 }
+
+
+//New style changes - Luigi
+
+.form-control.form-control-alt {
+  border-radius:40px;
+  padding: 10px 22px;
+  height: auto;
+}
+
+div.container-xl .block {
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.08);
+}
+
+
+div.container-xl .block-header {
+  padding: 22px 22px 4px 22px;
+}

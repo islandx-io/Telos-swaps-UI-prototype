@@ -8,11 +8,9 @@ export interface TokenPrice {
   primaryCommunityImageName: string;
   liquidityDepth: number;
   price: number;
-//  priceTlos: number;
   change24h: number;
   volume24h: Volume24h;
   smartPriceApr: number;
-//  priceHistory: PriceHistory[];
 }
 
 export interface Volume24h {
