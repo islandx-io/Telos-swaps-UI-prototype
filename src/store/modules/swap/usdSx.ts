@@ -165,7 +165,7 @@ interface AddedVolume extends Token {
   volume24h?: number;
 }
 
-const contract = process.env.VUE_APP_USDSTABLE!;
+//const contract = process.env.VUE_APP_USDSTABLE!;
 
 interface Stat {
   tokens: Tokens;
@@ -180,12 +180,12 @@ interface MiniRelay {
   tokenIds: string[];
 }
 
-interface TradeProposal {
-  fromId: string;
-  toId: string;
-  amount: Asset;
-  calculator: (token: Token, setting: Settings) => Asset;
-}
+//interface TradeProposal {
+//  fromId: string;
+//  toId: string;
+//  amount: Asset;
+//  calculator: (token: Token, setting: Settings) => Asset;
+//}
 
 interface PoolReturn {
   id: string;
@@ -297,11 +297,12 @@ export class UsdBancorModule
       retryPromise(() => get_settings(rpc, contract), 4, 500)
     ]);
 
+//    console.log("fetchContract", tokens, volume, settings);
     return { tokens, volume, settings, contract };
   }
 
   @action async checkPrices(contracts: string[]) {
-//    console.log(contracts);
+//    console.log("checkPrices", contracts);
 
     const prices = await Promise.all(
       contracts.map(async contract => {
@@ -319,88 +320,12 @@ export class UsdBancorModule
       })
     );
 
-//    console.log("usdsPrices", prices);
+//    console.log("checkPrices.usdsPrices", prices);
   }
 
   @action async refresh() {
-    console.log("refresh called on sx, trying new stuff");
-    const registryData = await getSxContracts();
-    if (this.isAuthenticated) {
-      vxm.tlosNetwork.getBalances({
-        tokens: registryData.flatMap(data => data.tokens),
-        slow: false
-      });
-    }
-
-    const contracts = registryData.map(x => x.contract);
-
-    this.checkPrices(contracts);
-    this.setContracts(contracts);
-    const allTokens = await Promise.all(contracts.map(this.fetchContract));
-    this.setStats(allTokens);
-
-    this.connector = await retryPromise(() => get_connector(rpc), 4, 500);
-//    console.log("refresh.connector", this.connector);
-
+//    console.log("USD Stable swaps : refresh called");
     retryPromise(() => this.updateStats(), 4, 1000);
-
-    const all = await Promise.all(
-      allTokens.flatMap(token =>
-        this.buildTokens({
-          tokens: token.tokens,
-          volume: token.volume[0],
-          settings: token.settings,
-          connector: this.connector
-        })
-      )
-    );
-
-    const allWithId: SxToken[] = all.flatMap(x =>
-      x.map(token => ({
-        ...token,
-        id: buildTokenId(token)
-      }))
-    );
-
-    const uniqTokens = _.uniqBy(allWithId, "id").map(x => x.id);
-
-    const newTokens = uniqTokens.map(
-      (id): SxToken => {
-        const allTokensOfId = allWithId.filter(token =>
-          compareString(id, token.id)
-        );
-
-        const { precision, contract, symbol } = allTokensOfId[0];
-
-        const [highestLiquidityToken] = allTokensOfId.sort(
-          (a, b) => b.liqDepth - a.liqDepth
-        );
-
-        const { price } = highestLiquidityToken;
-
-        const totalVolumeInToken = allTokensOfId
-          .map(token => token.volume24h)
-          .reduce(addNumbers, 0);
-
-        const liqDepth = allTokensOfId
-          .map(token => token.liqDepth)
-          .reduce(addNumbers, 0);
-
-        const volumeInPrice = price * totalVolumeInToken;
-
-        return {
-          precision,
-          price,
-          contract,
-          id,
-          liqDepth,
-          symbol,
-          volume24h: volumeInPrice
-        };
-      }
-    );
-
-    this.setNewTokens(newTokens);
     await wait(10);
   }
 
@@ -408,88 +333,15 @@ export class UsdBancorModule
     if (this.initiated) {
       return this.refresh();
     }
+
     console.time("sx");
     vxm.tlosBancor.init();
 
-    const registryData = await getSxContracts();
-    if (this.isAuthenticated) {
-      vxm.tlosNetwork.getBalances({
-        tokens: registryData.flatMap(data => data.tokens),
-        slow: false
-      });
-    }
+    setInterval(() => this.checkRefresh(), 60000);
 
-    const contracts = registryData.map(x => x.contract);
-
-    await this.checkPrices(contracts);
-    this.setContracts(contracts);
-    const allTokens = await Promise.all(contracts.map(this.fetchContract));
-    this.setStats(allTokens);
-
-    this.connector = await retryPromise(() => get_connector(rpc), 4, 500);
-//    console.log("init.connector", this.connector);
-
+//    this.updateStats();
     await retryPromise(() => this.updateStats(), 4, 1000);
 
-    const all = await Promise.all(
-      allTokens.flatMap(token =>
-        this.buildTokens({
-          tokens: token.tokens,
-          volume: token.volume[0],
-          settings: token.settings,
-          connector: this.connector
-        })
-      )
-    );
-
-    setInterval(() => this.checkRefresh(), 20000);
-
-    const allWithId: SxToken[] = all.flatMap(x =>
-      x.map(token => ({
-        ...token,
-        id: buildTokenId(token)
-      }))
-    );
-
-    const uniqTokens = _.uniqBy(allWithId, "id").map(x => x.id);
-
-    const newTokens = uniqTokens.map(
-      (id): SxToken => {
-        const allTokensOfId = allWithId.filter(token =>
-          compareString(id, token.id)
-        );
-
-        const { precision, contract, symbol } = allTokensOfId[0];
-
-        const [highestLiquidityToken] = allTokensOfId.sort(
-          (a, b) => b.liqDepth - a.liqDepth
-        );
-
-        const { price } = highestLiquidityToken;
-
-        const totalVolumeInToken = allTokensOfId
-          .map(token => token.volume24h)
-          .reduce(addNumbers, 0);
-
-        const liqDepth = allTokensOfId
-          .map(token => token.liqDepth)
-          .reduce(addNumbers, 0);
-
-        const volumeInPrice = price * totalVolumeInToken;
-
-        return {
-          precision,
-          price,
-          contract,
-          id,
-          liqDepth,
-          symbol,
-          volume24h: volumeInPrice
-        };
-      }
-    );
-
-    this.setNewTokens(newTokens);
     this.moduleInitiated();
     await wait(10);
     console.timeEnd("sx");
@@ -894,10 +746,85 @@ export class UsdBancorModule
 
   @action async updateStats() {
     this.resetTimer();
-    const contracts = this.contracts;
-    const allTokens = await Promise.all(contracts.map(this.fetchContract));
 
+    const registryData = await getSxContracts();
+    if (this.isAuthenticated) {
+      vxm.tlosNetwork.getBalances({
+        tokens: registryData.flatMap(data => data.tokens),
+        slow: false
+      });
+    }
+
+    const contracts = registryData.map(x => x.contract);
+
+    await this.checkPrices(contracts);
+//    console.log("updateStats.checkPrices", this.checkPrices);
+    this.setContracts(contracts);
+//    console.log(">>updateStats");
+    const allTokens = await Promise.all(contracts.map(this.fetchContract));
+//    console.log("updateStats.allTokens", allTokens);
     this.setStats(allTokens);
+
+    this.connector = await retryPromise(() => get_connector(rpc), 4, 500);
+//    console.log("updateStats.connector", this.connector);
+
+    const all = await Promise.all(
+      allTokens.flatMap(token =>
+        this.buildTokens({
+          tokens: token.tokens,
+          volume: token.volume[0],
+          settings: token.settings,
+          connector: this.connector
+        })
+      )
+    );
+
+    const allWithId: SxToken[] = all.flatMap(x =>
+      x.map(token => ({
+        ...token,
+        id: buildTokenId(token)
+      }))
+    );
+
+    const uniqTokens = _.uniqBy(allWithId, "id").map(x => x.id);
+
+    const newTokens = uniqTokens.map(
+      (id): SxToken => {
+        const allTokensOfId = allWithId.filter(token =>
+          compareString(id, token.id)
+        );
+
+        const { precision, contract, symbol } = allTokensOfId[0];
+
+        const [highestLiquidityToken] = allTokensOfId.sort(
+          (a, b) => b.liqDepth - a.liqDepth
+        );
+
+        const { price } = highestLiquidityToken;
+
+        const totalVolumeInToken = allTokensOfId
+          .map(token => token.volume24h)
+          .reduce(addNumbers, 0);
+
+        const liqDepth = allTokensOfId
+          .map(token => token.liqDepth)
+          .reduce(addNumbers, 0);
+
+        const volumeInPrice = price * totalVolumeInToken;
+
+        return {
+          precision,
+          price,
+          contract,
+          id,
+          liqDepth,
+          symbol,
+          volume24h: volumeInPrice
+        };
+      }
+    );
+
+    this.setNewTokens(newTokens);
   }
 
   @mutation setStats(stats: Stat[]) {
