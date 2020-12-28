@@ -713,14 +713,30 @@ export const fetchTradeData = async (): Promise<TokenPrice[]> => {
         .value.split(" ")[0] * usdPriceOfTlos;
     newObj.volume24h = volume24h;
 
-    // TODO smart token APR needs to be incuded in "pools" tab, calculations follow, APR in TLOS
-    let smartPrice = itemObject.smart_price
+    // Base APR calculation on both token and TLOS, APR = average 30 day % gainm annualised
+    // TLOS
+    let TlosSmartPrice = itemObject.smart_price
       .find((token: any) => compareString(token.key, "TLOS"))
       .value.split(" ")[0];
-    let smartPriceApr = itemObject.smart_price_change_30d
+    let TlosSmartPriceApr = itemObject.smart_price_change_30d
       .find((token: any) => compareString(token.key, "TLOS"))
       .value.split(" ")[0];
-    smartPriceApr = (smartPriceApr / (smartPrice - smartPriceApr)) * 100; // * 12;
+
+    // Token
+    let TokenSmartPrice = itemObject.smart_price
+      .find((token: any) => !compareString(token.key, "TLOS"))
+      .value.split(" ")[0];
+    let TokenSmartPriceApr = itemObject.smart_price_change_30d
+      .find((token: any) => !compareString(token.key, "TLOS"))
+      .value.split(" ")[0];
+
+    // Individual APR
+    TlosSmartPriceApr = (TlosSmartPriceApr / (TlosSmartPrice - TlosSmartPriceApr)) * 100 * 12;
+    TokenSmartPriceApr = (TokenSmartPriceApr / (TokenSmartPrice - TokenSmartPriceApr)) * 100 * 12;
+
+    // Combined APR
+    let smartPrice = TlosSmartPrice;
+    let smartPriceApr = (TlosSmartPriceApr + TokenSmartPriceApr)/2;
 
     newObj.smartPrice = smartPrice;
     newObj.smartPriceApr = smartPriceApr;

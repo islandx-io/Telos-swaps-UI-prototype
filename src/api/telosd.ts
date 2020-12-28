@@ -448,6 +448,7 @@ export async function get_volume(
   for (const row of results.rows) {
     volume.push(parse_volume(row));
   }
+//  console.log("get_volume",volume);
   return volume;
 }
 

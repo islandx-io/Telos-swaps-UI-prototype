@@ -779,6 +779,7 @@ export class TlosBancorModule
   }
 
   get tokens(): ViewToken[] {
+//    console.log("Telos Swaps - get tokens()")
     return this.relaysWithFeeds
       .flatMap(relay =>
         relay.reserves.map(reserve => {
@@ -1055,7 +1056,7 @@ export class TlosBancorModule
   }
 
   @action async refresh() {
-    console.log("refresh called, doing some stuff");
+//    console.log("Telos Swaps : refresh called");
 
     const v1Relays = getHardCodedRelays();
     //    const allDry = [...v1Relays].filter(

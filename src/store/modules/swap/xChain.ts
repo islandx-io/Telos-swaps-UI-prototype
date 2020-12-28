@@ -320,6 +320,7 @@ export class xChainModule
 
     this.checkPrices(contracts);
     this.setContracts(contracts);
+//    console.log(">>refresh");
     const allTokens = await Promise.all(contracts.map(this.fetchContract));
     //    this.setStats(allTokens);
 
@@ -407,6 +408,7 @@ export class xChainModule
 
     this.checkPrices(contracts);
     this.setContracts(contracts);
+//    console.log(">>init");
     const allTokens = await Promise.all(contracts.map(this.fetchContract));
     this.setStats(allTokens);
 
@@ -768,6 +770,7 @@ export class xChainModule
   @action async updateStats() {
     this.resetTimer();
     const contracts = this.contracts;
+//    console.log(">>updateStats");
     const allTokens = await Promise.all(contracts.map(this.fetchContract));
 
     this.setStats(allTokens);
